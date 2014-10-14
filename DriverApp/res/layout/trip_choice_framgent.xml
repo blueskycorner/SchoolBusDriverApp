@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <Button
+        android:id="@+id/buttonSchool"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/buttonTrip"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ToggleButton
+        android:id="@+id/toggleButtonReturn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textOn="@string/ret"
+        android:textOff="@string/ret" />
+
+    <ListView
+        android:id="@+id/listViewKids"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6" >
+
+    </ListView>
+
+    <Button
+        android:id="@+id/buttonStartTrip"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/start_trip" />
+
+</LinearLayout>
