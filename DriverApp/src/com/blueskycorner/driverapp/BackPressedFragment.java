@@ -1,6 +1,6 @@
 package com.blueskycorner.driverapp;
 
-public interface BackPressed 
+public interface BackPressedFragment 
 {
 	public void BackPressed();
 }

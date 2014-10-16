@@ -15,7 +15,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class ChildFragment extends Fragment implements OnClickListener, OnCheckedChangeListener, BackPressed
+public class ChildFragment extends Fragment implements OnClickListener, OnCheckedChangeListener, BackPressedFragment
 {
 	public static final String NAME = "CHILD_FRAGMENT";
 	private Child m_child;

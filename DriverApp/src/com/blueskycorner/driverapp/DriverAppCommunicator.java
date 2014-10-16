@@ -2,7 +2,7 @@ package com.blueskycorner.driverapp;
 
 public interface DriverAppCommunicator 
 {
-	void StartTrip(Trip pi_trip);
+	void TripStarted(Trip pi_trip);
 	
 	void ChildSelected(Child pi_child);
 

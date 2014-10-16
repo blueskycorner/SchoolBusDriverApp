@@ -1,5 +1,6 @@
 package com.blueskycorner.driverapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -7,10 +8,11 @@ import android.view.MenuItem;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-public class MainActivity extends FragmentActivity implements DriverAppCommunicator {
-
+public class MainActivity extends FragmentActivity implements DriverAppCommunicator
+{
 	private Trip m_trip;
-	BackPressed m_currentFragment = null;
+	BackPressedFragment m_currentFragment = null;
+	private MessageManager m_messageManager = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -19,11 +21,14 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 		setContentView(R.layout.activity_main);
 		
 		DataManager.GetInstance().Init();
+
+		m_messageManager = new MessageManager(this);
 		
 		LaunchTripChoiceFragment();
 	}
 
-	private void LaunchTripChoiceFragment() {
+	private void LaunchTripChoiceFragment() 
+	{
 		TripChoiceFragment f1 = (TripChoiceFragment) getSupportFragmentManager().findFragmentByTag(TripChoiceFragment.NAME);
 		
 		if (f1 == null)
@@ -40,14 +45,16 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
@@ -59,7 +66,7 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 	}
 
 	@Override
-	public void StartTrip(Trip pi_trip)
+	public void TripStarted(Trip pi_trip)
 	{
 		m_trip = pi_trip;
 		LaunchTripFragment(m_trip);
@@ -125,4 +132,11 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 	{
 		LaunchTripChoiceFragment();
 	}
+	
+	@Override
+	protected void onActivityResult(int arg0, int arg1, Intent arg2) 
+	{
+		m_messageManager.OnMessageAcknowledge(arg0);
+	}
+
 }

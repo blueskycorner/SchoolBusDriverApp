@@ -18,7 +18,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.ToggleButton;
 
-public class TripChoiceFragment extends Fragment implements OnClickListener, OnItemClickListener, BackPressed, OnCheckedChangeListener
+public class TripChoiceFragment extends Fragment implements OnClickListener, OnItemClickListener, BackPressedFragment, OnCheckedChangeListener
 {
 	public static final String NAME = "TRIP_CHOICE_FRAGMENT";
 	private static final String SCHOOL_INDEX = "SCHOOL_INDEX";
@@ -235,7 +235,7 @@ public class TripChoiceFragment extends Fragment implements OnClickListener, OnI
 				}
 				else
 				{
-					m_communicator.StartTrip(m_trip);
+					m_communicator.TripStarted(m_trip);
 				}
 				
 				break;

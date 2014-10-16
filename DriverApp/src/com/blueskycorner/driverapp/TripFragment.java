@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
-public class TripFragment extends Fragment implements OnClickListener, BackPressed
+public class TripFragment extends Fragment implements OnClickListener, BackPressedFragment
 {
 	public static final String NAME = "TRIP_FRAGMENT";
 	private Trip m_trip = null;
