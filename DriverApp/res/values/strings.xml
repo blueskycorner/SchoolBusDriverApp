@@ -25,6 +25,8 @@
     <string name="from_company">From Company</string>
     <string name="from_unknown">From Unknown</string>
     <string name="emergency">EMERGENCY</string>
+    <string name="child_is_not_part_of_current_trip">Child is not part of this trip</string>
+    
     
     
 </resources>

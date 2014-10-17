@@ -1,6 +1,7 @@
 package com.blueskycorner.driverapp;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -65,25 +66,7 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 					bt.setEnabled(false);
 				}
 				
-				switch (child.m_state)
-				{
-					case WAITING:
-					{	
-						img = m_activity.getResources().getDrawable(R.drawable.waiting);
-						break;
-					}
-					case FINISH:
-					{	
-						img = m_activity.getResources().getDrawable(R.drawable.happy);
-						break;
-					}
-					case SKIPPED:
-					case MISSING:
-					{	
-						img = m_activity.getResources().getDrawable(R.drawable.skip);
-						break;
-					}
-				}
+				img = GetDrawable(child);
 				bt.setCompoundDrawablesWithIntrinsicBounds( img, null, null, null);
 				m_layout.addView(bt);
 				
@@ -102,6 +85,31 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 				m_buttonEndTrip.setText(m_activity.getResources().getText(R.string.cancel_trip));
 			}
 		}
+	}
+
+	private Drawable GetDrawable(Child child) 
+	{
+		Drawable img = null;
+		switch (child.m_state)
+		{
+			case WAITING:
+			{	
+				img = m_activity.getResources().getDrawable(R.drawable.waiting);
+				break;
+			}
+			case FINISH:
+			{	
+				img = m_activity.getResources().getDrawable(R.drawable.happy);
+				break;
+			}
+			case SKIPPED:
+			case MISSING:
+			{	
+				img = m_activity.getResources().getDrawable(R.drawable.skip);
+				break;
+			}
+		}
+		return img;
 	}
 	
 	public void UpdateTrip(Trip pi_trip)
@@ -177,5 +185,23 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 	{
 		ViewGroup l = (ViewGroup) getActivity().findViewById(R.id.trip_fragment);
 		return l;
+	}
+
+	@Override
+	public void RefreshState(Child pi_child) 
+	{
+		Integer i = getKeyByValue(m_childMap, pi_child);
+		Button b = (Button) getActivity().findViewById(i);
+		Drawable img = GetDrawable(pi_child);
+		b.setCompoundDrawablesWithIntrinsicBounds( img, null, null, null);
+	}
+	
+	public static <T, E> T getKeyByValue(HashMap<T, E> map, E value) {
+	    for (Entry<T, E> entry : map.entrySet()) {
+	        if (value.equals(entry.getValue())) {
+	            return entry.getKey();
+	        }
+	    }
+	    return null;
 	}
 }

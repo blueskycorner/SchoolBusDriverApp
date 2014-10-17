@@ -20,12 +20,15 @@ public class MessageManager implements ISmsListener
 	private ReentrantLock m_lock = null;
 	private int m_messageId = 0;
 	private HashMap<Integer, MessageThread> m_messageThreads = null;
+	private Trip m_trip = null;
+	private ArrayList<IMessageListener> m_messageListener;
 	
 	public MessageManager(Activity pi_activity) 
 	{
 		m_activity = pi_activity;
 		m_messageThreads = new HashMap<Integer, MessageManager.MessageThread>();
 		m_lock = new ReentrantLock();
+		m_messageListener = new ArrayList<IMessageListener>();
 		
 		m_incommingSmsReceiver = new IncomingSmsReceiver();
 		m_incommingSmsReceiver.AddListener(this);
@@ -33,6 +36,11 @@ public class MessageManager implements ISmsListener
 		filter.addAction("android.provider.Telephony.SMS_RECEIVED");
 		filter.setPriority(Integer.MAX_VALUE);
         m_activity.registerReceiver(m_incommingSmsReceiver, filter);
+	}
+	
+	public void SetTrip(Trip pi_trip)
+	{
+		m_trip = pi_trip;
 	}
 
 	@Override
@@ -46,9 +54,38 @@ public class MessageManager implements ISmsListener
 			m_messageThreads.put(m_messageId, t);
 			m_messageId ++;
 			t.start();	
+			
+			BroadCastMessage(driverAppMessage);
 		}
 	}
 	
+	private void BroadCastMessage(DriverAppMessage pi_driverAppMessage) 
+	{
+		if (pi_driverAppMessage.m_from == E_SMS_FROM.FROM_PARENT)
+		{
+			for (IMessageListener l : m_messageListener)
+			{
+				l.onMessageReceived(pi_driverAppMessage);
+			}
+		}
+	}
+	
+	public void AddMessageListener(IMessageListener pi_listener)
+	{
+		if (m_messageListener.contains(pi_listener) == false)
+		{
+			m_messageListener.add(pi_listener);
+		}
+	}
+	
+	public void RemoveMessageListener(IMessageListener pi_listener)
+	{
+		if (m_messageListener.contains(pi_listener) == true)
+		{
+			m_messageListener.remove(pi_listener);
+		}
+	}
+
 	public void OnMessageAcknowledge(int pi_messageId)
 	{
 		MessageThread t = m_messageThreads.get(pi_messageId);

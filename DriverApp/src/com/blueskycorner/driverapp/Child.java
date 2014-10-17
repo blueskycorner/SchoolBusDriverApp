@@ -16,6 +16,7 @@ public class Child
 	public String m_address = "";
 	public boolean m_isPresent = false;
 	public E_CHILD_STATE m_state;
+	public int m_id = 0;
 	
 	public void Init() 
 	{

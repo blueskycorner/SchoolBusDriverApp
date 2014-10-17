@@ -124,4 +124,13 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 		ViewGroup l = (ViewGroup) getActivity().findViewById(R.id.child_fragment);
 		return l;
 	}
+
+	@Override
+	public void RefreshState(Child pi_child) 
+	{
+		if (pi_child == m_child)
+		{
+			m_comm.childStateUpdated(m_child);
+		}
+	}
 }

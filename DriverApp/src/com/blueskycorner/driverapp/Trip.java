@@ -30,4 +30,16 @@ public class Trip
 			child.Init();
 		}
 	}
+	public Child GetChild(int pi_fromId) 
+	{
+		Child child = null;
+		for (Child c : m_childs) 
+		{
+			if (c.m_id == pi_fromId)
+			{
+				child = c;
+			}
+		}
+		return child;
+	}
 }

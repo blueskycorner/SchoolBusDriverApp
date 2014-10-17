@@ -8,12 +8,13 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-public class MainActivity extends FragmentActivity implements DriverAppCommunicator, OnCheckedChangeListener
+public class MainActivity extends FragmentActivity implements DriverAppCommunicator, OnCheckedChangeListener, IMessageListener
 {
 	private Trip m_trip;
 	DriverAppFragment m_currentFragment = null;
@@ -33,6 +34,7 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 		DataManager.GetInstance().Init();
 
 		m_messageManager = new MessageManager(this);
+		m_messageManager.AddMessageListener(this);
 		
 		m_buttonEmergency = (ToggleButton) findViewById(R.id.toggleButtonEmmergency);
 		m_buttonEmergency .setOnCheckedChangeListener(this);
@@ -156,6 +158,25 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 	public void onCheckedChanged(CompoundButton arg0, boolean arg1)
 	{
 		m_currentFragment.SetEnabled(!arg1);
+	}
+
+	@Override
+	public void onMessageReceived(DriverAppMessage pi_message) 
+	{
+		if (m_trip != null)
+		{
+			Child c = m_trip.GetChild(pi_message.m_fromId);
+			if (c != null)
+			{
+				c.m_state = E_CHILD_STATE.SKIPPED;
+				m_currentFragment.RefreshState(c);
+			}
+			else
+			{
+				// TODO reply to parent
+				Toast.makeText(this, R.string.child_is_not_part_of_current_trip, Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 
 }

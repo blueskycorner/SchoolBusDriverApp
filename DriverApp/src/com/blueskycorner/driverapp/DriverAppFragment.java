@@ -10,6 +10,8 @@ public abstract class DriverAppFragment extends Fragment
 
 	public abstract ViewGroup GetViewGroup();
 	
+	public abstract void RefreshState(Child pi_child);
+	
 	public void SetEnabled(boolean b)
 	{
 		ViewGroup l = GetViewGroup();

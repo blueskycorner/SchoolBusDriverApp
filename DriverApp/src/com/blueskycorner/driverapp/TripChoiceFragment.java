@@ -393,4 +393,10 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		ViewGroup l = (ViewGroup) getActivity().findViewById(R.id.trip_choice_fragment);
 		return l;
 	}
+
+	@Override
+	public void RefreshState(Child pi_child) 
+	{
+		
+	}
 }

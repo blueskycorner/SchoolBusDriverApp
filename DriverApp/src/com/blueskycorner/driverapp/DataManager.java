@@ -36,7 +36,9 @@ public class DataManager
 		lfmTrip1.m_name = "Alabang";
 		lfmTrip1.m_id = 0;
 		ArrayList<Child> childs1 = new ArrayList<Child>();
-		childs1.add(new Child("Alexandre", "EHLERS", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Julie", "DAUPLE", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add( new Child("Thomas", "LOVET", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Michael", "JORDAN", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Tim", "COOK", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Chantal", "LAUBIE", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Andrew", "JAMES", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Tom", "SELECT", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Wilfrid", "CROISARD", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Alexandre", "STAUB", "21 Jump Street\nDasmarinas Village, MAKATI"));
+		Child c = new Child("Alexandre", "EHLERS", "21 Jump Street\nDasmarinas Village, MAKATI");
+		c.m_id = 1;
+		childs1.add(c);childs1.add(new Child("Julie", "DAUPLE", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add( new Child("Thomas", "LOVET", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Michael", "JORDAN", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Tim", "COOK", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Chantal", "LAUBIE", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Andrew", "JAMES", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Tom", "SELECT", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Wilfrid", "CROISARD", "21 Jump Street\nDasmarinas Village, MAKATI"));childs1.add(new Child("Alexandre", "STAUB", "21 Jump Street\nDasmarinas Village, MAKATI"));
 		lfmTrip1.m_childs = childs1;
 		Trip lfmTrip2 = new Trip();
 		lfmTrip2.m_name = "Makati";

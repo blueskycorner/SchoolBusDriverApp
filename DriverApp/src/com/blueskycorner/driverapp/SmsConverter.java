@@ -14,7 +14,7 @@ public class SmsConverter
 		DriverAppMessage m = new DriverAppMessage();
 		m.m_cellNumer = pi_sms.m_number;
 		m.m_text = pi_sms.m_body;
-		if (m.m_cellNumer.equals("111"))
+		if ( (m.m_cellNumer.equals("111")) || (m.m_cellNumer.equals("+639157912584")) )
 		{
 			m.m_from = E_SMS_FROM.FROM_PARENT;
 		}
@@ -31,7 +31,14 @@ public class SmsConverter
 			m.m_from = E_SMS_FROM.FROM_UNKNOWN;
 		}
 		
-		m.m_fromId = 0;
+		if (m.m_cellNumer.equals("+639157912584"))
+		{
+			m.m_fromId = 1;
+		}
+		else
+		{
+			m.m_fromId = 0;
+		}
 		
 		list.add(m);
 		
