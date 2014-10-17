@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
-public class TripFragment extends Fragment implements OnClickListener, BackPressedFragment
+public class TripFragment extends DriverAppFragment implements OnClickListener
 {
 	public static final String NAME = "TRIP_FRAGMENT";
 	private Trip m_trip = null;
@@ -170,5 +170,12 @@ public class TripFragment extends Fragment implements OnClickListener, BackPress
 			}
 		});
     	builder.show();
+	}
+
+	@Override
+	public ViewGroup GetViewGroup()
+	{
+		ViewGroup l = (ViewGroup) getActivity().findViewById(R.id.trip_fragment);
+		return l;
 	}
 }

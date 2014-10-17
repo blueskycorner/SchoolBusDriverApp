@@ -1,8 +1,12 @@
 package com.blueskycorner.driverapp;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
+import android.app.KeyguardManager.KeyguardLock;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,6 +24,12 @@ public class MessageActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.message_activity);
+		
+		Window wind = this.getWindow();
+		wind.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	    wind.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+	    wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+	    wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 		
 		m_from = (TextView) findViewById(R.id.textViewFrom);
 		m_cellNumber = (TextView) findViewById(R.id.textViewCellNumber);

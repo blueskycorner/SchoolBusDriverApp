@@ -50,7 +50,7 @@ public class IncomingSmsReceiver extends BroadcastReceiver {
         }
         finally
         {
-        	abortBroadcast();
+//        	abortBroadcast();
         }
     }
 

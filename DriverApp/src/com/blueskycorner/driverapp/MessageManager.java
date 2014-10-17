@@ -85,9 +85,11 @@ public class MessageManager implements ISmsListener
 			m_handler = new Handler();
 			
 			m_lock.lock();
-			Intent it = new Intent("intent.my.action");
+			Intent it = new Intent("intent.message");
 	        it.setComponent(new ComponentName(m_activity.getPackageName(), MessageActivity.class.getName()));
-//			it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			it.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	        it.setAction(Intent.ACTION_MAIN);
+	        it.addCategory(Intent.CATEGORY_LAUNCHER);
 	        it.putExtra(MessageActivity.MESSAGE, m_message);
 	        m_activity.startActivityForResult(it, m_messageId);
 	        Looper.loop();

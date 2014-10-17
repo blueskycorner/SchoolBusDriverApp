@@ -2,17 +2,23 @@ package com.blueskycorner.driverapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ToggleButton;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-public class MainActivity extends FragmentActivity implements DriverAppCommunicator
+public class MainActivity extends FragmentActivity implements DriverAppCommunicator, OnCheckedChangeListener
 {
 	private Trip m_trip;
-	BackPressedFragment m_currentFragment = null;
+	DriverAppFragment m_currentFragment = null;
 	private MessageManager m_messageManager = null;
+	private ToggleButton m_buttonEmergency = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -20,9 +26,16 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		Settings.System.putInt(this.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE,
+	            Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
+		
 		DataManager.GetInstance().Init();
 
 		m_messageManager = new MessageManager(this);
+		
+		m_buttonEmergency = (ToggleButton) findViewById(R.id.toggleButtonEmmergency);
+		m_buttonEmergency .setOnCheckedChangeListener(this);
 		
 		LaunchTripChoiceFragment();
 	}
@@ -137,6 +150,12 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 	protected void onActivityResult(int arg0, int arg1, Intent arg2) 
 	{
 		m_messageManager.OnMessageAcknowledge(arg0);
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton arg0, boolean arg1)
+	{
+		m_currentFragment.SetEnabled(!arg1);
 	}
 
 }

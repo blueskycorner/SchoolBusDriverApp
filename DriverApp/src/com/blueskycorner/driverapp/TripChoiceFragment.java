@@ -15,10 +15,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ToggleButton;
 
-public class TripChoiceFragment extends Fragment implements OnClickListener, OnItemClickListener, BackPressedFragment, OnCheckedChangeListener
+public class TripChoiceFragment extends DriverAppFragment implements OnClickListener, OnItemClickListener, OnCheckedChangeListener
 {
 	public static final String NAME = "TRIP_CHOICE_FRAGMENT";
 	private static final String SCHOOL_INDEX = "SCHOOL_INDEX";
@@ -49,7 +50,6 @@ public class TripChoiceFragment extends Fragment implements OnClickListener, OnI
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
 		if (savedInstanceState != null)
@@ -385,5 +385,12 @@ public class TripChoiceFragment extends Fragment implements OnClickListener, OnI
 	{
 		m_trip.m_isReturn = isChecked;
 		m_childList.invalidateViews();
+	}
+
+	@Override
+	public ViewGroup GetViewGroup()
+	{
+		ViewGroup l = (ViewGroup) getActivity().findViewById(R.id.trip_choice_fragment);
+		return l;
 	}
 }

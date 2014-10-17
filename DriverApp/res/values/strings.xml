@@ -24,5 +24,7 @@
     <string name="from_school">From School</string>
     <string name="from_company">From Company</string>
     <string name="from_unknown">From Unknown</string>
+    <string name="emergency">EMERGENCY</string>
+    
     
 </resources>

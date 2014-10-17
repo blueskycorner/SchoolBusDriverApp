@@ -10,12 +10,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class ChildFragment extends Fragment implements OnClickListener, OnCheckedChangeListener, BackPressedFragment
+public class ChildFragment extends DriverAppFragment implements OnClickListener, OnCheckedChangeListener
 {
 	public static final String NAME = "CHILD_FRAGMENT";
 	private Child m_child;
@@ -114,5 +116,12 @@ public class ChildFragment extends Fragment implements OnClickListener, OnChecke
 		{
 			Toast.makeText(getActivity(), "Please update child state", Toast.LENGTH_LONG).show();
 		}
+	}
+
+	@Override
+	public ViewGroup GetViewGroup()
+	{
+		ViewGroup l = (ViewGroup) getActivity().findViewById(R.id.child_fragment);
+		return l;
 	}
 }
