@@ -26,7 +26,7 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 	private LinearLayout m_layout = null;
 	private Activity m_activity;
 	private HashMap<Integer, Child> m_childMap = null;
-	private DriverAppCommunicator m_comm = null;
+	private IDriverAppCommunicator m_comm = null;
 	private Button m_buttonEndTrip = null;
 
 	@Override
@@ -122,7 +122,7 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 	{
 		super.onAttach(activity);
 		m_activity = activity;
-		m_comm = (DriverAppCommunicator) activity;
+		m_comm = (IDriverAppCommunicator) activity;
 		
 	}
 

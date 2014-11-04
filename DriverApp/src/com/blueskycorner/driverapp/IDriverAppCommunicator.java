@@ -1,6 +1,6 @@
 package com.blueskycorner.driverapp;
 
-public interface DriverAppCommunicator 
+public interface IDriverAppCommunicator 
 {
 	void TripStarted(Trip pi_trip);
 	

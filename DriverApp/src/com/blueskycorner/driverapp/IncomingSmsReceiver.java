@@ -30,13 +30,16 @@ public class IncomingSmsReceiver extends BroadcastReceiver {
             if (bundle != null) 
             {
                 final Object[] pdusObj = (Object[]) bundle.get("pdus");
-                DriverAppSmsMessage message = new DriverAppSmsMessage();;
+                DriverAppSmsMessage message = new DriverAppSmsMessage();
                 for (int i = 0; i < pdusObj.length; i++) 
                 {
                 	SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
-                    message.m_number = currentMessage.getOriginatingAddress();
+                	if (currentMessage.getOriginatingAddress().equals(DriverAppParamHelper.GetGatewayNumber(context)) == false)
+                	{
+                		return;
+                	}
                     message.m_body += currentMessage.getMessageBody();
-                    message.date = currentMessage.getTimestampMillis();
+                    message.m_date = currentMessage.getTimestampMillis();
                  
                 } // end for loop
                 

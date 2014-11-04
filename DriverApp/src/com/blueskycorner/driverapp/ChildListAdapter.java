@@ -91,7 +91,7 @@ public class ChildListAdapter extends BaseAdapter
 		}
 		else
 		{
-			present.setVisibility(View.GONE);
+			present.setVisibility(View.INVISIBLE);
 		}
 
 		return listView;

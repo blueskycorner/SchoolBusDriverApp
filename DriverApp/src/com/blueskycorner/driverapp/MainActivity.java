@@ -1,6 +1,11 @@
 package com.blueskycorner.driverapp;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
@@ -14,7 +19,7 @@ import android.widget.ToggleButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-public class MainActivity extends FragmentActivity implements DriverAppCommunicator, OnCheckedChangeListener, IMessageListener
+public class MainActivity extends FragmentActivity implements IDriverAppCommunicator, OnCheckedChangeListener, IMessageListener, IDeviceDataListener
 {
 	private Trip m_trip;
 	DriverAppFragment m_currentFragment = null;
@@ -84,7 +89,36 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 	public void TripStarted(Trip pi_trip)
 	{
 		m_trip = pi_trip;
-		LaunchTripFragment(m_trip);
+		SmsSender.SendTripStarted(this, m_trip.m_id);
+		
+		try
+		{
+			LaunchTripFragment(m_trip);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	private void setMobileDataEnabled(Context context, boolean enabled) 
+	{
+		try
+		{
+		    final ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		    final Class conmanClass = Class.forName(conman.getClass().getName());
+		    final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
+		    iConnectivityManagerField.setAccessible(true);
+		    final Object iConnectivityManager = iConnectivityManagerField.get(conman);
+		    final Class iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
+		    final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
+		    setMobileDataEnabledMethod.setAccessible(true);
+	
+		    setMobileDataEnabledMethod.invoke(iConnectivityManager, enabled);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	private void LaunchTripFragment(Trip pi_trip) 
@@ -126,7 +160,14 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 	@Override
 	public void childStateUpdated(Child pi_child) 
 	{
-		LaunchTripFragment(m_trip);
+		if ( (pi_child.m_state != E_CHILD_STATE.WAITING) && (pi_child.m_state != E_CHILD_STATE.MISSING) )
+		{
+			SmsSender.SendChildState(pi_child);
+		}
+		if (pi_child.m_state != E_CHILD_STATE.STATE_ON_THE_WAY)
+		{			
+			LaunchTripFragment(m_trip);
+		}
 	}
 	
 	@Override
@@ -145,6 +186,7 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 	@Override
 	public void TripFinished()
 	{
+		SmsSender.SendTripFinished(m_trip.m_id);
 		LaunchTripChoiceFragment();
 	}
 	
@@ -158,25 +200,44 @@ public class MainActivity extends FragmentActivity implements DriverAppCommunica
 	public void onCheckedChanged(CompoundButton arg0, boolean arg1)
 	{
 		m_currentFragment.SetEnabled(!arg1);
+		SmsSender.SendEmergency(arg1);
 	}
 
 	@Override
-	public void onMessageReceived(DriverAppMessage pi_message) 
+	public void onMessageReceived(DriverAppSmsMessage pi_message) 
 	{
-		if (m_trip != null)
+		switch (pi_message.GetType())
 		{
-			Child c = m_trip.GetChild(pi_message.m_fromId);
-			if (c != null)
+			case 0:
 			{
-				c.m_state = E_CHILD_STATE.SKIPPED;
-				m_currentFragment.RefreshState(c);
+				if (m_trip != null)
+				{
+					Child c = m_trip.GetChild(pi_message.GetChildId());
+					if (c != null)
+					{
+						c.m_state = E_CHILD_STATE.SKIPPED;
+						m_currentFragment.RefreshState(c);
+					}
+					else
+					{
+						// TODO reply to parent
+						Toast.makeText(this, R.string.child_is_not_part_of_current_trip, Toast.LENGTH_SHORT).show();
+					}
+				}
+
 			}
-			else
+			case 3:
 			{
-				// TODO reply to parent
-				Toast.makeText(this, R.string.child_is_not_part_of_current_trip, Toast.LENGTH_SHORT).show();
+				DataGrabber dg = new DataGrabber();
+				dg.GetDeviceState(this, this);
 			}
 		}
+	}
+
+	@Override
+	public void onDeviceDataChanged(DeviceState pi_deviceState) 
+	{
+		SmsSender.SendDeviceState(this, pi_deviceState);
 	}
 
 }

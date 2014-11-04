@@ -27,7 +27,7 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 	Button m_buttonFinish = null;
 	Button m_buttonSkip = null;
 	Button m_buttonBack = null;
-	private DriverAppCommunicator m_comm;
+	private IDriverAppCommunicator m_comm;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) 
@@ -39,7 +39,7 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 	public void onAttach(Activity activity) 
 	{
 		super.onAttach(activity);
-		m_comm = (DriverAppCommunicator) activity;
+		m_comm = (IDriverAppCommunicator) activity;
 	}
 	
 	@Override
@@ -103,6 +103,16 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 	{
 		m_buttonBack.setEnabled(!isChecked);
 		m_buttonFinish.setEnabled(isChecked);
+		
+		if (isChecked == true)
+		{
+			m_child.m_state = E_CHILD_STATE.STATE_ON_THE_WAY;
+		}
+		else
+		{
+			m_child.m_state = E_CHILD_STATE.WAITING;
+		}
+		m_comm.childStateUpdated(m_child);
 	}
 
 	@Override

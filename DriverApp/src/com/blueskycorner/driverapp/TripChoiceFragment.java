@@ -38,7 +38,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 
 	private int m_schoolIndex = -1;
 	private int m_tripIndex = -1;
-	private DriverAppCommunicator m_communicator = null;
+	private IDriverAppCommunicator m_communicator = null;
 	private Activity m_activity = null;
 	
 	@Override
@@ -349,7 +349,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	public void onAttach(Activity activity) 
 	{
 		m_activity = activity;
-		m_communicator  = (DriverAppCommunicator) activity;
+		m_communicator  = (IDriverAppCommunicator) activity;
 		super.onAttach(activity);
 	}
 

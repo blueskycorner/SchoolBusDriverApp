@@ -14,6 +14,7 @@ public class DriverAppParamHelper
 	private static final String SCHOOL_BACKGROUND_COLOR = "SCHOOL_BACKGROUND_COLOR";
 	private static final String COMPANY_BACKGROUND_COLOR = "COMPANY_BACKGROUND_COLOR";
 	private static final String UNKNOWN_BACKGROUND_COLOR = "UNKNOWN_BACKGROUND_COLOR";
+	private static final String GETWAY_NUMBER = "GETWAY_NUMBER";
 
 	public static int GetLastSchoolId(Context pi_context) 
 	{
@@ -39,6 +40,13 @@ public class DriverAppParamHelper
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
 		sharedPref.edit().putInt(LAST_TRIP_ID, m_id).commit();		
+	}
+	
+	public static String GetGatewayNumber(Context pi_context)
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		String sGatewayNumber = sharedPref.getString(GETWAY_NUMBER, "+639157912584");
+		return sGatewayNumber;
 	}
 
 	public static int GetParentBackgroudColor(Context pi_context) 

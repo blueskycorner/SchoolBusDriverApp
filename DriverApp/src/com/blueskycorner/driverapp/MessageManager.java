@@ -46,27 +46,21 @@ public class MessageManager implements ISmsListener
 	@Override
 	public void OnSmsReceived(DriverAppSmsMessage pi_sms) 
 	{
-		// TODO : manage if a trip is started
-		ArrayList<DriverAppMessage> m = SmsConverter.Convert(pi_sms);
-		for (DriverAppMessage driverAppMessage : m) 
+		if (pi_sms.HasToBeShown() == true)
 		{
-			MessageThread t = new MessageThread(driverAppMessage, m_messageId);
+			MessageThread t = new MessageThread(pi_sms, m_messageId);
 			m_messageThreads.put(m_messageId, t);
 			m_messageId ++;
 			t.start();	
-			
-			BroadCastMessage(driverAppMessage);
 		}
+		BroadCastMessage(pi_sms);
 	}
 	
-	private void BroadCastMessage(DriverAppMessage pi_driverAppMessage) 
+	private void BroadCastMessage(DriverAppSmsMessage pi_sms) 
 	{
-		if (pi_driverAppMessage.m_from == E_SMS_FROM.FROM_PARENT)
+		for (IMessageListener l : m_messageListener)
 		{
-			for (IMessageListener l : m_messageListener)
-			{
-				l.onMessageReceived(pi_driverAppMessage);
-			}
+			l.onMessageReceived(pi_sms);
 		}
 	}
 	
@@ -105,11 +99,11 @@ public class MessageManager implements ISmsListener
 	
 	private class MessageThread extends Thread
 	{
-		private DriverAppMessage m_message;
+		private DriverAppSmsMessage m_message;
 		private int m_messageId;
 		Handler m_handler = null;
 		
-		public MessageThread(DriverAppMessage pi_message, int pi_messageId)
+		public MessageThread(DriverAppSmsMessage pi_message, int pi_messageId)
 		{
 			m_message = pi_message;
 			m_messageId = pi_messageId;
