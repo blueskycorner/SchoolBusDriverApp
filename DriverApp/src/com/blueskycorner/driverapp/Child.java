@@ -8,7 +8,7 @@ public class Child
 		m_lastName = pi_lastName;
 		m_address = pi_address;
 		m_isPresent = false;
-		m_state = E_CHILD_STATE.WAITING;
+		m_state = E_CHILD_STATE.STATE_WAITING;
 	}
 	
 	public String m_firstName = "";
@@ -21,6 +21,6 @@ public class Child
 	public void Init() 
 	{
 		m_isPresent = false;
-		m_state = E_CHILD_STATE.WAITING;
+		m_state = E_CHILD_STATE.STATE_WAITING;
 	}
 }

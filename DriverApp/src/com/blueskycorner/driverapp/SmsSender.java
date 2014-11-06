@@ -15,7 +15,7 @@ public class SmsSender
 	{
 		String sMessage = pi_deviceState.toSMS();
 		SmsManager sms = SmsManager.getDefault();
-		sms.sendTextMessage(DriverAppParamHelper.GetGatewayNumber(pi_context), null, sMessage, null, null);
+		sms.sendTextMessage(DriverAppParamHelper.GetDeviceGateway(pi_context), null, sMessage, null, null);
 	}
 	
 	public static void SendTripStarted(final Context pi_context, int m_id) 

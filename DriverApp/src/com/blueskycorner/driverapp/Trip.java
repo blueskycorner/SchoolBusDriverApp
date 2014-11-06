@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Trip 
 {
 	public int m_id = -1;
+	public int m_schoolId = -1;
 	public String m_name = null;
 	public ArrayList<Child> m_childs = null;
 	public boolean m_isCancel;
@@ -14,7 +15,7 @@ public class Trip
 		int remainCount = 0;
 		for (Child child : m_childs) 
 		{
-			if (child.m_state == E_CHILD_STATE.WAITING)
+			if (child.m_state == E_CHILD_STATE.STATE_WAITING)
 			{
 				remainCount ++;
 			}

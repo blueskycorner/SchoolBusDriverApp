@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	DriverAppFragment m_currentFragment = null;
 	private MessageManager m_messageManager = null;
 	private ToggleButton m_buttonEmergency = null;
+	private TimerManager m_timerManager = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -45,6 +47,9 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		m_buttonEmergency .setOnCheckedChangeListener(this);
 		
 		LaunchTripChoiceFragment();
+		
+		m_timerManager = new TimerManager(this);
+		m_timerManager.StartTimer();
 	}
 
 	private void LaunchTripChoiceFragment() 
@@ -79,8 +84,10 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		if (id == R.id.action_settings) 
+		{
+			startActivity(new Intent(this, SettingsActivity.class));
+		    return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -160,7 +167,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	@Override
 	public void childStateUpdated(Child pi_child) 
 	{
-		if ( (pi_child.m_state != E_CHILD_STATE.WAITING) && (pi_child.m_state != E_CHILD_STATE.MISSING) )
+		if ( (pi_child.m_state != E_CHILD_STATE.STATE_WAITING) && (pi_child.m_state != E_CHILD_STATE.STATE_MISSING) )
 		{
 			SmsSender.SendChildState(pi_child);
 		}
@@ -215,7 +222,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 					Child c = m_trip.GetChild(pi_message.GetChildId());
 					if (c != null)
 					{
-						c.m_state = E_CHILD_STATE.SKIPPED;
+						c.m_state = E_CHILD_STATE.STATE_SKIPPED;
 						m_currentFragment.RefreshState(c);
 					}
 					else

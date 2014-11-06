@@ -1,0 +1,244 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.blueskycorner.driverapp.SettingsActivity"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:paddingBottom="@dimen/activity_vertical_margin"
+	    android:paddingLeft="@dimen/activity_horizontal_margin"
+	    android:paddingRight="@dimen/activity_horizontal_margin"
+	    android:paddingTop="@dimen/activity_vertical_margin"
+	    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/textViewAppVersionTitle"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/app_version_title" />
+    <TextView
+        android:id="@+id/textViewAppVersionData"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+    <Button 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:visibility="invisible"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/textViewLastDeviceInfoUpdateTitle"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/last_device_info_update_title" />
+    <TextView
+        android:id="@+id/textViewLastDeviceInfoUpdateData"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+    <Button 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:visibility="invisible"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/textViewLastDbUpdateTitle"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/last_db_update_title" />
+    <TextView
+        android:id="@+id/textViewLastDbUpdateData"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+    <Button 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:visibility="invisible"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/textViewDeviceIdTitle"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/device_id_title" />
+    <TextView
+        android:id="@+id/textViewDeviceIdData"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+    <Button 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:visibility="invisible"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/textViewGatewayTitle"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/gateway_title" />
+    <EditText
+        android:id="@+id/textViewGatewayData"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="phone" />
+    <Button 
+        android:id="@+id/buttonGateway"
+        android:onClick="Gateway"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:visibility="visible"
+        android:text="Apply"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/textViewDeviceInfoUpdatePeriodTitle"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/device_info_update_period_title" />
+    <EditText
+        android:id="@+id/editTextDeviceInfoUpdatePeriodData"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="number" />
+    <Button 
+        android:id="@+id/buttonDevice"
+        android:onClick="Device"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:visibility="visible"
+        android:text="Apply"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/textViewDbUpdatePeriodTitle"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/db_update_period_title" />
+    <EditText
+        android:id="@+id/editTextDbUpdatePeriodData"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="number" />
+    <Button 
+        android:id="@+id/buttonDb"
+        android:onClick="Db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:visibility="visible"
+        android:text="Apply"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/textViewDeviceCheckPeriodTitle"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/device_check_period_title" />
+    <EditText
+        android:id="@+id/editTextDeviceCheckPeriodData"
+        android:layout_weight="45"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="number" />
+    <Button 
+        android:id="@+id/buttonCheck"
+        android:onClick="Check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:visibility="visible"
+        android:text="Apply" />
+    </LinearLayout>
+    
+</LinearLayout>

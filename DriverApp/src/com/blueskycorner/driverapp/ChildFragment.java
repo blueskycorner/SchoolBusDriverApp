@@ -80,13 +80,13 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 		{
 			case R.id.buttonFinish:
 			{
-				m_child.m_state = E_CHILD_STATE.FINISH;
+				m_child.m_state = E_CHILD_STATE.STATE_FINISH;
 				m_comm.childStateUpdated(m_child);
 				break;
 			}
 			case R.id.buttonSkip:
 			{
-				m_child.m_state = E_CHILD_STATE.SKIPPED;
+				m_child.m_state = E_CHILD_STATE.STATE_SKIPPED;
 				m_comm.childStateUpdated(m_child);
 				break;
 			}
@@ -110,7 +110,7 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 		}
 		else
 		{
-			m_child.m_state = E_CHILD_STATE.WAITING;
+			m_child.m_state = E_CHILD_STATE.STATE_WAITING;
 		}
 		m_comm.childStateUpdated(m_child);
 	}

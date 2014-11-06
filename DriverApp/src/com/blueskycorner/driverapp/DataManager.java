@@ -1,10 +1,16 @@
 package com.blueskycorner.driverapp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.concurrent.locks.ReentrantLock;
+
+import android.content.Context;
 
 public class DataManager
 {
+	public static final int TABLE_ACCOUNT = 3;
 	static private DataManager m_dataManager = new DataManager();
+	private ReentrantLock m_lock = null;
 	
 	private School[] m_schoolList = null;
 	private Trip[] m_trips = null;
@@ -17,7 +23,7 @@ public class DataManager
     
     private DataManager()
     {
-
+    	m_lock = new ReentrantLock();
     }
 
 	public void Init() {
@@ -90,5 +96,63 @@ public class DataManager
 	public Trip getTrip(int pi_tripId) 
 	{
 		return m_trips[pi_tripId];
+	}
+
+	public void Update(Context pi_context, boolean pi_bForceUpdate) 
+	{
+		DataBaseUpdateThread t = new DataBaseUpdateThread(pi_context, pi_bForceUpdate);
+		t.start();
+	}
+
+	private void SynchDB(Context pi_context) 
+	{
+		DriverAppParamHelper.SetLastDBUpdateTime(pi_context, System.currentTimeMillis());
+	}
+	
+	private class DataBaseUpdateThread extends Thread
+	{
+		Context m_context = null;
+		Boolean m_bForceUpdate = false;
+		public DataBaseUpdateThread(Context pi_context, boolean pi_bForceUpdate) 
+		{
+			m_context = pi_context;
+			m_bForceUpdate = pi_bForceUpdate;
+		}
+
+		@Override
+		public void run() 
+		{
+			m_lock.lock();
+			try
+			{
+				long lastUpdate = DriverAppParamHelper.GetLastDBUpdateTime(m_context);
+				int period = DriverAppParamHelper.GetDBUpdatePeriod(m_context);
+				if ( (lastUpdate + period > System.currentTimeMillis()) || (m_bForceUpdate == true) )
+				{
+					SynchDB(m_context);
+				}
+			}
+			catch (Exception e)
+			{
+				
+			}
+			finally
+			{
+				m_lock.unlock();
+			}
+
+		}
+	}
+
+	public int[] GetLocalTableVersion() 
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Boolean Update(TableContainer c) 
+	{
+		// TODO Auto-generated method stub
+		return true;
 	}
 }

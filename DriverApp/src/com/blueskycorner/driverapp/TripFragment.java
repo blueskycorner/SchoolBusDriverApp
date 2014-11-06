@@ -62,7 +62,7 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 				
 				if ( (bIsReturn == true) && (child.m_isPresent == false) )
 				{
-					child.m_state = E_CHILD_STATE.MISSING;
+					child.m_state = E_CHILD_STATE.STATE_MISSING;
 					bt.setEnabled(false);
 				}
 				
@@ -92,18 +92,18 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 		Drawable img = null;
 		switch (child.m_state)
 		{
-			case WAITING:
+			case STATE_WAITING:
 			{	
 				img = m_activity.getResources().getDrawable(R.drawable.waiting);
 				break;
 			}
-			case FINISH:
+			case STATE_FINISH:
 			{	
 				img = m_activity.getResources().getDrawable(R.drawable.happy);
 				break;
 			}
-			case SKIPPED:
-			case MISSING:
+			case STATE_SKIPPED:
+			case STATE_MISSING:
 			{	
 				img = m_activity.getResources().getDrawable(R.drawable.skip);
 				break;
