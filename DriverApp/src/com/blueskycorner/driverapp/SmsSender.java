@@ -13,8 +13,9 @@ public class SmsSender
 {
 	public static void SendDeviceState(Context pi_context, DeviceState pi_deviceState)
 	{
-		String sMessage = pi_deviceState.toSMS();
+		String sMessage = pi_deviceState.toSMS(pi_context);
 		SmsManager sms = SmsManager.getDefault();
+//		Toast.makeText(pi_context, sMessage, Toast.LENGTH_SHORT).show();
 		sms.sendTextMessage(DriverAppParamHelper.GetDeviceGateway(pi_context), null, sMessage, null, null);
 	}
 	

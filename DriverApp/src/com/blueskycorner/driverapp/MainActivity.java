@@ -50,6 +50,11 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		
 		m_timerManager = new TimerManager(this);
 		m_timerManager.StartTimer();
+		
+//		DriverAppSmsMessage m = new DriverAppSmsMessage();
+//		m.m_body = "3|";
+//		onMessageReceived(m);
+//		int i = m.GetChildId();
 	}
 
 	private void LaunchTripChoiceFragment() 
@@ -217,20 +222,20 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		{
 			case 0:
 			{
-				if (m_trip != null)
-				{
-					Child c = m_trip.GetChild(pi_message.GetChildId());
-					if (c != null)
-					{
-						c.m_state = E_CHILD_STATE.STATE_SKIPPED;
-						m_currentFragment.RefreshState(c);
-					}
-					else
-					{
-						// TODO reply to parent
-						Toast.makeText(this, R.string.child_is_not_part_of_current_trip, Toast.LENGTH_SHORT).show();
-					}
-				}
+//				if (m_trip != null)
+//				{
+//					Child c = m_trip.GetChild(pi_message.GetChildId());
+//					if (c != null)
+//					{
+//						c.m_state = E_CHILD_STATE.STATE_SKIPPED;
+//						m_currentFragment.RefreshState(c);
+//					}
+//					else
+//					{
+//						// TODO reply to parent
+//						Toast.makeText(this, R.string.child_is_not_part_of_current_trip, Toast.LENGTH_SHORT).show();
+//					}
+//				}
 
 			}
 			case 3:

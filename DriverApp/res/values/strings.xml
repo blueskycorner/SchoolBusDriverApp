@@ -43,8 +43,8 @@
     <string name="last_db_update_title">Last DB update</string>
     <string name="device_id_title">Device ID</string>
     <string name="gateway_title">Gateway</string>
-    <string name="device_info_update_period_title">Device update period (minute)</string>
-    <string name="db_update_period_title">DB update period (minute)</string>
-    <string name="device_check_period_title">Device check period (minute)</string>
+    <string name="auto_update_check_hour">Auto update check Hour (0-24)</string>
+    <string name="auto_update_check_period">Auto update check period (minute)</string>
+    <string name="device_check_period_title">GPS, charger check period (minute)</string>
 
 </resources>

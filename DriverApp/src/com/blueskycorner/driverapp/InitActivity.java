@@ -11,12 +11,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class InitActivity extends Activity implements IBackEndManagerListener 
+public class InitActivity extends Activity implements ISynchronizerListener
 {
 	private static final int MAIN_ACTIVITY = 0;
 	private TextView m_tvInitState = null;
 	private ProgressBar m_progressBar = null;
-	private BackEndManager m_backEndManager = null;
+	private DataSynchronyzer m_dataSynchronizer = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -29,96 +29,13 @@ public class InitActivity extends Activity implements IBackEndManagerListener
 		m_tvInitState = (TextView) findViewById(R.id.textViewInitState);
 		m_progressBar = (ProgressBar) findViewById(R.id.progressBarInit);
 		
-		m_backEndManager = new BackEndManager(this);
-		m_backEndManager.addListener(this);
+		m_dataSynchronizer = new DataSynchronyzer();
+		m_dataSynchronizer.addListener(this);
 		
-		CheckDeviceInfo();
+		m_progressBar.setVisibility(View.VISIBLE);
+		m_dataSynchronizer.Synchronize(this, E_SYNCHRONISATION_MODE.MODE_STARTUP);
 	}
 
-	private void CheckDeviceInfo() 
-	{
-		if (DriverAppParamHelper.IsDeviceInfoOutdated(this) == true)
-		{
-			if (NetworkManager.GetInstance().IsNetworkAvailable() == true)
-			{
-				m_progressBar.setVisibility(View.VISIBLE);
-				m_tvInitState.setText(getResources().getText(R.string.app_initialisation));
-				
-				m_backEndManager.launchDeviceInfoGrabing(com.blueskycorner.system.System.GetSimSerialNumber(this));
-			}
-			else
-			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(R.string.internet_connection_required_to_init_app)
-					   .setTitle(R.string.warning)
-				       .setCancelable(false)
-				       .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() 
-				       {
-				           public void onClick(DialogInterface dialog, int id) 
-				           {
-				        	   dialog.dismiss();
-				               CheckDeviceInfo();
-				           }
-				       })
-				       .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
-				       {
-				           public void onClick(DialogInterface dialog, int id) 
-				           {
-				        	   android.os.Process.killProcess(android.os.Process.myPid());
-			                   System.exit(1);
-				           }
-				       });
-				AlertDialog alert = builder.create();
-				alert.show();
-			}
-		}
-		else
-		{
-			CheckDbUpdate();
-		}
-	}
-	
-	private void CheckDbUpdate() 
-	{
-		if (DriverAppParamHelper.IsDbOutdated(this) == true)
-		{
-			if (NetworkManager.GetInstance().IsNetworkAvailable() == true)
-			{
-				m_progressBar.setVisibility(View.VISIBLE);
-				m_tvInitState.setText(getResources().getText(R.string.db_update));
-				m_backEndManager.launchDbModificationGrabing(DriverAppParamHelper.GetDeviceId(this));
-			}
-			else
-			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(R.string.internet_connection_required_to_init_app)
-					   .setTitle(R.string.warning)
-				       .setCancelable(false)
-				       .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() 
-				       {
-				           public void onClick(DialogInterface dialog, int id) 
-				           {
-				        	   dialog.dismiss();
-				               CheckDeviceInfo();
-				           }
-				       })
-				       .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
-				       {
-				           public void onClick(DialogInterface dialog, int id) 
-				           {
-				        	   android.os.Process.killProcess(android.os.Process.myPid());
-			                   System.exit(1);
-				           }
-				       });
-				AlertDialog alert = builder.create();
-				alert.show();
-			}
-		}
-		else
-		{
-			StartMainActivity();
-		}
-	}
 
 	private void StartMainActivity() 
 	{
@@ -139,91 +56,27 @@ public class InitActivity extends Activity implements IBackEndManagerListener
     }
 
 	@Override
-	public void OnDeviceInfoGrabed(Boolean pi_bResult) 
+	public void OnStepChanged(E_INIT_STEP pi_step) 
 	{
-		DeviceInfo deviceInfo = m_backEndManager.getDeviceInfo();
-		
-		try
+		switch (pi_step)
 		{
-			if (pi_bResult)
+			case STEP_DEVICE_UPDATE:
 			{
-				DriverAppParamHelper.SetLastDeviceInfoUpdate(this, System.currentTimeMillis());
-				DriverAppParamHelper.SetDeviceId(this, deviceInfo.m_id);
-				DriverAppParamHelper.SetDeviceGateway(this, deviceInfo.m_gateway);
-				CheckDbUpdate();
+				m_tvInitState.setText(getResources().getText(R.string.app_initialisation));
+				break;
 			}
-			else
+			case STEP_DB_UPDATE:
 			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(R.string.server_unavailable)
-					   .setTitle(R.string.error)
-				       .setCancelable(false)
-				       .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() 
-				       {
-				           public void onClick(DialogInterface dialog, int id) 
-				           {
-				        	   dialog.dismiss();
-				               CheckDeviceInfo();
-				           }
-				       })
-				       .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
-				       {
-				           public void onClick(DialogInterface dialog, int id) 
-				           {
-				        	   android.os.Process.killProcess(android.os.Process.myPid());
-			                   System.exit(1);
-				           }
-				       });
-				AlertDialog alert = builder.create();
-				alert.show();
+				m_tvInitState.setText(getResources().getText(R.string.db_update));
+				break;
 			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void OnDbModificationGrabed(Boolean pi_bResult) 
+	public void OnDataSynchronised()
 	{
-		try
-		{
-			if (pi_bResult)
-			{
-				DriverAppParamHelper.SetLastDBUpdateTime(this, System.currentTimeMillis());
-				StartMainActivity();
-			}
-			else
-			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(R.string.db_update_failed)
-					   .setTitle(R.string.error)
-				       .setCancelable(false)
-				       .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() 
-				       {
-				           public void onClick(DialogInterface dialog, int id) 
-				           {
-				        	   dialog.dismiss();
-				               CheckDeviceInfo();
-				           }
-				       })
-				       .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
-				       {
-				           public void onClick(DialogInterface dialog, int id) 
-				           {
-				        	   android.os.Process.killProcess(android.os.Process.myPid());
-			                   System.exit(1);
-				           }
-				       });
-				AlertDialog alert = builder.create();
-				alert.show();
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
+		m_progressBar.setVisibility(View.INVISIBLE);
+		StartMainActivity();
 	}
 }

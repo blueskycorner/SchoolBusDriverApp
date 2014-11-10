@@ -5,6 +5,12 @@ import android.os.Parcelable;
 
 public class DriverAppSmsMessage implements Parcelable
 {
+	static final int SEPARATOR_INT = '|';
+	static final String SEPARATOR_STRING = "|";
+	
+	private static final int TYPE_FIELD_NUMBER = 0;
+	private static final int CHILD_FIELD_NUMBER = 1;
+	
 	public String m_body = "";
 	public long m_date = 0;
 	
@@ -56,16 +62,54 @@ public class DriverAppSmsMessage implements Parcelable
 		return s;
 	}
 
-	public int GetType() 
+	public int GetType()
 	{
-		// TODO Auto-generated method stub
-		return 3;
+		return GetField(TYPE_FIELD_NUMBER);
+	}
+	
+	private int GetField(int pi_field)
+	{
+		int type = -1;
+		String s = GetStringField(pi_field);
+		if (s != null)
+		{			
+			type = Integer.parseInt(s);
+		}
+		return type;
+	}
+
+	private String GetStringField(int typeFieldNumber) 
+	{
+		String s = null;
+		int first = -1;
+		if (typeFieldNumber != 0)
+		{
+			first = GetSeparatorIndex(typeFieldNumber);
+		}
+		
+		int second = GetSeparatorIndex(typeFieldNumber+1);
+		
+		if (first < second)
+		{			
+			s = m_body.substring(first+1, second);
+		}
+		
+		return s;
+	}
+
+	private int GetSeparatorIndex(int typeFieldNumber) 
+	{
+		int start = -1;
+		for (int i=0; i<typeFieldNumber; i++)
+		{
+			start = m_body.indexOf(SEPARATOR_INT, start+1);
+		}
+		return start;
 	}
 
 	public int GetChildId() 
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return GetField(CHILD_FIELD_NUMBER);	
 	}
 
 }

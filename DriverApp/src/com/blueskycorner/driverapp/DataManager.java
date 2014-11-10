@@ -126,7 +126,7 @@ public class DataManager
 			try
 			{
 				long lastUpdate = DriverAppParamHelper.GetLastDBUpdateTime(m_context);
-				int period = DriverAppParamHelper.GetDBUpdatePeriod(m_context);
+				int period = DriverAppParamHelper.GetAutoUpdatePeriod(m_context);
 				if ( (lastUpdate + period > System.currentTimeMillis()) || (m_bForceUpdate == true) )
 				{
 					SynchDB(m_context);

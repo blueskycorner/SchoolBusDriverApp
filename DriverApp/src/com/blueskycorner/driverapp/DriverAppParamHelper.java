@@ -1,6 +1,7 @@
 package com.blueskycorner.driverapp;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.content.Context;
@@ -21,10 +22,11 @@ public class DriverAppParamHelper
 	private static final String DEVICE_GETWAY = "GETWAY_NUMBER";
 	private static final String CHECK_TIMER_PERIOD = "CHECK_TIMER_PERIOD";
 	private static final String LAST_DB_UPDATE_TIME = "LAST_DB_UPDATE_TIME";
-	private static final String DB_UPDATE_PERIOD = "DB_UPDATE_PERIOD";
+	private static final String AUTO_UPDATE_PERIOD = "AUTO_UPDATE_PERIOD";
 	private static final String LAST_DEVICE_INFO_UPDATE = "LAST_DEVICE_INFO_UPDATE";
 	private static final String DEVICE_ID = "DEVICE_ID";
-	private static final String DEVICE_UPDATE_PERIOD = "DEVICE_UPDATE_PERIOD";
+	private static final String AUTO_UPDATE_CHECK_HOUR = "AUTO_UPDATE_CHECK_HOUR";
+	private static final String MAX_UPDATE_ATTEMPTS = "MAX_UPDATE_ATTEMPTS";
 
 	public static Date Long2Date(Long pi_date)
 	{
@@ -149,17 +151,17 @@ public class DriverAppParamHelper
 	}
 
 	
-	public static int GetDBUpdatePeriod(Context pi_context) 
+	public static int GetAutoUpdatePeriod(Context pi_context) 
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
-		int val = sharedPref.getInt(DB_UPDATE_PERIOD, 60*1000);
+		int val = sharedPref.getInt(AUTO_UPDATE_PERIOD, 24*60*60*1000);
 		return val;
 	}
 	
-	public static void SetDBUpdatePeriod(Context pi_context, int m_period) 
+	public static void SetAutoUpdatePeriod(Context pi_context, int m_period) 
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
-		sharedPref.edit().putInt(DB_UPDATE_PERIOD, m_period).commit();
+		sharedPref.edit().putInt(AUTO_UPDATE_PERIOD, m_period).commit();
 	}
 
 	public static long GetLastDBUpdateTime(Context pi_context) 
@@ -204,35 +206,75 @@ public class DriverAppParamHelper
 	public static boolean IsDbOutdated(Context pi_context) 
 	{
 		Boolean b = false;
-		if (DriverAppParamHelper.GetLastDBUpdateTime(pi_context) + DriverAppParamHelper.GetDBUpdatePeriod(pi_context) < System.currentTimeMillis())
+		long l = DriverAppParamHelper.GetLastDBUpdateTime(pi_context);
+		if (DriverAppParamHelper.HasDayChanged(l))
 		{
 			b = true;
 		}
+		return b;
+	}
+
+	private static boolean HasDayChanged(long l) 
+	{
+		Boolean b = false;
+		
+		Calendar c1 = Calendar.getInstance();
+		c1.setTimeInMillis(System.currentTimeMillis());
+		int currentMonth = c1.get(Calendar.MONTH);
+		int currentDay = c1.get(Calendar.DAY_OF_MONTH);
+		int currentHour = c1.get(Calendar.HOUR_OF_DAY);
+		
+		Calendar c2 = Calendar.getInstance();
+		c2.setTimeInMillis(l);
+		int lastMonth = c2.get(Calendar.MONTH);
+		int lastHour = c2.get(Calendar.HOUR_OF_DAY);
+		int lastDay = c2.get(Calendar.DAY_OF_MONTH);
+		
+		if ( (currentMonth != lastMonth) || (currentDay != lastDay) || (currentHour != lastHour) )
+		{
+			b = true;
+		}
+		
 		return b;
 	}
 
 	public static boolean IsDeviceInfoOutdated(Context pi_context) 
 	{
 		Boolean b = false;
-		if (DriverAppParamHelper.GetLastDeviceInfoUpdate(pi_context) + DriverAppParamHelper.GetDeviceUpdatePeriod(pi_context) < System.currentTimeMillis())
+		long l = DriverAppParamHelper.GetLastDeviceInfoUpdate(pi_context);
+		if (DriverAppParamHelper.HasDayChanged(l))
 		{
 			b = true;
 		}
 		return b;
 	}
 
-	public static int GetDeviceUpdatePeriod(Context pi_context) 
+	public static int GetAutoUpdateCheckHour(Context pi_context) 
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
-		int val = sharedPref.getInt(DEVICE_UPDATE_PERIOD, 60*1000);
+		int val = sharedPref.getInt(AUTO_UPDATE_CHECK_HOUR, 2);
 		return val;
 	}
-	
-	public static void SetDeviceUpdatePeriod(Context pi_context, int m_period) 
+
+	public static void SetAutoUpdateCheckHour(Context pi_context, int pi_time) 
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
-		sharedPref.edit().putInt(DEVICE_UPDATE_PERIOD, m_period).commit();
+		sharedPref.edit().putInt(AUTO_UPDATE_CHECK_HOUR, pi_time).commit();
+		DataSynchronyzer.CancelAlarm(pi_context);
+		DataSynchronyzer.SetAlarm(pi_context);
 	}
 
+	public static int GetMaxUpdateAttempts(Context pi_context) 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		int val = sharedPref.getInt(MAX_UPDATE_ATTEMPTS, 3);
+		return val;
+	}
+
+	public static void SetMaxUpdateAttempts(Context pi_context, int pi_max) 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		sharedPref.edit().putInt(MAX_UPDATE_ATTEMPTS, pi_max).commit();
+	}
 
 }

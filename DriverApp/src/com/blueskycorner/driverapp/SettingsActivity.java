@@ -18,8 +18,8 @@ public class SettingsActivity extends Activity
 	private TextView m_lastDBUpdate = null;
 	private TextView m_deviceID = null;
 	private TextView m_gateway = null;
-	private EditText m_deviceUpdatePeriod = null;
-	private EditText m_DbUpdatePeriod = null;
+	private EditText m_autoUpdateHour = null;
+	private EditText m_AutoUpdatePeriod = null;
 	private EditText m_checkPeriod = null;
 	
 	@Override
@@ -33,8 +33,8 @@ public class SettingsActivity extends Activity
 		m_lastDBUpdate = (TextView) findViewById(R.id.textViewLastDbUpdateData);
 		m_deviceID = (TextView) findViewById(R.id.textViewDeviceIdData);
 		m_gateway = (TextView) findViewById(R.id.textViewGatewayData);
-		m_deviceUpdatePeriod = (EditText) findViewById(R.id.editTextDeviceInfoUpdatePeriodData);
-		m_DbUpdatePeriod = (EditText) findViewById(R.id.editTextDbUpdatePeriodData);
+		m_autoUpdateHour = (EditText) findViewById(R.id.editTextAutoUpdateHourData);
+		m_AutoUpdatePeriod = (EditText) findViewById(R.id.editTextAutoUpdatePeriodData);
 		m_checkPeriod = (EditText) findViewById(R.id.editTextDeviceCheckPeriodData);
 		
 		try 
@@ -53,9 +53,9 @@ public class SettingsActivity extends Activity
 			
 			m_gateway.setText(DriverAppParamHelper.GetDeviceGateway(this));
 			
-			m_deviceUpdatePeriod.setText(Integer.toString(DriverAppParamHelper.GetDeviceUpdatePeriod(this)/(60*1000)));
+			m_autoUpdateHour.setText(Integer.toString(DriverAppParamHelper.GetAutoUpdateCheckHour(this)));
 			
-			m_DbUpdatePeriod.setText(Integer.toString(DriverAppParamHelper.GetDBUpdatePeriod(this)/(60*1000)));
+			m_AutoUpdatePeriod.setText(Integer.toString(DriverAppParamHelper.GetAutoUpdatePeriod(this)/(60*1000)));
 			
 			m_checkPeriod.setText(Integer.toString(DriverAppParamHelper.GetCheckTimerPeriod(this)/(60*1000)));
 		} 
@@ -71,16 +71,20 @@ public class SettingsActivity extends Activity
 		DriverAppParamHelper.SetDeviceGateway(this, s);
 	}
 
-	public void Device(View v)
+	public void Hour(View v)
 	{
-		String s = m_deviceUpdatePeriod.getText().toString();
-		DriverAppParamHelper.SetDeviceUpdatePeriod(this, Integer.parseInt(s) * 60 * 1000);
+		String s = m_autoUpdateHour.getText().toString();
+		DriverAppParamHelper.SetAutoUpdateCheckHour(this, Integer.parseInt(s));
+		DataSynchronyzer.CancelAlarm(this);
+		DataSynchronyzer.SetAlarm(this);
 	}
 
-	public void Db(View v)
+	public void Period(View v)
 	{
-		String s = m_DbUpdatePeriod.getText().toString();
-		DriverAppParamHelper.SetDBUpdatePeriod(this, Integer.parseInt(s) * 60 * 1000);		
+		String s = m_AutoUpdatePeriod.getText().toString();
+		DriverAppParamHelper.SetAutoUpdatePeriod(this, Integer.parseInt(s) * 60 * 1000);
+		DataSynchronyzer.CancelAlarm(this);
+		DataSynchronyzer.SetAlarm(this);
 	}
 
 	public void Check(View v)

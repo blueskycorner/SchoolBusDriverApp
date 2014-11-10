@@ -14,8 +14,6 @@ public class BootUpReceiver extends BroadcastReceiver
 		{   
 			DataSynchronyzer.SetAlarm(context);
 			
-			Log.println(0, "ALARM", "TESTSTTTTTTTTTTTTTTTTTTT");
-			
 			Intent i = new Intent(context, InitActivity.class);  
 	        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	        context.startActivity(i);
