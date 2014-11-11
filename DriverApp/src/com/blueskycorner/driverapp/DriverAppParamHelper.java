@@ -223,14 +223,19 @@ public class DriverAppParamHelper
 		int currentMonth = c1.get(Calendar.MONTH);
 		int currentDay = c1.get(Calendar.DAY_OF_MONTH);
 		int currentHour = c1.get(Calendar.HOUR_OF_DAY);
+		int currentMinute = c1.get(Calendar.MINUTE);
 		
 		Calendar c2 = Calendar.getInstance();
 		c2.setTimeInMillis(l);
 		int lastMonth = c2.get(Calendar.MONTH);
 		int lastHour = c2.get(Calendar.HOUR_OF_DAY);
 		int lastDay = c2.get(Calendar.DAY_OF_MONTH);
+		int lastMinute = c2.get(Calendar.MINUTE);
 		
-		if ( (currentMonth != lastMonth) || (currentDay != lastDay) || (currentHour != lastHour) )
+		if ( (currentMonth != lastMonth) || 
+			 (currentDay != lastDay) /*|| 
+			 (currentHour != lastHour) ||
+			 (currentMinute != lastMinute)*/ )
 		{
 			b = true;
 		}

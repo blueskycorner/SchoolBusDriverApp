@@ -93,8 +93,8 @@ public class BackEndManager
 	                if(bResult)
 	                {
 	                	java.lang.System.out.println("Calling back end server : get device info successful");
-	                	m_deviceInfo.m_id = json.getInt(DeviceInfo.DEVICE_ID);
-	                	m_deviceInfo.m_gateway = json.getString(DeviceInfo.DEVICE_GATEWAY);
+//	                	m_deviceInfo.m_id = json.getInt(DeviceInfo.DEVICE_ID);
+//	                	m_deviceInfo.m_gateway = json.getString(DeviceInfo.DEVICE_GATEWAY);
 	                }
 	                // User is a not a guest
 	                else
