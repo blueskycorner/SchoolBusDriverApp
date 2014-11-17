@@ -1,5 +1,6 @@
 package com.blueskycorner.driverapp;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.locks.ReentrantLock;
@@ -15,6 +16,9 @@ public class DataManager
 	private School[] m_schoolList = null;
 	private Trip[] m_trips = null;
 	
+	private Context m_context = null;
+	private SchoolDAO m_schoolDAO = null;
+	
 	/* Static 'instance' method */
     public static DataManager GetInstance() 
     {
@@ -25,8 +29,18 @@ public class DataManager
     {
     	m_lock = new ReentrantLock();
     }
+    
+    public void SetContext(Context pi_context)
+    {
+ 	   m_context = pi_context;
+ 	   Init();
+    }
 
-	public void Init() {
+	private void Init() 
+	{
+		m_schoolDAO = new SchoolDAO(m_context);
+		m_schoolDAO.open();
+		
 		m_schoolList = new School[2];
     	m_trips = new Trip[4];
 		
@@ -83,14 +97,14 @@ public class DataManager
 		m_trips[3] = gesmTrip2;
 	}
 
-	public School[] GetSchools() 
+	public ArrayList<School> GetSchools() 
 	{
-		return m_schoolList;
+		return m_schoolDAO.GetSchool();
 	}
 
 	public School getSchool(int pi_schoolId) 
 	{
-		return m_schoolList[pi_schoolId];
+		return m_schoolDAO.GetSchool().get(pi_schoolId);
 	}
 
 	public Trip getTrip(int pi_tripId) 

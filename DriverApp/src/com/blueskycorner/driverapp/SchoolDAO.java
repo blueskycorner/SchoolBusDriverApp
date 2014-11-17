@@ -1,0 +1,61 @@
+package com.blueskycorner.driverapp;
+
+import java.util.ArrayList;
+import android.content.Context;
+import android.database.Cursor;
+
+public class SchoolDAO extends SchoolBusDAO 
+{
+    // Books table name
+    protected static final String TABLE = "school";
+
+    // Books Table Columns names
+    private static final String KEY_ID = "id";
+    private static final String KEY_NAME = "name";
+    
+    public SchoolDAO(Context context) 
+    {
+        super(context);
+    }
+	
+	static public String GetOnUpgrade() 
+	{
+        String s = "DROP TABLE IF EXISTS" + TABLE;
+ 
+        return s;
+	}
+
+	public ArrayList<School> GetSchool()
+	{
+		ArrayList<School> schools = new ArrayList<School>();
+        // 1. build the query
+        String query = "SELECT * FROM " + TABLE;
+    	
+        // 2. get reference to writable DB
+        Cursor cursor = m_database.rawQuery(query, null);
+ 
+        // 3. go over each row, build book and add it to list
+        School school = null;
+        if (cursor.moveToFirst()) {
+            do {
+            	try
+            	{
+	            	school = new School();
+	            	school.m_id = cursor.getInt(cursor.getColumnIndex(KEY_ID));
+	            	school.m_name = cursor.getString(cursor.getColumnIndex(KEY_NAME));
+	            	
+	            	// Add book to books
+	            	schools.add(school);
+            	}
+            	catch (Exception e) 
+            	{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+ 
+            } while (cursor.moveToNext());
+        }
+
+		return schools;
+	}
+}

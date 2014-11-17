@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		Settings.System.putInt(this.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE,
 	            Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
 		
-		DataManager.GetInstance().Init();
+		DataManager.GetInstance().SetContext(this);
 
 		m_messageManager = new MessageManager(this);
 		m_messageManager.AddMessageListener(this);

@@ -1,5 +1,7 @@
 package com.blueskycorner.driverapp;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -157,8 +159,9 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		{
 			case R.id.buttonSchool:
 			{
-				String[] schoolNames = GetSchoolNames();
-				int currentIndex = GetCurrentSchoolIndex();
+				final ArrayList<School> schools = DataManager.GetInstance().GetSchools();
+				String[] schoolNames = GetSchoolNames(schools);
+				final int currentIndex = GetCurrentSchoolIndex(schools);
 				AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
 		    	builder.setTitle(R.string.school);
 		    	builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
@@ -174,9 +177,14 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 					@Override
 					public void onClick(DialogInterface dialog, int which) 
 					{
-						m_school = TripChoiceFragment.this.GetSchool(which);
+						m_school = schools.get(which);
 						SetSchoolButtonText(m_school);
-						((ChildListAdapter)m_childList.getAdapter()).SetTrip(null);
+						if (which != currentIndex)
+						{
+							m_trip = null;
+							SetTripButtonText(m_trip);
+							((ChildListAdapter)m_childList.getAdapter()).SetTrip(null);
+						}
 						m_childList.invalidateViews();
 						DriverAppParamHelper.SetLastSchoolId(getActivity(),m_school.m_id);
 						dialog.dismiss();
@@ -305,31 +313,28 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		return tripNames;
 	}
 
-	private int GetCurrentSchoolIndex()
+	private int GetCurrentSchoolIndex(ArrayList<School> pi_schools)
 	{
-		return m_schoolIndex;
-	}
-
-	protected School GetSchool(int pi_index) 
-	{
-		if (m_schoolIndex != pi_index)
+		int index = -1;
+		if (m_school != null)
 		{
-			m_schoolIndex = pi_index;
-			m_trip = null;
-			m_tripIndex = -1;
-			SetTripButtonText(m_trip);
+			for (int i=0; i<pi_schools.size(); i++) 
+			{
+				if (pi_schools.get(i).m_id == m_school.m_id)
+				{
+					index = i;
+				}
+			}
 		}
-		return DataManager.GetInstance().GetSchools()[pi_index];
+		return index;
 	}
 
-	private String[] GetSchoolNames() 
+	private String[] GetSchoolNames(ArrayList<School> pi_schools) 
 	{
-		School[] schools = DataManager.GetInstance().GetSchools();
-		
-		String[] schoolNames = new String[schools.length];
-		for (int i=0; i<schools.length; i++)
+		String[] schoolNames = new String[pi_schools.size()];
+		for (int i=0; i<pi_schools.size(); i++)
 		{
-			schoolNames[i] = schools[i].m_name;
+			schoolNames[i] = pi_schools.get(i).m_name;
 		}
 		return schoolNames;
 	}
@@ -383,8 +388,11 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
 	{
-		m_trip.m_isReturn = isChecked;
-		m_childList.invalidateViews();
+		if (m_trip != null)
+		{
+			m_trip.m_isReturn = isChecked;
+			m_childList.invalidateViews();
+		}
 	}
 
 	@Override
