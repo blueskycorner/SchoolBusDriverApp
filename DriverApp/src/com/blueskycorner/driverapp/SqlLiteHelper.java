@@ -51,7 +51,7 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 			s = "INSERT INTO trip_destination VALUES (0, \"Alabang up\")";
 			db.execSQL(s);
 
-			s = "INSERT INTO trip VALUES (0, 0, 0, 0, 13, 30)";
+			s = "INSERT INTO trip VALUES (0, 0, 0, 0, 13, 30, 1)";
 			db.execSQL(s);
 			
 			s = "INSERT INTO child VALUES (0, \"John\", \"STEWART\", \"21, Jump Street, MAKATI\", 0, \"2014-02-12 00:00\", \"2014-02-12 00:00\")";

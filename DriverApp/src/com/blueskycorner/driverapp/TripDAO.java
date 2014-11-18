@@ -106,6 +106,7 @@ public class TripDAO extends SchoolBusDAO
 		trip.m_destination = sDestination;
 		trip.m_hour = cursor.getInt(cursor.getColumnIndex(KEY_HOUR));
 		trip.m_minute = cursor.getInt(cursor.getColumnIndex(KEY_MINUTE));
+		trip.m_isReturn = cursor.getInt(cursor.getColumnIndex(KEY_MINUTE))>0;
 		return trip;
 	}
 

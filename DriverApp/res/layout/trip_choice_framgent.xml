@@ -17,13 +17,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <ToggleButton
-        android:id="@+id/toggleButtonReturn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textOn="@string/ret"
-        android:textOff="@string/ret" />
-
     <ListView
         android:id="@+id/listViewKids"
         android:layout_width="match_parent"

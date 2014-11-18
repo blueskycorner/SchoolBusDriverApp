@@ -26,7 +26,6 @@ public class Trip
 	public void Init(ArrayList<Child> pi_childs) 
 	{
 		m_isCancel = false;
-		m_isReturn = false;
 		m_childs = pi_childs;
 		for (Child child : m_childs) 
 		{

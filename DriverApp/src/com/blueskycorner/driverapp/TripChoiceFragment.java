@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ToggleButton;
 
-public class TripChoiceFragment extends DriverAppFragment implements OnClickListener, OnItemClickListener, OnCheckedChangeListener
+public class TripChoiceFragment extends DriverAppFragment implements OnClickListener, OnItemClickListener
 {
 	public static final String NAME = "TRIP_CHOICE_FRAGMENT";
 	private static final String TRIP_INDEX = "TRIP_INDEX";
@@ -31,7 +31,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	private Button m_buttonSchool = null;
 	private Button m_buttonTrip = null;
 	private Button m_buttonStartTrip = null;
-	private ToggleButton m_buttonReturn = null;
 	private ListView m_childList = null;
 	
 	private School m_school = null;
@@ -88,9 +87,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		
 		m_buttonStartTrip = (Button)getActivity().findViewById(R.id.buttonStartTrip);
 		m_buttonStartTrip.setOnClickListener(this);
-		
-		m_buttonReturn = (ToggleButton)getActivity().findViewById(R.id.toggleButtonReturn);
-		m_buttonReturn.setOnCheckedChangeListener(this);
 		
 		m_childList = (ListView)getActivity().findViewById(R.id.listViewKids);
 		ChildListAdapter adapter = new ChildListAdapter(getActivity());
@@ -366,16 +362,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		});
     	builder.show();
 
-	}
-
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
-	{
-		if (m_trip != null)
-		{
-			m_trip.m_isReturn = isChecked;
-			m_childList.invalidateViews();
-		}
 	}
 
 	@Override
