@@ -1,11 +1,4 @@
-﻿/*
-Created: 16/11/2014
-Modified: 17/11/2014
-Project: SchoolBusService
-Model: SQLite 3.7
-Database: SQLite 3.7
-*/
-
+﻿
 -- Create tables section -------------------------------------------------
 
 -- Table school
@@ -25,10 +18,10 @@ CREATE TABLE trip
   school_id INTEGER NOT NULL,
   destination_id INTEGER NOT NULL,
   day_id INTEGER NOT NULL,
-  time_id INTEGER NOT NULL,
+  hour INTEGER NOT NULL,
+  minute INTEGER NOT NULL,
   CONSTRAINT Key2 PRIMARY KEY (id),
   CONSTRAINT fk_trip_school_id FOREIGN KEY (school_id) REFERENCES school (id),
-  CONSTRAINT fk_trip_time FOREIGN KEY (time_id) REFERENCES trip_time (id),
   CONSTRAINT Relationship1 FOREIGN KEY (id) REFERENCES trip_destination (id),
   CONSTRAINT Relationship4 FOREIGN KEY (destination_id) REFERENCES trip_destination (id)
 );
@@ -55,16 +48,6 @@ CREATE TABLE version
   name TEXT NOT NULL,
   version INTEGER NOT NULL,
   CONSTRAINT Key6 PRIMARY KEY (id)
-);
-
--- Table trip_time
-
-CREATE TABLE trip_time
-(
-  id INTEGER NOT NULL,
-  hour INTEGER NOT NULL,
-  minute INTEGER NOT NULL,
-  CONSTRAINT Key7 PRIMARY KEY (id)
 );
 
 -- Table trip_destination

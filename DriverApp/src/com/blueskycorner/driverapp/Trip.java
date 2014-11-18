@@ -5,8 +5,9 @@ import java.util.ArrayList;
 public class Trip 
 {
 	public int m_id = -1;
-	public int m_schoolId = -1;
-	public String m_name = null;
+	public String m_destination = null;
+	public int m_hour;
+	public int m_minute;
 	public ArrayList<Child> m_childs = null;
 	public boolean m_isCancel;
 	public boolean m_isReturn = false;
@@ -42,5 +43,18 @@ public class Trip
 			}
 		}
 		return child;
+	}
+	public String GetTime() 
+	{
+		int hour = m_hour;
+		String s = "AM";
+		if (m_hour > 12)
+		{
+			hour -= 12;
+			s = "PM";
+		}
+		String time = Integer.toString(hour) + ":" + Integer.toString(m_minute) + " " + s;
+
+		return time;
 	}
 }

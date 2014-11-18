@@ -24,7 +24,6 @@ import android.widget.ToggleButton;
 public class TripChoiceFragment extends DriverAppFragment implements OnClickListener, OnItemClickListener, OnCheckedChangeListener
 {
 	public static final String NAME = "TRIP_CHOICE_FRAGMENT";
-	private static final String SCHOOL_INDEX = "SCHOOL_INDEX";
 	private static final String TRIP_INDEX = "TRIP_INDEX";
 	private static final String SCHOOL_ID = "SCHOOL_ID";
 	private static final String TRIP_ID = "TRIP_ID";
@@ -38,7 +37,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	private School m_school = null;
 	private Trip m_trip = null;
 
-	private int m_schoolIndex = -1;
 	private int m_tripIndex = -1;
 	private IDriverAppCommunicator m_communicator = null;
 	private Activity m_activity = null;
@@ -56,7 +54,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		
 		if (savedInstanceState != null)
 		{
-			m_schoolIndex = savedInstanceState.getInt(SCHOOL_INDEX);
 			m_tripIndex = savedInstanceState.getInt(TRIP_INDEX);
 		}
 		
@@ -71,7 +68,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		if (tripId != -1)
 		{
 			m_trip = DataManager.GetInstance().getTrip(tripId);
-			m_trip.Init();
+//			m_trip.Init();
 		}
 	}
 	
@@ -79,7 +76,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	public void onSaveInstanceState(Bundle outState) 
 	{
 		super.onSaveInstanceState(outState);
-		outState.putInt(SCHOOL_INDEX, m_schoolIndex);
 		outState.putInt(TRIP_INDEX, m_tripIndex);
 		
 		if (m_school != null)
@@ -127,7 +123,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		String tripName = "";
 		if (pi_trip != null)
 		{
-			tripName = pi_trip.m_name;
+			tripName = pi_trip.m_destination + " @ " + pi_trip.GetTime();
 		}
 		else
 		{
@@ -197,7 +193,8 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 			{
 				if (m_school != null)
 				{
-					String[] tripNames = GetTripNames();
+					final ArrayList<Trip> trips = DataManager.GetInstance().GetTrips(m_school.m_id, true, true);
+					String[] tripNames = GetTripNames(trips);
 					int currentIndex = GetCurrentTripIndex();
 					AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
 			    	builder.setTitle(R.string.trip);
@@ -214,8 +211,8 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 						@Override
 						public void onClick(DialogInterface dialog, int which) 
 						{
-							m_trip = TripChoiceFragment.this.GetTrip(which);
-							m_trip.Init();
+							m_trip = trips.get(which);
+//							m_trip.Init();
 							SetTripButtonText(m_trip);
 							((ChildListAdapter)m_childList.getAdapter()).SetTrip(m_trip);
 							m_childList.invalidateViews();
@@ -283,31 +280,20 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		builder.show();
 	}
 
-	protected Trip GetTrip(int pi_index) 
-	{
-		Trip trip = null;
-		if (m_school != null)
-		{
-			trip = m_school.m_trips.get(pi_index);
-			m_tripIndex = pi_index;
-		}
-		return trip;
-	}
-
 	private int GetCurrentTripIndex() 
 	{
 		return m_tripIndex;
 	}
 
-	private String[] GetTripNames() 
+	private String[] GetTripNames(ArrayList<Trip> pi_trips) 
 	{
 		String[] tripNames = null;
 		if (m_school != null)
 		{
-			tripNames = new String[m_school.m_trips.size()];
-			for (int i=0; i<m_school.m_trips.size(); i++)
+			tripNames = new String[pi_trips.size()];
+			for (int i=0; i<pi_trips.size(); i++)
 			{
-				tripNames[i] = m_school.m_trips.get(i).m_name;
+				tripNames[i] = pi_trips.get(i).m_destination;
 			}
 		}
 		return tripNames;

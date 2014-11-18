@@ -25,7 +25,7 @@ public class SchoolDAO extends SchoolBusDAO
         return s;
 	}
 
-	public ArrayList<School> GetSchool()
+	public ArrayList<School> GetSchools()
 	{
 		ArrayList<School> schools = new ArrayList<School>();
         // 1. build the query
@@ -57,5 +57,26 @@ public class SchoolDAO extends SchoolBusDAO
         }
 
 		return schools;
+	}
+
+	public School GetSchool(int pi_schoolId) 
+	{
+		School school = null;
+		
+        // 1. build the query
+        String query = "SELECT * FROM " + TABLE + " WHERE " + KEY_ID + " = " + pi_schoolId;
+    	
+        // 2. get reference to writable DB
+        Cursor c = m_database.rawQuery(query, null);
+        
+        if (c != null)
+        {
+        	c.moveToFirst();
+        	school = new School();
+        	school.m_id = c.getInt(c.getColumnIndex(KEY_ID));
+        	school.m_name = c.getString(c.getColumnIndex(KEY_NAME));			
+        }
+
+        return school;
 	}
 }

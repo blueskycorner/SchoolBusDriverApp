@@ -48,19 +48,10 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 			s = "INSERT INTO school VALUES (1, \"GESM\")";
 			db.execSQL(s);
 			
-			s = "INSERT INTO trip_time VALUES (0, 6, 0)";
-			db.execSQL(s);
-			s = "INSERT INTO trip_time VALUES (1, 13, 30)";
-			db.execSQL(s);
-			s = "INSERT INTO trip_time VALUES (2, 15, 30)";
-			db.execSQL(s);
-			s = "INSERT INTO trip_time VALUES (3, 17, 15)";
-			db.execSQL(s);
-
 			s = "INSERT INTO trip_destination VALUES (0, \"Alabang up\")";
 			db.execSQL(s);
 
-			s = "INSERT INTO trip VALUES (0, 0, 0, 0, 1)";
+			s = "INSERT INTO trip VALUES (0, 0, 0, 0, 13, 30)";
 			db.execSQL(s);
 		}
 		catch (Exception e)

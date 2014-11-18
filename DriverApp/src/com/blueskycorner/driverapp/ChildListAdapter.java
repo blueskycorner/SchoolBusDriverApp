@@ -34,7 +34,10 @@ public class ChildListAdapter extends BaseAdapter
 		
 		if (m_trip != null)
 		{
-			count = m_trip.m_childs.size();
+			if (m_trip.m_childs != null)
+			{
+				count = m_trip.m_childs.size();
+			}
 		}
 		
 		return count;
