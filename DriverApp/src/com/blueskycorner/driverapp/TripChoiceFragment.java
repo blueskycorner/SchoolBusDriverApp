@@ -37,7 +37,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	private School m_school = null;
 	private Trip m_trip = null;
 
-	private int m_tripIndex = -1;
 	private IDriverAppCommunicator m_communicator = null;
 	private Activity m_activity = null;
 	
@@ -52,11 +51,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	{
 		super.onCreate(savedInstanceState);
 		
-		if (savedInstanceState != null)
-		{
-			m_tripIndex = savedInstanceState.getInt(TRIP_INDEX);
-		}
-		
 		int schoolId = DriverAppParamHelper.GetLastSchoolId(getActivity());
 		int tripId = DriverAppParamHelper.GetLastTripId(getActivity());
 		
@@ -68,7 +62,8 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		if (tripId != -1)
 		{
 			m_trip = DataManager.GetInstance().getTrip(tripId);
-//			m_trip.Init();
+			ArrayList<Child> list = DataManager.GetInstance().GetChilds(m_trip.m_id);
+			m_trip.Init(list);
 		}
 	}
 	
@@ -76,16 +71,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	public void onSaveInstanceState(Bundle outState) 
 	{
 		super.onSaveInstanceState(outState);
-		outState.putInt(TRIP_INDEX, m_tripIndex);
-		
-		if (m_school != null)
-		{
-			outState.putInt(SCHOOL_ID, m_school.m_id);
-		}
-		else
-		{
-			outState.putInt(SCHOOL_ID, -1);
-		}
 	}
 	
 	@Override
@@ -195,7 +180,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 				{
 					final ArrayList<Trip> trips = DataManager.GetInstance().GetTrips(m_school.m_id, true, true);
 					String[] tripNames = GetTripNames(trips);
-					int currentIndex = GetCurrentTripIndex();
+					int currentIndex = GetCurrentTripIndex(trips);
 					AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
 			    	builder.setTitle(R.string.trip);
 			    	builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
@@ -212,8 +197,9 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 						public void onClick(DialogInterface dialog, int which) 
 						{
 							m_trip = trips.get(which);
-//							m_trip.Init();
 							SetTripButtonText(m_trip);
+							ArrayList<Child> list = DataManager.GetInstance().GetChilds(m_trip.m_id);
+							m_trip.Init(list);
 							((ChildListAdapter)m_childList.getAdapter()).SetTrip(m_trip);
 							m_childList.invalidateViews();
 							DriverAppParamHelper.SetLastTripId(getActivity(),m_trip.m_id);
@@ -280,9 +266,20 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		builder.show();
 	}
 
-	private int GetCurrentTripIndex() 
+	private int GetCurrentTripIndex(ArrayList<Trip> pi_trips) 
 	{
-		return m_tripIndex;
+		int index = -1;
+		if (m_trip != null)
+		{
+			for (int i=0; i<pi_trips.size(); i++) 
+			{
+				if (pi_trips.get(i).m_id == m_trip.m_id)
+				{
+					index = i;
+				}
+			}
+		}
+		return index;
 	}
 
 	private String[] GetTripNames(ArrayList<Trip> pi_trips) 

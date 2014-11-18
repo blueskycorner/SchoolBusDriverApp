@@ -162,6 +162,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		
 		m_currentFragment = f;
 		f.SetChild(pi_child);
+		f.SetReturn(m_trip.m_isReturn);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.replace(R.id.main_content_frame, f, ChildFragment.NAME);

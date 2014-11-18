@@ -1,22 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/child_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/child_fragment" >
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textViewName"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/linearLayoutNamePickup"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" >
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_weight="70"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+
+        <TextView
+            android:id="@+id/textViewPickupTime"
+            android:layout_weight="30"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textViewAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textViewName"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/linearLayoutNamePickup"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
@@ -54,8 +72,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textOn="On the way"
-            android:textOff="Start" />
+            android:textOff="Start"
+            android:textOn="On the way" />
 
         <Button
             android:id="@+id/buttonSkip"

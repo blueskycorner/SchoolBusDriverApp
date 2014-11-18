@@ -53,6 +53,16 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 
 			s = "INSERT INTO trip VALUES (0, 0, 0, 0, 13, 30)";
 			db.execSQL(s);
+			
+			s = "INSERT INTO child VALUES (0, \"John\", \"STEWART\", \"21, Jump Street, MAKATI\", 0, \"2014-02-12 00:00\", \"2014-02-12 00:00\")";
+			db.execSQL(s);
+			s = "INSERT INTO child VALUES (1, \"Steve\", \"MAC QUEEN\", \"47, Kalamansi Street, MAKATI\", 0, \"2014-02-12 00:00\", \"2014-02-12 00:00\")";
+			db.execSQL(s);
+
+			s = "INSERT INTO trip_child_association VALUES (0, 0, 13, 50)";
+			db.execSQL(s);
+			s = "INSERT INTO trip_child_association VALUES (0, 1, 14, 10)";
+			db.execSQL(s);
 		}
 		catch (Exception e)
 		{

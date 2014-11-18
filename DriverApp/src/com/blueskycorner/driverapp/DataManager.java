@@ -19,6 +19,8 @@ public class DataManager
 	private Context m_context = null;
 	private SchoolDAO m_schoolDAO = null;
 	private TripDAO m_tripDAO = null;
+	private TripChildAssociationDAO m_tripChildAssociationDAO = null;
+	private ChildDAO m_childDAO = null;
 	
 	/* Static 'instance' method */
     public static DataManager GetInstance() 
@@ -42,8 +44,14 @@ public class DataManager
 		m_schoolDAO = new SchoolDAO(m_context);
 		m_schoolDAO.open();
 		
-		m_tripDAO= new TripDAO(m_context);
+		m_tripDAO = new TripDAO(m_context);
 		m_tripDAO.open();
+		
+		m_tripChildAssociationDAO = new TripChildAssociationDAO(m_context);
+		m_tripChildAssociationDAO.open();
+		
+		m_childDAO = new ChildDAO(m_context);
+		m_childDAO.open();
 		
 		m_schoolList = new School[2];
     	m_trips = new Trip[4];
@@ -120,6 +128,14 @@ public class DataManager
 	public Trip getTrip(int pi_tripId) 
 	{
 		return m_tripDAO.GetTrip(pi_tripId);
+	}
+
+	public ArrayList<Child> GetChilds(int pi_tripId)
+	{
+		ArrayList<Child> childs = m_tripChildAssociationDAO.GetChilds(pi_tripId);
+		childs = m_childDAO.GetChildInfo(childs);
+		
+		return childs;
 	}
 
 	public void Update(Context pi_context, boolean pi_bForceUpdate) 

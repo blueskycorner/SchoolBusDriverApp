@@ -21,13 +21,15 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 {
 	public static final String NAME = "CHILD_FRAGMENT";
 	private Child m_child;
-	TextView m_name = null;
-	TextView m_address = null;
-	ToggleButton m_buttonStart = null;
-	Button m_buttonFinish = null;
-	Button m_buttonSkip = null;
-	Button m_buttonBack = null;
+	private TextView m_name = null;
+	private TextView m_address = null;
+	private TextView m_pickupTime = null;
+	private ToggleButton m_buttonStart = null;
+	private Button m_buttonFinish = null;
+	private Button m_buttonSkip = null;
+	private Button m_buttonBack = null;
 	private IDriverAppCommunicator m_comm;
+	private boolean m_bIsReturn;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) 
@@ -49,6 +51,7 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 		
 		m_name = (TextView) getActivity().findViewById(R.id.textViewName);
 		m_address = (TextView) getActivity().findViewById(R.id.textViewAddress);
+		m_pickupTime  = (TextView) getActivity().findViewById(R.id.textViewPickupTime);
 		m_buttonStart = (ToggleButton) getActivity().findViewById(R.id.buttonStart);
 		m_buttonFinish = (Button) getActivity().findViewById(R.id.buttonFinish);
 		m_buttonSkip = (Button) getActivity().findViewById(R.id.buttonSkip);
@@ -65,9 +68,25 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 		{
 			m_name.setText(m_child.m_firstName + " " + m_child.m_lastName);
 			m_address.setText(m_child.m_address);
+			m_pickupTime.setText(GetPickupText() + " @ " + m_child.GetPickupTime());
 		}
 	}
 	
+	private String GetPickupText() 
+	{
+		String s;
+		if (m_bIsReturn == false)
+		{
+			s = getActivity().getResources().getString(R.string.pickup);
+		}
+		else
+		{
+			s = getActivity().getResources().getString(R.string.dropoff);
+		}
+		
+		return s;
+	}
+
 	public void SetChild(Child pi_child)
 	{
 		m_child = pi_child;
@@ -142,5 +161,10 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 		{
 			m_comm.childStateUpdated(m_child);
 		}
+	}
+
+	public void SetReturn(boolean pi_isReturn) 
+	{
+		m_bIsReturn = pi_isReturn;
 	}
 }
