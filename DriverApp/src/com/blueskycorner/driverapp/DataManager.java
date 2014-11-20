@@ -127,7 +127,7 @@ public class DataManager
 
 	public ArrayList<Trip> GetTrips(int pi_schoolId, boolean pi_dayFilter, boolean pi_timeFilter) 
 	{
-		E_DAY day = E_DAY.MONDAY;
+		E_DAY day = E_DAY.TUESDAY;
 		return m_tripDAO.GetTrips(pi_schoolId, day, 10, 0);
 	}
 
@@ -169,6 +169,11 @@ public class DataManager
 	public void InsertSchool(int pi_schoolId, String pi_name)
 	{
 		m_schoolDAO.InsertSchool(pi_schoolId, pi_name);
+	}
+
+	public void InsertTripDestination(int pi_id, String pi_destination) 
+	{
+		m_tripDestinationDAO.InsertDestination(pi_id, pi_destination);
 	}
 
 	public void InsertTripChildAssociation(int pi_tripId, int pi_childId, int pi_pickupTimeHour, int pi_pickupTimeMinute, int pi_addressId)

@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.blueskycorner.system.JSONParser;
@@ -32,6 +31,31 @@ public class BackEndManager
 	
 	private static final String KEY_SCHOOL_SCHOOL_ID = "id";
 	private static final String KEY_SCHOOL_NAME = "name";
+	
+	private static final String KEY_CHILD_ID = "id";
+	private static final String KEY_CHILD_FIRST_NAME = "fn";
+	private static final String KEY_CHILD_LAST_NAME = "ln";
+	private static final String KEY_CHILD_ADDRESS1 = "ad1";
+	private static final String KEY_CHILD_ADDRESS2 = "ad2";
+	private static final String KEY_CHILD_LANGUAGE_ID = "lid";
+	private static final String KEY_CHILD_CREATION_DATE = "cd";
+	private static final String KEY_CHILD_ADDRESS_DATE = "ad";
+	private static final String KEY_CHILD_MONDAY_INFO = "mon";
+	private static final String KEY_CHILD_TUESDAY_INFO = "tue";
+	private static final String KEY_CHILD_WEDNESDAY_INFO = "wed";
+	private static final String KEY_CHILD_THURSDAY_INFO = "thu";
+	private static final String KEY_CHILD_FRIDAY_INFO = "fri";
+	
+	private static final String KEY_TRIP_ID = "id";
+	private static final String KEY_TRIP_SCHOOL_ID = "sid";
+	private static final String KEY_TRIP_DESTINATION_ID = "did";
+	private static final String KEY_TRIP_DAY_ID = "day_id";
+	private static final String KEY_TRIP_HOUR = "h";
+	private static final String KEY_TRIP_MINUTE = "m";
+	private static final String KEY_TRIP_RETURN = "r";
+	
+	private static final String KEY_TRIP_DESTINATION_ID1 = "id";
+	private static final String KEY_TRIP_DESTINATION = "dest";
 	
 	private ArrayList<IBackEndManagerListener> m_listeners;
 	private DeviceInfo m_deviceInfo;
@@ -292,9 +316,21 @@ public class BackEndManager
 		}
 	}
 
-	private void CreateTripDestinationObjects(JSONObject pi_jsonObject) {
-		// TODO Auto-generated method stub
-		
+	private void CreateTripDestinationObjects(JSONObject pi_jsonObject) 
+	{
+		try {
+			JSONArray schools = pi_jsonObject.getJSONArray(TripDestinationDAO.TABLE);
+			for (int i=0; i<schools.length(); i++) 
+			{
+				JSONObject o = (JSONObject) schools.get(i);
+				int id = o.getInt(KEY_TRIP_DESTINATION_ID1);
+				String destination = o.getString(KEY_TRIP_DESTINATION);
+				DataManager.GetInstance().InsertTripDestination(id, destination);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void CreateTripChildObjects(JSONObject jsonObject)
@@ -311,20 +347,61 @@ public class BackEndManager
 				int addressId = o.getInt(KEY_TRIP_CHILD_ASSO_ADDRESS_ID);
 				DataManager.GetInstance().InsertTripChildAssociation(tripId, childId, pickupTimeHour, pickupTimeMinute, addressId);
 			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} catch (JSONException e) 
+		{
 			e.printStackTrace();
 		}
 	}
 
-	public ArrayList<Child> CreateChildObjects(JSONObject jsonObject) {
-		// TODO Auto-generated method stub
-		return null;
+	public void CreateChildObjects(JSONObject jsonObject) 
+	{
+		try {
+			JSONArray childs = jsonObject.getJSONArray(ChildDAO.TABLE);
+			for (int i=0; i<childs.length(); i++) 
+			{
+				JSONObject o = (JSONObject) childs.get(i);
+				int childId = o.getInt(KEY_CHILD_ID);
+				String firstName = o.getString(KEY_CHILD_FIRST_NAME);
+				String lastName = o.getString(KEY_CHILD_LAST_NAME);
+				String address1 = o.getString(KEY_CHILD_ADDRESS1);
+				String address2 = o.getString(KEY_CHILD_ADDRESS2);
+				int languageId = o.getInt(KEY_CHILD_LANGUAGE_ID);
+				String creationDate = o.getString(KEY_CHILD_CREATION_DATE);
+				String modificationDate = o.getString(KEY_CHILD_ADDRESS_DATE);
+				String mondayInfo = o.getString(KEY_CHILD_MONDAY_INFO);
+				String tuesdayInfo = o.getString(KEY_CHILD_TUESDAY_INFO);
+				String wednesdayInfo = o.getString(KEY_CHILD_WEDNESDAY_INFO);
+				String thursdayInfo = o.getString(KEY_CHILD_THURSDAY_INFO);
+				String fridayInfo = o.getString(KEY_CHILD_FRIDAY_INFO);
+				DataManager.GetInstance().InsertChild(childId, firstName, lastName, address1, address2, languageId, creationDate, modificationDate, mondayInfo, tuesdayInfo, wednesdayInfo, thursdayInfo, fridayInfo);
+			}
+		} 
+		catch (JSONException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 
-	public ArrayList<Trip> CreateTripObjects(JSONObject jsonObject) {
-		// TODO Auto-generated method stub
-		return null;
+	public void CreateTripObjects(JSONObject jsonObject) 
+	{
+		try {
+			JSONArray trip = jsonObject.getJSONArray(TripDAO.TABLE);
+			for (int i=0; i<trip.length(); i++) 
+			{
+				JSONObject o = (JSONObject) trip.get(i);
+				int id = o.getInt(KEY_TRIP_ID);
+				int schoolId = o.getInt(KEY_TRIP_SCHOOL_ID);
+				int destinationId = o.getInt(KEY_TRIP_DESTINATION_ID);
+				E_DAY day = E_DAY.FromInt(o.getInt(KEY_TRIP_DAY_ID));
+				int hour = o.getInt(KEY_TRIP_HOUR);
+				int minute = o.getInt(KEY_TRIP_MINUTE);
+				boolean bReturn = o.getBoolean(KEY_TRIP_RETURN);
+				DataManager.GetInstance().InsertTrip(id, schoolId, destinationId, day, hour, minute, bReturn);
+			}
+		} catch (JSONException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void CreateSchoolObjects(JSONObject jsonObject) 
@@ -336,7 +413,7 @@ public class BackEndManager
 				JSONObject o = (JSONObject) schools.get(i);
 				int id = o.getInt(KEY_SCHOOL_SCHOOL_ID);
 				String name = o.getString(KEY_SCHOOL_NAME);
-//				DataManager.GetInstance().InsertSchool(id, name);
+				DataManager.GetInstance().InsertSchool(id, name);
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -352,22 +429,22 @@ public class BackEndManager
 		{
 			case 0:
 			{
-				sJson = "{\"result\":true,\"school\":[{\"id\":\"0\",\"name\":\"LFM\"},{\"id\":\"1\",\"name\":\"GESM\"}]}";
+				sJson = "{\"result\":true,\"school\":[{\"id\":\"0\",\"name\":\"LFM\"},{\"id\":\"1\",\"name\":\"Chinese School\"}]}";
 				break;
 			}
 			case 1:
 			{
-				sJson = "{\"result\":true,\"school\":[{\"id\":\"0\",\"name\":\"LFM\"},{\"id\":\"1\",\"name\":\"GESM\"}]}";
+				sJson = "{\"result\":true,\"trip_destination\":[{\"id\":\"0\",\"dest\":\"Makati\"},{\"id\":\"1\",\"dest\":\"Alabang up\"}]}";
 				break;
 			}
 			case 2:
 			{
-				sJson = "{\"result\":true,\"school\":[{\"id\":\"0\",\"name\":\"LFM\"},{\"id\":\"1\",\"name\":\"GESM\"}]}";
+				sJson = "{\"result\":true,\"trip\":[{\"id\":\"0\",\"sid\":\"0\",\"did\":\"0\",\"day_id\":\"1\",\"h\":\"13\",\"m\":\"30\",\"r\":true},{\"id\":\"1\",\"sid\":\"0\",\"did\":\"0\",\"day_id\":\"1\",\"h\":\"6\",\"m\":\"00\",\"r\":false}]}";
 				break;
 			}
 			case 3:
 			{
-				sJson = "{\"result\":true,\"school\":[{\"id\":\"0\",\"name\":\"LFM\"},{\"id\":\"1\",\"name\":\"GESM\"}]}";
+				sJson = "{\"result\":true,\"child\":[{\"id\":\"0\",\"fn\":\"john\",\"ln\":\"travolta\",\"ad1\":\"21 Jump street\",\"ad2\":\"1813 Santan street\",\"lid\":\"0\",\"cd\":\"2014:09:01\",\"ad\":\"2014:10:21\",\"mon\":\"foot until 3:30\",\"tue\":\"...\",\"wed\":\"...\",\"thu\":\"...\",\"fri\":\"...\"},{\"id\":\"1\",\"fn\":\"steve\",\"ln\":\"jobs\",\"ad1\":\"42 Kalamansi street\",\"ad2\":\"1796 Accacia street\",\"lid\":\"0\",\"cd\":\"2014:09:01\",\"ad\":\"2014:10:21\",\"mon\":\"hip-hop until 3:30\",\"tue\":\"...\",\"wed\":\"...\",\"thu\":\"...\",\"fri\":\"...\"}]}";
 				break;
 			}
 			case 4:
