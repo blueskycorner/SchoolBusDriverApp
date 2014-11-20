@@ -1,6 +1,8 @@
 package com.blueskycorner.driverapp;
 
 import java.util.ArrayList;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -10,8 +12,8 @@ public class SchoolDAO extends SchoolBusDAO
     protected static final String TABLE = "school";
 
     // Books Table Columns names
-    private static final String KEY_ID = "id";
-    private static final String KEY_NAME = "name";
+    public static final String KEY_ID = "id";
+    public static final String KEY_NAME = "name";
     
     public SchoolDAO(Context context) 
     {
@@ -69,14 +71,25 @@ public class SchoolDAO extends SchoolBusDAO
         // 2. get reference to writable DB
         Cursor c = m_database.rawQuery(query, null);
         
-        if (c != null)
+        if ( (c != null) && (c.moveToFirst()) )
         {
-        	c.moveToFirst();
         	school = new School();
         	school.m_id = c.getInt(c.getColumnIndex(KEY_ID));
         	school.m_name = c.getString(c.getColumnIndex(KEY_NAME));			
         }
 
         return school;
+	}
+	
+
+	
+	public void InsertSchool(int pi_schoolId, String pi_name)
+	{
+		ContentValues values = new ContentValues();
+		values.put(KEY_ID, pi_schoolId);
+		values.put(KEY_NAME, pi_name);
+		
+	    // 1. build the query
+		m_database.insert(TABLE, null, values);
 	}
 }

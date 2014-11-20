@@ -1,5 +1,6 @@
 package com.blueskycorner.driverapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,11 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 public class TripDestinationDAO extends SchoolBusDAO 
 {
     // Books table name
-    protected static final String TABLE = "trip_destination";
+	public static final String TABLE = "trip_destination";
 
     // Books Table Columns names
-    private static final String KEY_ID = "id";
-    private static final String KEY_DESTINATION = "destination";
+    public static final String KEY_ID = "id";
+    public static final String KEY_DESTINATION = "destination";
     
     public TripDestinationDAO(Context context) 
     {
@@ -42,5 +43,16 @@ public class TripDestinationDAO extends SchoolBusDAO
         }
         
 		return sDestination;
+	}
+	
+	public void InsertDestination(int pi_id, String pi_destination)
+	{
+		ContentValues values = new ContentValues();
+		values.put(KEY_ID, pi_id);
+		values.put(KEY_DESTINATION, pi_destination);
+		
+        // 1. build the query
+		m_database.insert(TABLE, null, values);
+
 	}
 }

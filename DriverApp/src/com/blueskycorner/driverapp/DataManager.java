@@ -1,15 +1,12 @@
 package com.blueskycorner.driverapp;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.concurrent.locks.ReentrantLock;
 
 import android.content.Context;
 
 public class DataManager
 {
-	public static final int TABLE_ACCOUNT = 3;
 	static private DataManager m_dataManager = new DataManager();
 	private ReentrantLock m_lock = null;
 	
@@ -17,10 +14,13 @@ public class DataManager
 	private Trip[] m_trips = null;
 	
 	private Context m_context = null;
+	
 	private SchoolDAO m_schoolDAO = null;
 	private TripDAO m_tripDAO = null;
 	private TripChildAssociationDAO m_tripChildAssociationDAO = null;
 	private ChildDAO m_childDAO = null;
+	private TripDestinationDAO m_tripDestinationDAO = null;
+	private VersionDAO m_versionDAO = null;
 	
 	/* Static 'instance' method */
     public static DataManager GetInstance() 
@@ -52,6 +52,12 @@ public class DataManager
 		
 		m_childDAO = new ChildDAO(m_context);
 		m_childDAO.open();
+		
+		m_tripDestinationDAO = new TripDestinationDAO(m_context);
+		m_tripDestinationDAO.open();
+		
+		m_versionDAO = new VersionDAO(m_context);
+		m_versionDAO.open();
 		
 		m_schoolList = new School[2];
     	m_trips = new Trip[4];
@@ -137,6 +143,49 @@ public class DataManager
 		
 		return childs;
 	}
+	
+	public void InsertVersion(int pi_id, int pi_version) 
+	{
+		m_versionDAO.InsertVersion(pi_id, pi_version);
+	}
+	
+	public void InsertChild(int pi_childId, 
+							String pi_firstName, 
+							String pi_lastName, 
+							String pi_address1,
+							String pi_address2,
+							int pi_languageId, 
+							String pi_creationDate, 
+							String pi_modificationDate,
+							String pi_mondayInfo,
+							String pi_tuesdayInfo,
+							String pi_wednesdayInfo,
+							String pi_thursdayInfo,
+							String pi_fridayInfo)
+	{
+		m_childDAO.InsertChild(pi_childId, pi_firstName, pi_lastName, pi_address1, pi_address2, pi_languageId, pi_creationDate, pi_modificationDate, pi_mondayInfo, pi_tuesdayInfo, pi_wednesdayInfo, pi_thursdayInfo, pi_fridayInfo);
+	}
+	
+	public void InsertSchool(int pi_schoolId, String pi_name)
+	{
+		m_schoolDAO.InsertSchool(pi_schoolId, pi_name);
+	}
+
+	public void InsertTripChildAssociation(int pi_tripId, int pi_childId, int pi_pickupTimeHour, int pi_pickupTimeMinute, int pi_addressId)
+	{
+		m_tripChildAssociationDAO.InsertTripChildAssociation(pi_tripId, pi_childId, pi_pickupTimeHour, pi_pickupTimeMinute, pi_addressId);
+	}
+
+	public void InsertTrip(int pi_id, int pi_schoolId, int pi_destinationId, E_DAY pi_day, int pi_hour, int pi_minute, boolean pi_return)
+	{
+		m_tripDAO.InsertTrip(pi_id, pi_schoolId, pi_destinationId, pi_day, pi_hour, pi_minute, pi_return);
+	}
+
+	public void InsertDestination(int pi_id, String pi_destination)
+	{
+		m_tripDestinationDAO.InsertDestination(pi_id, pi_destination);
+	}
+
 
 	public void Update(Context pi_context, boolean pi_bForceUpdate) 
 	{
@@ -184,15 +233,45 @@ public class DataManager
 		}
 	}
 
-	public int[] GetLocalTableVersion() 
+	public ArrayList<Integer> GetLocalTableVersion() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Integer> tableVersions = new ArrayList<Integer>();
+		for (E_TABLE_ID i : E_TABLE_ID.values()) 
+		{
+			tableVersions.add(m_versionDAO.GetVersion(i.getValue()));
+		}
+		return tableVersions;
 	}
 
 	public Boolean Update(TableContainer c) 
 	{
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public void BeginTransaction() 
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void EndTransaction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void UpdateTableVersion(E_TABLE_ID j, Integer integer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void DropTable(E_TABLE_ID j) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void SetTransactionSuccessful() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -42,6 +42,14 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 		{
 			execSqlFile(DATABASE_FILE_NAME, db);
 			
+			// Init version table with -1 o be updated at the first update
+			for (E_TABLE_ID id : E_TABLE_ID.values()) 
+			{
+				String s1 = null;
+				s1 = "INSERT INTO version VALUES (" + Integer.toString(id.getValue()) + ", -1)";
+				db.execSQL(s1);
+			}
+			
 			String s = null;
 			s = "INSERT INTO school VALUES (0, \"LFM\")";
 			db.execSQL(s);
@@ -54,15 +62,15 @@ public class SqlLiteHelper extends SQLiteOpenHelper
 			s = "INSERT INTO trip VALUES (0, 0, 0, 0, 13, 30, 1)";
 			db.execSQL(s);
 			
-			s = "INSERT INTO child VALUES (0, \"John\", \"STEWART\", \"21, Jump Street, MAKATI\", 0, \"2014-02-12 00:00\", \"2014-02-12 00:00\")";
+			s = "INSERT INTO child VALUES (0, \"John\", \"STEWART\", \"21, Jump Street, MAKATI\", \"1813, Santan Street, MAKATI\", 0, \"2014-02-12 00:00\", \"2014-02-12 00:00\", \"Hip-Hop\", \"Foot\", \"\", \"\", \"\")";
 			db.execSQL(s);
-			s = "INSERT INTO child VALUES (1, \"Steve\", \"MAC QUEEN\", \"47, Kalamansi Street, MAKATI\", 0, \"2014-02-12 00:00\", \"2014-02-12 00:00\")";
+			s = "INSERT INTO child VALUES (1, \"Steve\", \"MAC QUEEN\", \"47, Kalamansi Street, MAKATI\", \"1220, Accacia Street, MAKATI\", 0, \"2014-02-12 00:00\", \"2014-02-12 00:00\", \"Dance\", \"Rugby\", \"\", \"\", \"\")";
 			db.execSQL(s);
 
-			s = "INSERT INTO trip_child_association VALUES (0, 0, 13, 50)";
-			db.execSQL(s);
-			s = "INSERT INTO trip_child_association VALUES (0, 1, 14, 10)";
-			db.execSQL(s);
+//			s = "INSERT INTO trip_child_association VALUES (0, 0, 13, 50)";
+//			db.execSQL(s);
+//			s = "INSERT INTO trip_child_association VALUES (0, 1, 14, 10)";
+//			db.execSQL(s);
 		}
 		catch (Exception e)
 		{

@@ -2,21 +2,23 @@ package com.blueskycorner.driverapp;
 
 import java.util.ArrayList;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
 public class TripDAO extends SchoolBusDAO 
 {
     // Books table name
-    protected static final String TABLE = "trip";
+	public static final String TABLE = "trip";
 
     // Books Table Columns names
-    private static final String KEY_ID = "id";
-    private static final String KEY_SCHOOL_ID = "school_id";
-    private static final String KEY_DESTINATION_ID = "destination_id";
-    private static final String KEY_DAY_ID = "day_id";
-    private static final String KEY_HOUR = "hour";
-    private static final String KEY_MINUTE = "minute";
+    public static final String KEY_ID = "id";
+    public static final String KEY_SCHOOL_ID = "school_id";
+    public static final String KEY_DESTINATION_ID = "destination_id";
+    public static final String KEY_DAY_ID = "day_id";
+    public static final String KEY_HOUR = "hour";
+    public static final String KEY_MINUTE = "minute";
+    public static final String KEY_RETURN = "return";
     
     private TripDestinationDAO m_tripDestinationDAO = null;
     
@@ -68,7 +70,6 @@ public class TripDAO extends SchoolBusDAO
             	}
             	catch (Exception e) 
             	{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
  
@@ -110,4 +111,20 @@ public class TripDAO extends SchoolBusDAO
 		return trip;
 	}
 
+
+	
+	public void InsertTrip(int pi_id, int pi_schoolId, int pi_destinationId, E_DAY pi_day, int pi_hour, int pi_minute, boolean pi_return)
+	{
+		ContentValues values = new ContentValues();
+		values.put(KEY_ID, pi_id);
+		values.put(KEY_SCHOOL_ID, pi_schoolId);
+		values.put(KEY_DESTINATION_ID, pi_destinationId);
+		values.put(KEY_DAY_ID, pi_day.getValue());
+		values.put(KEY_HOUR, pi_hour);
+		values.put(KEY_MINUTE, pi_minute);
+		values.put(KEY_RETURN, pi_return);
+		
+        // 1. build the query
+		m_database.insert(TABLE, null, values);
+	}
 }

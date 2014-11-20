@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,13 +24,20 @@ public class BackEndManager
 	public static final String DEVICE_ID = "deviceid";
 	public static final String TABLE_ID = "tableid";
 	
-	private Context m_context = null;
+	private static final String KEY_TRIP_CHILD_ASSO_TRIP_ID = "tid";
+	private static final String KEY_TRIP_CHILD_ASSO_CHILD_ID = "cid";
+	private static final String KEY_TRIP_CHILD_ASSO_PICKUP_TIME_HOUR = "h";
+	private static final String KEY_TRIP_CHILD_ASSO_PICKUP_TIME_MINUTE = "m";
+	private static final String KEY_TRIP_CHILD_ASSO_ADDRESS_ID = "ad";
+	
+	private static final String KEY_SCHOOL_SCHOOL_ID = "id";
+	private static final String KEY_SCHOOL_NAME = "name";
+	
 	private ArrayList<IBackEndManagerListener> m_listeners;
 	private DeviceInfo m_deviceInfo;
 	
-	public BackEndManager(Context pi_context)
+	public BackEndManager()
 	{
-		m_context = pi_context;
 		m_listeners = new ArrayList<IBackEndManagerListener>();
 		m_deviceInfo = new DeviceInfo();
 	}
@@ -142,62 +150,73 @@ public class BackEndManager
 			
 			try 
 			{
-//				JSONParser jsonParser = new JSONParser();
-//				int[] localTableVersion = DataManager.GetInstance().GetLocalTableVersion();
-//				int[] remoteTableVersion = new int[DataManager.TABLE_ACCOUNT];
-//				for (E_TABLE_ID i : E_TABLE_ID.values()) 
-//				{
-//					List<NameValuePair> paramsJson = new ArrayList<NameValuePair>();
-//					paramsJson.add(new BasicNameValuePair(DEVICE_ID, Integer.toString(params[0])));
-//					paramsJson.add(new BasicNameValuePair(TABLE_ID, Integer.toString(i.getValue())));
-//					java.lang.System.out.println("Calling back end server : updating");
-////					json = jsonParser.getJSONFromUrl(tableVersionURL, paramsJson);
-//					json = GetFakeTableVersion(i.getValue());
-//					if (json.getBoolean(KEY_RESULT) == true)
-//					{
-//						remoteTableVersion[i.getValue()] = json.getInt(VERSION);
-//					}
-//				}
-//				
-//				int indexStart = 0;
-//				Boolean bContinue = true;
-//				while ( (indexStart < DataManager.TABLE_ACCOUNT) && (bContinue == true) )
-//				{
-//					if (remoteTableVersion[indexStart] != localTableVersion[indexStart])
-//					{
-//						bContinue = false;
-//					}
-//					else
-//					{
-//						indexStart ++;
-//					}
-//				}
-//				
-//				for (E_TABLE_ID j : E_TABLE_ID.values())
-//				{
-//					JSONObject jsonObj = null;
-//					if (j.getValue() >= indexStart)
-//					{
-//						List<NameValuePair> paramsJson = new ArrayList<NameValuePair>();
-//						paramsJson.add(new BasicNameValuePair(DEVICE_ID, Integer.toString(params[0])));
-//						paramsJson.add(new BasicNameValuePair(TABLE_ID, Integer.toString(j.getValue())));
-//						
-////						jsonObj = jsonParser.getJSONFromUrl(getTableURL, paramsJson);
-//						jsonObj = GetFakeTable(j.getValue());
-//					}
-//					jsonList.add(jsonObj);
-//				}
-//				
-//				ArrayList<School> schoolList = CreateSchoolObjects(jsonList.get(E_TABLE_ID.ID_SCHOOL.getValue()));
-//				ArrayList<Trip> tripList = CreateTripObjects(jsonList.get(E_TABLE_ID.ID_TRIP.getValue()));
-//				ArrayList<Child> childList = CreateChildObjects(jsonList.get(E_TABLE_ID.ID_CHILD.getValue()));
-//				tableContainer c = new tableContainer(remoteTableVersion, schoolList, tripList, childList);
-//				bResult = DataManager.GetInstance().Update(c);
+				DataManager.GetInstance().BeginTransaction();
+				
+				JSONParser jsonParser = new JSONParser();
+				ArrayList<Integer> localTableVersion = DataManager.GetInstance().GetLocalTableVersion();
+				ArrayList<Integer> remoteTableVersion = new ArrayList<Integer>();
+				for (E_TABLE_ID i : E_TABLE_ID.values()) 
+				{
+					List<NameValuePair> paramsJson = new ArrayList<NameValuePair>();
+					paramsJson.add(new BasicNameValuePair(DEVICE_ID, Integer.toString(params[0])));
+					paramsJson.add(new BasicNameValuePair(TABLE_ID, Integer.toString(i.getValue())));
+					java.lang.System.out.println("Calling back end server : updating");
+//					json = jsonParser.getJSONFromUrl(tableVersionURL, paramsJson);
+					json = GetFakeTableVersion(i.getValue());
+					if (json.getBoolean(KEY_RESULT) == true)
+					{
+						remoteTableVersion.add(json.getInt(VERSION));
+					}
+				}
+				
+				int indexStart = 0;
+				Boolean bContinue = true;
+				while ( (indexStart < E_TABLE_ID.values().length) && (bContinue == true) )
+				{
+					if (remoteTableVersion.get(indexStart) != localTableVersion.get(indexStart))
+					{
+						bContinue = false;
+					}
+					else
+					{
+						indexStart ++;
+					}
+				}
+				
+				for (E_TABLE_ID j : E_TABLE_ID.values())
+				{
+					JSONObject jsonObj = null;
+					if (j.getValue() >= indexStart)
+					{
+						List<NameValuePair> paramsJson = new ArrayList<NameValuePair>();
+						paramsJson.add(new BasicNameValuePair(DEVICE_ID, Integer.toString(params[0])));
+						paramsJson.add(new BasicNameValuePair(TABLE_ID, Integer.toString(j.getValue())));
+						
+						DataManager.GetInstance().DropTable(j);
+						DataManager.GetInstance().UpdateTableVersion(j,remoteTableVersion.get(j.getValue()));
+//						jsonObj = jsonParser.getJSONFromUrl(getTableURL, paramsJson);
+						jsonObj = GetFakeTable(j.getValue());
+					}
+					jsonList.add(jsonObj);
+				}
+				
+				for (E_TABLE_ID j : E_TABLE_ID.values())
+				{
+					if (j.getValue() >= indexStart)
+					{
+						CreateObject(j, jsonList.get(j.getValue()));
+					}
+				}
 				bResult = true;
+				DataManager.GetInstance().SetTransactionSuccessful();
 			} 
 			catch (Exception e) 
 			{
 				e.printStackTrace();
+			}
+			finally
+			{
+				DataManager.GetInstance().EndTransaction();
 			}
 			
 			return bResult;
@@ -241,6 +260,63 @@ public class BackEndManager
 		task.execute(pi_deviceId);
 	}
 	
+	public void CreateObject(E_TABLE_ID j, JSONObject pi_jsonObject) 
+	{
+		switch (j.getValue())
+		{
+			case 0:
+			{
+				CreateSchoolObjects(pi_jsonObject);
+				break;
+			}
+			case 1:
+			{
+				CreateTripDestinationObjects(pi_jsonObject);
+				break;
+			}
+			case 2:
+			{
+				CreateTripObjects(pi_jsonObject);
+				break;
+			}
+			case 3:
+			{
+				CreateChildObjects(pi_jsonObject);
+				break;
+			}
+			case 4:
+			{
+				CreateTripChildObjects(pi_jsonObject);
+				break;
+			}
+		}
+	}
+
+	private void CreateTripDestinationObjects(JSONObject pi_jsonObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void CreateTripChildObjects(JSONObject jsonObject)
+	{
+		try {
+			JSONArray schools = jsonObject.getJSONArray(TripChildAssociationDAO.TABLE);
+			for (int i=0; i<schools.length(); i++) 
+			{
+				JSONObject o = (JSONObject) schools.get(i);
+				int tripId = o.getInt(KEY_TRIP_CHILD_ASSO_TRIP_ID);
+				int childId = o.getInt(KEY_TRIP_CHILD_ASSO_CHILD_ID);
+				int pickupTimeHour = o.getInt(KEY_TRIP_CHILD_ASSO_PICKUP_TIME_HOUR);
+				int pickupTimeMinute = o.getInt(KEY_TRIP_CHILD_ASSO_PICKUP_TIME_MINUTE);
+				int addressId = o.getInt(KEY_TRIP_CHILD_ASSO_ADDRESS_ID);
+				DataManager.GetInstance().InsertTripChildAssociation(tripId, childId, pickupTimeHour, pickupTimeMinute, addressId);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public ArrayList<Child> CreateChildObjects(JSONObject jsonObject) {
 		// TODO Auto-generated method stub
 		return null;
@@ -251,15 +327,66 @@ public class BackEndManager
 		return null;
 	}
 
-	public ArrayList<School> CreateSchoolObjects(JSONObject jsonObject) {
-		// TODO Auto-generated method stub
-		return null;
+	public void CreateSchoolObjects(JSONObject jsonObject) 
+	{
+		try {
+			JSONArray schools = jsonObject.getJSONArray(SchoolDAO.TABLE);
+			for (int i=0; i<schools.length(); i++) 
+			{
+				JSONObject o = (JSONObject) schools.get(i);
+				int id = o.getInt(KEY_SCHOOL_SCHOOL_ID);
+				String name = o.getString(KEY_SCHOOL_NAME);
+//				DataManager.GetInstance().InsertSchool(id, name);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public JSONObject GetFakeTable(int value) 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		String sJson = null;
+		JSONObject json = null;
+		switch (value)
+		{
+			case 0:
+			{
+				sJson = "{\"result\":true,\"school\":[{\"id\":\"0\",\"name\":\"LFM\"},{\"id\":\"1\",\"name\":\"GESM\"}]}";
+				break;
+			}
+			case 1:
+			{
+				sJson = "{\"result\":true,\"school\":[{\"id\":\"0\",\"name\":\"LFM\"},{\"id\":\"1\",\"name\":\"GESM\"}]}";
+				break;
+			}
+			case 2:
+			{
+				sJson = "{\"result\":true,\"school\":[{\"id\":\"0\",\"name\":\"LFM\"},{\"id\":\"1\",\"name\":\"GESM\"}]}";
+				break;
+			}
+			case 3:
+			{
+				sJson = "{\"result\":true,\"school\":[{\"id\":\"0\",\"name\":\"LFM\"},{\"id\":\"1\",\"name\":\"GESM\"}]}";
+				break;
+			}
+			case 4:
+			{
+				sJson = "{\"result\":true,\"trip_child_association\":[{\"tid\":\"0\",\"cid\":\"0\",\"h\":\"13\",\"m\":\"50\",\"ad\":\"0\"},{\"tid\":\"0\",\"cid\":\"1\",\"h\":\"14\",\"m\":\"10\",\"ad\":\"1\"}]}";
+				break;
+			}
+		}
+		
+		try 
+		{
+			json = new JSONObject(sJson);
+		} 
+		catch (JSONException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
 	}
 
 	public JSONObject GetFakeTableVersion(int value) 

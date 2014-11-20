@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import android.R.integer;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -13,10 +14,11 @@ public class TripChildAssociationDAO extends SchoolBusDAO
     protected static final String TABLE = "trip_child_association";
 
     // Books Table Columns names
-    private static final String KEY_TRIP_ID = "trip_id";
-    private static final String KEY_CHILD_ID = "child_id";
-    private static final String KEY_PICKUP_TIME_HOUR = "pickup_time_hour";
-    private static final String KEY_PICKUP_TIME_MINUTE = "pickup_time_minute";
+    public static final String KEY_TRIP_ID = "trip_id";
+    public static final String KEY_CHILD_ID = "child_id";
+    public static final String KEY_PICKUP_TIME_HOUR = "pickup_time_hour";
+    public static final String KEY_PICKUP_TIME_MINUTE = "pickup_time_minute";
+	private static final String KEY_ADDRESS_ID = "address_id";
     
     public TripChildAssociationDAO(Context context) 
     {
@@ -48,6 +50,11 @@ public class TripChildAssociationDAO extends SchoolBusDAO
             		child.m_id = cursor.getInt(cursor.getColumnIndex(KEY_CHILD_ID));
             		child.m_pickupTimeHour = cursor.getInt(cursor.getColumnIndex(KEY_PICKUP_TIME_HOUR));
             		child.m_pickupTimeMinute = cursor.getInt(cursor.getColumnIndex(KEY_PICKUP_TIME_MINUTE));
+            		child.m_activeAddress = cursor.getInt(cursor.getColumnIndex(KEY_ADDRESS_ID));
+            		if ( (child.m_activeAddress != 0) && (child.m_activeAddress != 1) )
+            		{
+            			child.m_activeAddress = 0;
+            		}
 	            	childs.add(child);
             	}
             	catch (Exception e) 
@@ -60,5 +67,18 @@ public class TripChildAssociationDAO extends SchoolBusDAO
         }
 
 		return childs;
+	}
+	
+	public void InsertTripChildAssociation(int pi_tripId, int pi_childId, int pi_pickupTimeHour, int pi_pickupTimeMinute, int pi_addressId)
+	{
+		ContentValues values = new ContentValues();
+		values.put(KEY_TRIP_ID, pi_tripId);
+		values.put(KEY_CHILD_ID, pi_childId);
+		values.put(KEY_PICKUP_TIME_HOUR, pi_pickupTimeHour);
+		values.put(KEY_PICKUP_TIME_MINUTE, pi_pickupTimeMinute);
+		values.put(KEY_ADDRESS_ID, pi_addressId);
+		
+	    // 1. build the query
+		m_database.insert(TABLE, null, values);
 	}
 }

@@ -73,7 +73,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
     	m_lock.lock();
     	m_mode = pi_mode;
     	m_context = pi_context;
-    	m_backEndManager = new BackEndManager(m_context);
+    	m_backEndManager = new BackEndManager();
     	m_backEndManager.addListener(this);
     	
     	CheckDeviceInfo();

@@ -6,11 +6,12 @@ public class Trip
 {
 	public int m_id = -1;
 	public String m_destination = null;
-	public int m_hour;
-	public int m_minute;
+	public int m_hour = 0;
+	public int m_minute = 0;
 	public ArrayList<Child> m_childs = null;
-	public boolean m_isCancel;
+	public boolean m_isCancel = false;
 	public boolean m_isReturn = false;
+	
 	public int GetRemainChildCount() 
 	{
 		int remainCount = 0;

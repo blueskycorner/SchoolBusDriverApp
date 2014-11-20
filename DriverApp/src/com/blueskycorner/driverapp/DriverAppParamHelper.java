@@ -211,7 +211,7 @@ public class DriverAppParamHelper
 		{
 			b = true;
 		}
-		return b;
+		return true;
 	}
 
 	private static boolean HasDayChanged(long l) 

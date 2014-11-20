@@ -67,7 +67,7 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 		if (m_child != null)
 		{
 			m_name.setText(m_child.m_firstName + " " + m_child.m_lastName);
-			m_address.setText(m_child.m_address);
+			m_address.setText(m_child.GetAddress());
 			m_pickupTime.setText(GetPickupText() + " @ " + m_child.GetPickupTime());
 		}
 	}
