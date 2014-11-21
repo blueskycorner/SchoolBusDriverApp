@@ -221,8 +221,10 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 					       {
 					           public void onClick(DialogInterface dialog, int id) 
 					           {
-					        	   android.os.Process.killProcess(android.os.Process.myPid());
-				                   System.exit(1);
+//					        	   android.os.Process.killProcess(android.os.Process.myPid());
+//				                   System.exit(1);
+					        	   dialog.dismiss();
+					        	   BroadcastDataSynchronized();
 					           }
 					       });
 					AlertDialog alert = builder.create();

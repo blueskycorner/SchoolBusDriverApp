@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteOpenHelper;
 
 public class SchoolDAO extends SchoolBusDAO 
 {
@@ -15,9 +16,9 @@ public class SchoolDAO extends SchoolBusDAO
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
     
-    public SchoolDAO(Context context) 
+    public SchoolDAO(SqlLiteHelper pi_sqliteHelper) 
     {
-        super(context);
+        super(pi_sqliteHelper);
     }
 	
 	static public String GetOnUpgrade() 

@@ -14,9 +14,9 @@ public class TripDestinationDAO extends SchoolBusDAO
     public static final String KEY_ID = "id";
     public static final String KEY_DESTINATION = "destination";
     
-    public TripDestinationDAO(Context context) 
+    public TripDestinationDAO(SqlLiteHelper pi_sqliteHelper) 
     {
-        super(context);
+        super(pi_sqliteHelper);
     }
 	
 	static public String GetOnUpgrade() 

@@ -1,9 +1,7 @@
 package com.blueskycorner.driverapp;
 
-import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-
 
 public abstract class SchoolBusDAO 
 {
@@ -11,9 +9,9 @@ public abstract class SchoolBusDAO
     protected SQLiteDatabase m_database = null;
     protected SqlLiteHelper m_dbHelper = null;
 	  
-    SchoolBusDAO(Context pi_context)
+    SchoolBusDAO(SqlLiteHelper pi_sqliteHelper)
 	{
-		m_dbHelper = new SqlLiteHelper(pi_context);
+		m_dbHelper = pi_sqliteHelper;
 	}
 	
 	public void open() throws SQLException 

@@ -31,9 +31,9 @@ public class ChildDAO extends SchoolBusDAO
     
     private SimpleDateFormat m_parser = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     
-    public ChildDAO(Context context) 
+    public ChildDAO(SqlLiteHelper pi_sqliteHelper) 
     {
-        super(context);
+        super(pi_sqliteHelper);
     }
 	
 	static public String GetOnUpgrade() 

@@ -20,9 +20,9 @@ public class TripChildAssociationDAO extends SchoolBusDAO
     public static final String KEY_PICKUP_TIME_MINUTE = "pickup_time_minute";
 	private static final String KEY_ADDRESS_ID = "address_id";
     
-    public TripChildAssociationDAO(Context context) 
+    public TripChildAssociationDAO(SqlLiteHelper pi_sqliteHelper) 
     {
-        super(context);
+        super(pi_sqliteHelper);
     }
 	
 	static public String GetOnUpgrade() 

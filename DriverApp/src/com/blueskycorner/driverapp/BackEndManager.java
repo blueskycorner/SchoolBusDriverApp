@@ -429,6 +429,8 @@ public class BackEndManager
 				String name = o.getString(KEY_SCHOOL_NAME);
 				DataManager.GetInstance().InsertSchool(id, name);
 			}
+//			ArrayList<Integer> l = new ArrayList<Integer>();
+//			int i = l.get(5);
 		} 
 		catch (JSONException e) 
 		{
@@ -460,7 +462,7 @@ public class BackEndManager
 			}
 			case 3:
 			{
-				sJson = "{\"result\":true,\"child\":[{\"id\":\"0\",\"fn\":\"john\",\"ln\":\"travolta\",\"ad1\":\"21 Jump street\",\"ad2\":\"1813 Santan street\",\"lid\":\"0\",\"cd\":\"2014:09:01\",\"ad\":\"2014:10:21\",\"mon\":\"foot until 3:30\",\"tue\":\"...\",\"wed\":\"...\",\"thu\":\"...\",\"fri\":\"...\"},{\"id\":\"1\",\"fn\":\"steve\",\"ln\":\"jobs\",\"ad1\":\"42 Kalamansi street\",\"ad2\":\"1795 Accacia street\",\"lid\":\"0\",\"cd\":\"2014:09:01\",\"ad\":\"2014:10:21\",\"mon\":\"hip-hop until 3:30\",\"tue\":\"...\",\"wed\":\"...\",\"thu\":\"...\",\"fri\":\"...\"}]}";
+				sJson = "{\"result\":true,\"child\":[{\"id\":\"0\",\"fn\":\"john\",\"ln\":\"travolta\",\"ad1\":\"22 Jump street,MAKATI\",\"ad2\":\"1813 Santan street\",\"lid\":\"0\",\"cd\":\"2014:09:01\",\"ad\":\"2014:10:21\",\"mon\":\"foot until 3:30\",\"tue\":\"...\",\"wed\":\"...\",\"thu\":\"...\",\"fri\":\"...\"},{\"id\":\"1\",\"fn\":\"steve\",\"ln\":\"jobs\",\"ad1\":\"42 Kalamansi street\",\"ad2\":\"1795 Accacia street\",\"lid\":\"0\",\"cd\":\"2014:09:01\",\"ad\":\"2014:10:21\",\"mon\":\"hip-hop until 3:30\",\"tue\":\"...\",\"wed\":\"...\",\"thu\":\"...\",\"fri\":\"...\"}]}";
 				break;
 			}
 			case 4:
@@ -488,7 +490,7 @@ public class BackEndManager
 		{
 			case 0:
 			{
-				sJson = "{\"result\":true,\"version\":\"3\"}";
+				sJson = "{\"result\":true,\"version\":\"4\"}";
 				break;
 			}
 			case 1:
@@ -503,7 +505,7 @@ public class BackEndManager
 			}
 			case 3:
 			{
-				sJson = "{\"result\":true,\"version\":\"2\"}";
+				sJson = "{\"result\":true,\"version\":\"3\"}";
 				break;
 			}
 			case 4:

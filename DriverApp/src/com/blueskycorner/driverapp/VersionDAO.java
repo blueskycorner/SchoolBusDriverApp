@@ -13,9 +13,9 @@ public class VersionDAO extends SchoolBusDAO
     private static final String KEY_ID = "id";
     private static final String KEY_VERSION = "version";
     
-    public VersionDAO(Context context) 
+    public VersionDAO(SqlLiteHelper pi_sqliteHelper) 
     {
-        super(context);
+        super(pi_sqliteHelper);
     }
 	
 	static public String GetOnUpgrade() 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 public class DataManager
 {
@@ -14,6 +15,7 @@ public class DataManager
 //	private Trip[] m_trips = null;
 	
 	private Context m_context = null;
+	protected SQLiteDatabase m_database = null;
 	
 	private SchoolDAO m_schoolDAO = null;
 	private TripDAO m_tripDAO = null;
@@ -41,22 +43,25 @@ public class DataManager
 
 	private void Init() 
 	{
-		m_schoolDAO = new SchoolDAO(m_context);
+		SqlLiteHelper sqliteHelper = new SqlLiteHelper(m_context);
+		m_database = sqliteHelper.getWritableDatabase();
+		
+		m_schoolDAO = new SchoolDAO(sqliteHelper);
 		m_schoolDAO.open();
 		
-		m_tripDAO = new TripDAO(m_context);
+		m_tripDAO = new TripDAO(sqliteHelper);
 		m_tripDAO.open();
 		
-		m_tripChildAssociationDAO = new TripChildAssociationDAO(m_context);
+		m_tripChildAssociationDAO = new TripChildAssociationDAO(sqliteHelper);
 		m_tripChildAssociationDAO.open();
 		
-		m_childDAO = new ChildDAO(m_context);
+		m_childDAO = new ChildDAO(sqliteHelper);
 		m_childDAO.open();
 		
-		m_tripDestinationDAO = new TripDestinationDAO(m_context);
+		m_tripDestinationDAO = new TripDestinationDAO(sqliteHelper);
 		m_tripDestinationDAO.open();
 		
-		m_versionDAO = new VersionDAO(m_context);
+		m_versionDAO = new VersionDAO(sqliteHelper);
 		m_versionDAO.open();
 		
 //		m_schoolList = new School[2];
@@ -295,16 +300,16 @@ public class DataManager
 	
 	public void BeginTransaction() 
 	{
-		
+		m_database.beginTransaction();
 	}
 	
-	public void EndTransaction() {
-		// TODO Auto-generated method stub
-		
+	public void EndTransaction() 
+	{
+		m_database.endTransaction();
 	}
 
-	public void SetTransactionSuccessful() {
-		// TODO Auto-generated method stub
-		
+	public void SetTransactionSuccessful() 
+	{
+		m_database.setTransactionSuccessful();
 	}
 }

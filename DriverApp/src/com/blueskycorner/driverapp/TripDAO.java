@@ -22,10 +22,10 @@ public class TripDAO extends SchoolBusDAO
     
     private TripDestinationDAO m_tripDestinationDAO = null;
     
-    public TripDAO(Context context) 
+    public TripDAO(SqlLiteHelper pi_sqliteHelper) 
     {
-        super(context);
-        m_tripDestinationDAO = new TripDestinationDAO(context);
+        super(pi_sqliteHelper);
+        m_tripDestinationDAO = new TripDestinationDAO(pi_sqliteHelper);
     }
 	
 	static public String GetOnUpgrade() 
