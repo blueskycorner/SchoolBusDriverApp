@@ -196,52 +196,52 @@ public class DataManager
 		m_tripDestinationDAO.InsertDestination(pi_id, pi_destination);
 	}
 
-
-	public void Update(Context pi_context, boolean pi_bForceUpdate) 
-	{
-		DataBaseUpdateThread t = new DataBaseUpdateThread(pi_context, pi_bForceUpdate);
-		t.start();
-	}
-
-	private void SynchDB(Context pi_context) 
-	{
-		DriverAppParamHelper.SetLastDBUpdateTime(pi_context, System.currentTimeMillis());
-	}
-	
-	private class DataBaseUpdateThread extends Thread
-	{
-		Context m_context = null;
-		Boolean m_bForceUpdate = false;
-		public DataBaseUpdateThread(Context pi_context, boolean pi_bForceUpdate) 
-		{
-			m_context = pi_context;
-			m_bForceUpdate = pi_bForceUpdate;
-		}
-
-		@Override
-		public void run() 
-		{
-			m_lock.lock();
-			try
-			{
-				long lastUpdate = DriverAppParamHelper.GetLastDBUpdateTime(m_context);
-				int period = DriverAppParamHelper.GetAutoUpdatePeriod(m_context);
-				if ( (lastUpdate + period > System.currentTimeMillis()) || (m_bForceUpdate == true) )
-				{
-					SynchDB(m_context);
-				}
-			}
-			catch (Exception e)
-			{
-				
-			}
-			finally
-			{
-				m_lock.unlock();
-			}
-
-		}
-	}
+//
+//	public void Update(Context pi_context, boolean pi_bForceUpdate) 
+//	{
+//		DataBaseUpdateThread t = new DataBaseUpdateThread(pi_context, pi_bForceUpdate);
+//		t.start();
+//	}
+//
+//	private void SynchDB(Context pi_context) 
+//	{
+//		DriverAppParamHelper.SetLastDBUpdateTime(pi_context, System.currentTimeMillis());
+//	}
+//	
+//	private class DataBaseUpdateThread extends Thread
+//	{
+//		Context m_context = null;
+//		Boolean m_bForceUpdate = false;
+//		public DataBaseUpdateThread(Context pi_context, boolean pi_bForceUpdate) 
+//		{
+//			m_context = pi_context;
+//			m_bForceUpdate = pi_bForceUpdate;
+//		}
+//
+//		@Override
+//		public void run() 
+//		{
+//			m_lock.lock();
+//			try
+//			{
+//				long lastUpdate = DriverAppParamHelper.GetLastDBUpdateTime(m_context);
+//				int period = DriverAppParamHelper.GetAutoUpdatePeriod(m_context);
+//				if ( (lastUpdate + period > System.currentTimeMillis()) || (m_bForceUpdate == true) )
+//				{
+//					SynchDB(m_context);
+//				}
+//			}
+//			catch (Exception e)
+//			{
+//				
+//			}
+//			finally
+//			{
+//				m_lock.unlock();
+//			}
+//
+//		}
+//	}
 
 	public ArrayList<Integer> GetLocalTableVersion() 
 	{

@@ -17,8 +17,8 @@ import com.blueskycorner.system.JSONParser;
 public class BackEndManager 
 {
 	public static final String deviceInfoURL = "http://www.";
-	public static final String tableVersionURL = "http://www.";
-	public static final String getTableURL = "http://www.";
+	public static final String tableVersionURL = "http://testguest.hostei.com/DriverAppVersionApi.php";
+	public static final String getTableURL = "http://testguest.hostei.com/DriverAppTableApi.php";
 	public static final String KEY_RESULT = "result";
 	private static final String VERSION = "version";
 	public static final String DEVICE_ID = "deviceid";
@@ -186,8 +186,8 @@ public class BackEndManager
 					paramsJson.add(new BasicNameValuePair(DEVICE_ID, Integer.toString(params[0])));
 					paramsJson.add(new BasicNameValuePair(TABLE_ID, Integer.toString(i.getValue())));
 					java.lang.System.out.println("Calling back end server : updating");
-//					json = jsonParser.getJSONFromUrl(tableVersionURL, paramsJson);
-					json = GetFakeTableVersion(i.getValue());
+					json = jsonParser.getJSONFromUrl(tableVersionURL, paramsJson);
+//					json = GetFakeTableVersion(i.getValue());
 					if (json.getBoolean(KEY_RESULT) == true)
 					{
 						remoteTableVersion.add(json.getInt(VERSION));
@@ -217,8 +217,8 @@ public class BackEndManager
 						paramsJson.add(new BasicNameValuePair(DEVICE_ID, Integer.toString(params[0])));
 						paramsJson.add(new BasicNameValuePair(TABLE_ID, Integer.toString(j.getValue())));
 						
-//						jsonObj = jsonParser.getJSONFromUrl(getTableURL, paramsJson);
-						jsonObj = GetFakeTable(j.getValue());
+						jsonObj = jsonParser.getJSONFromUrl(getTableURL, paramsJson);
+//						jsonObj = GetFakeTable(j.getValue());
 					}
 					jsonList.add(jsonObj);
 				}
@@ -490,7 +490,7 @@ public class BackEndManager
 		{
 			case 0:
 			{
-				sJson = "{\"result\":true,\"version\":\"4\"}";
+				sJson = "{\"result\":true,\"version\":\"5\"}";
 				break;
 			}
 			case 1:
@@ -505,7 +505,7 @@ public class BackEndManager
 			}
 			case 3:
 			{
-				sJson = "{\"result\":true,\"version\":\"3\"}";
+				sJson = "{\"result\":true,\"version\":\"5\"}";
 				break;
 			}
 			case 4:
