@@ -113,7 +113,7 @@ public class TripDAO extends SchoolBusDAO
 
 
 	
-	public void InsertTrip(int pi_id, int pi_schoolId, int pi_destinationId, E_DAY pi_day, int pi_hour, int pi_minute, boolean pi_return)
+	public void InsertTrip(int pi_id, int pi_schoolId, int pi_destinationId, E_DAY pi_day, int pi_hour, int pi_minute, boolean pi_return) throws Exception
 	{
 		ContentValues values = new ContentValues();
 		values.put(KEY_ID, pi_id);
@@ -125,7 +125,7 @@ public class TripDAO extends SchoolBusDAO
 		values.put(KEY_RETURN, pi_return);
 		
         // 1. build the query
-		m_database.insert(TABLE, null, values);
+		Insert(values);
 	}
 
 	@Override

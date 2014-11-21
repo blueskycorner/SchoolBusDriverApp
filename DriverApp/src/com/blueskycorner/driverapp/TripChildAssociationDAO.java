@@ -69,7 +69,7 @@ public class TripChildAssociationDAO extends SchoolBusDAO
 		return childs;
 	}
 	
-	public void InsertTripChildAssociation(int pi_tripId, int pi_childId, int pi_pickupTimeHour, int pi_pickupTimeMinute, int pi_addressId)
+	public void InsertTripChildAssociation(int pi_tripId, int pi_childId, int pi_pickupTimeHour, int pi_pickupTimeMinute, int pi_addressId) throws Exception
 	{
 		ContentValues values = new ContentValues();
 		values.put(KEY_TRIP_ID, pi_tripId);
@@ -79,7 +79,7 @@ public class TripChildAssociationDAO extends SchoolBusDAO
 		values.put(KEY_ADDRESS_ID, pi_addressId);
 		
 	    // 1. build the query
-		m_database.insert(TABLE, null, values);
+		Insert(values);
 	}
 
 	@Override

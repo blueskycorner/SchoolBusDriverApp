@@ -149,7 +149,7 @@ public class DataManager
 		return childs;
 	}
 	
-	public void InsertVersion(int pi_id, int pi_version) 
+	public void InsertVersion(int pi_id, int pi_version) throws Exception 
 	{
 		m_versionDAO.InsertVersion(pi_id, pi_version);
 	}
@@ -166,32 +166,32 @@ public class DataManager
 							String pi_tuesdayInfo,
 							String pi_wednesdayInfo,
 							String pi_thursdayInfo,
-							String pi_fridayInfo)
+							String pi_fridayInfo) throws Exception
 	{
 		m_childDAO.InsertChild(pi_childId, pi_firstName, pi_lastName, pi_address1, pi_address2, pi_languageId, pi_creationDate, pi_modificationDate, pi_mondayInfo, pi_tuesdayInfo, pi_wednesdayInfo, pi_thursdayInfo, pi_fridayInfo);
 	}
 	
-	public void InsertSchool(int pi_schoolId, String pi_name)
+	public void InsertSchool(int pi_schoolId, String pi_name) throws Exception
 	{
 		m_schoolDAO.InsertSchool(pi_schoolId, pi_name);
 	}
 
-	public void InsertTripDestination(int pi_id, String pi_destination) 
+	public void InsertTripDestination(int pi_id, String pi_destination) throws Exception 
 	{
 		m_tripDestinationDAO.InsertDestination(pi_id, pi_destination);
 	}
 
-	public void InsertTripChildAssociation(int pi_tripId, int pi_childId, int pi_pickupTimeHour, int pi_pickupTimeMinute, int pi_addressId)
+	public void InsertTripChildAssociation(int pi_tripId, int pi_childId, int pi_pickupTimeHour, int pi_pickupTimeMinute, int pi_addressId) throws Exception
 	{
 		m_tripChildAssociationDAO.InsertTripChildAssociation(pi_tripId, pi_childId, pi_pickupTimeHour, pi_pickupTimeMinute, pi_addressId);
 	}
 
-	public void InsertTrip(int pi_id, int pi_schoolId, int pi_destinationId, E_DAY pi_day, int pi_hour, int pi_minute, boolean pi_return)
+	public void InsertTrip(int pi_id, int pi_schoolId, int pi_destinationId, E_DAY pi_day, int pi_hour, int pi_minute, boolean pi_return) throws Exception
 	{
 		m_tripDAO.InsertTrip(pi_id, pi_schoolId, pi_destinationId, pi_day, pi_hour, pi_minute, pi_return);
 	}
 
-	public void InsertDestination(int pi_id, String pi_destination)
+	public void InsertDestination(int pi_id, String pi_destination) throws Exception
 	{
 		m_tripDestinationDAO.InsertDestination(pi_id, pi_destination);
 	}

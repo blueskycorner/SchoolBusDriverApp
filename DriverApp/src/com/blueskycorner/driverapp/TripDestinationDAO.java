@@ -45,14 +45,14 @@ public class TripDestinationDAO extends SchoolBusDAO
 		return sDestination;
 	}
 	
-	public void InsertDestination(int pi_id, String pi_destination)
+	public void InsertDestination(int pi_id, String pi_destination) throws Exception
 	{
 		ContentValues values = new ContentValues();
 		values.put(KEY_ID, pi_id);
 		values.put(KEY_DESTINATION, pi_destination);
 		
         // 1. build the query
-		m_database.insert(TABLE, null, values);
+		Insert(values);
 
 	}
 

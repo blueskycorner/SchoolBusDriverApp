@@ -325,7 +325,7 @@ public class BackEndManager
 		}
 	}
 
-	private void CreateTripDestinationObjects(JSONObject pi_jsonObject) throws JSONException 
+	private void CreateTripDestinationObjects(JSONObject pi_jsonObject) throws Exception 
 	{
 		try {
 			JSONArray schools = pi_jsonObject.getJSONArray(TripDestinationDAO.TABLE);
@@ -337,14 +337,14 @@ public class BackEndManager
 				DataManager.GetInstance().InsertTripDestination(id, destination);
 			}
 		} 
-		catch (JSONException e) 
+		catch (Exception e) 
 		{
 			Log.e("BackEnManager", "CreateTripDestinationObjects");
 			throw e;
 		}
 	}
 
-	public void CreateTripChildObjects(JSONObject jsonObject) throws JSONException
+	public void CreateTripChildObjects(JSONObject jsonObject) throws Exception
 	{
 		try {
 			JSONArray schools = jsonObject.getJSONArray(TripChildAssociationDAO.TABLE);
@@ -358,14 +358,14 @@ public class BackEndManager
 				int addressId = o.getInt(KEY_TRIP_CHILD_ASSO_ADDRESS_ID);
 				DataManager.GetInstance().InsertTripChildAssociation(tripId, childId, pickupTimeHour, pickupTimeMinute, addressId);
 			}
-		} catch (JSONException e) 
+		} catch (Exception e) 
 		{
 			Log.e("BackEnManager", "CreateTripChildObjects");
 			throw e;
 		}
 	}
 
-	public void CreateChildObjects(JSONObject jsonObject) throws JSONException 
+	public void CreateChildObjects(JSONObject jsonObject) throws Exception 
 	{
 		try {
 			JSONArray childs = jsonObject.getJSONArray(ChildDAO.TABLE);
@@ -388,14 +388,14 @@ public class BackEndManager
 				DataManager.GetInstance().InsertChild(childId, firstName, lastName, address1, address2, languageId, creationDate, modificationDate, mondayInfo, tuesdayInfo, wednesdayInfo, thursdayInfo, fridayInfo);
 			}
 		} 
-		catch (JSONException e) 
+		catch (Exception e) 
 		{
 			Log.e("BackEnManager", "CreateChildObjects");
 			throw e;
 		}
 	}
 
-	public void CreateTripObjects(JSONObject jsonObject) throws JSONException 
+	public void CreateTripObjects(JSONObject jsonObject) throws Exception 
 	{
 		try {
 			JSONArray trip = jsonObject.getJSONArray(TripDAO.TABLE);
@@ -411,14 +411,14 @@ public class BackEndManager
 				boolean bReturn = o.getBoolean(KEY_TRIP_RETURN);
 				DataManager.GetInstance().InsertTrip(id, schoolId, destinationId, day, hour, minute, bReturn);
 			}
-		} catch (JSONException e) 
+		} catch (Exception e) 
 		{
 			Log.e("BackEnManager", "CreateTripObjects");
 			throw e;
 		}
 	}
 
-	public void CreateSchoolObjects(JSONObject jsonObject) throws JSONException 
+	public void CreateSchoolObjects(JSONObject jsonObject) throws Exception 
 	{
 		try {
 			JSONArray schools = jsonObject.getJSONArray(SchoolDAO.TABLE);
@@ -432,7 +432,7 @@ public class BackEndManager
 //			ArrayList<Integer> l = new ArrayList<Integer>();
 //			int i = l.get(5);
 		} 
-		catch (JSONException e) 
+		catch (Exception e) 
 		{
 			Log.e("BackEnManager", "CreateSchoolObjects");
 			throw e;
@@ -476,7 +476,7 @@ public class BackEndManager
 		{
 			json = new JSONObject(sJson);
 		} 
-		catch (JSONException e) 
+		catch (Exception e) 
 		{
 			e.printStackTrace();
 		}

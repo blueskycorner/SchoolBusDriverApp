@@ -54,14 +54,14 @@ public class VersionDAO extends SchoolBusDAO
 
 
 	
-	public void InsertVersion(int pi_id, int pi_version) 
+	public void InsertVersion(int pi_id, int pi_version) throws Exception 
 	{
 		ContentValues values = new ContentValues();
 		values.put(KEY_ID, pi_id);
 		values.put(KEY_VERSION, pi_version);
 		
         // 1. build the query
-		m_database.insert(TABLE, null, values);
+		Insert(values);
 	}
 
 	@Override

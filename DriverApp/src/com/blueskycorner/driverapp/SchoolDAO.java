@@ -82,14 +82,14 @@ public class SchoolDAO extends SchoolBusDAO
         return school;
 	}
 	
-	public void InsertSchool(int pi_schoolId, String pi_name)
+	public void InsertSchool(int pi_schoolId, String pi_name) throws Exception
 	{
 		ContentValues values = new ContentValues();
 		values.put(KEY_ID, pi_schoolId);
 		values.put(KEY_NAME, pi_name);
 		
 	    // 1. build the query
-		m_database.insert(TABLE, null, values);
+		Insert(values);
 	}
 
 	@Override

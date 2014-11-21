@@ -114,7 +114,7 @@ public class ChildDAO extends SchoolBusDAO
 							String pi_tuesdayInfo,
 							String pi_wednesdayInfo,
 							String pi_thursdayInfo,
-							String pi_fridayInfo)
+							String pi_fridayInfo) throws Exception
 	{
 		ContentValues values = new ContentValues();
 		values.put(KEY_ID, pi_childId);
@@ -132,7 +132,7 @@ public class ChildDAO extends SchoolBusDAO
 		values.put(KEY_FRIDAY_INFO, pi_fridayInfo);
 		
 	    // 1. build the query
-		m_database.insert(TABLE, null, values);
+		Insert(values);
 	}
 
 	@Override
