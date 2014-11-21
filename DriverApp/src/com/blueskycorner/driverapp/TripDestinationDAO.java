@@ -55,4 +55,10 @@ public class TripDestinationDAO extends SchoolBusDAO
 		m_database.insert(TABLE, null, values);
 
 	}
+
+	@Override
+	protected String GetTableName() 
+	{
+		return TABLE;
+	}
 }

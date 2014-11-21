@@ -5,7 +5,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 
-public class SchoolBusDAO 
+public abstract class SchoolBusDAO 
 {
 	// Database fields
     protected SQLiteDatabase m_database = null;
@@ -25,4 +25,11 @@ public class SchoolBusDAO
 	{
 	    m_dbHelper.close();
 	}
+	
+	public void Delete()
+	{
+		m_database.execSQL("delete from "+ GetTableName());
+	}
+
+	protected abstract String GetTableName();
 }

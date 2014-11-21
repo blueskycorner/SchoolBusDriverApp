@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.blueskycorner.system.JSONParser;
 
@@ -216,8 +217,6 @@ public class BackEndManager
 						paramsJson.add(new BasicNameValuePair(DEVICE_ID, Integer.toString(params[0])));
 						paramsJson.add(new BasicNameValuePair(TABLE_ID, Integer.toString(j.getValue())));
 						
-						DataManager.GetInstance().DropTable(j);
-						DataManager.GetInstance().UpdateTableVersion(j,remoteTableVersion.get(j.getValue()));
 //						jsonObj = jsonParser.getJSONFromUrl(getTableURL, paramsJson);
 						jsonObj = GetFakeTable(j.getValue());
 					}
@@ -228,11 +227,13 @@ public class BackEndManager
 				{
 					if (j.getValue() >= indexStart)
 					{
+						DataManager.GetInstance().DeleteTable(j);
 						CreateObject(j, jsonList.get(j.getValue()));
+						DataManager.GetInstance().UpdateTableVersion(j,remoteTableVersion.get(j.getValue()));
 					}
 				}
-				bResult = true;
 				DataManager.GetInstance().SetTransactionSuccessful();
+				bResult = true;
 			} 
 			catch (Exception e) 
 			{
@@ -284,39 +285,47 @@ public class BackEndManager
 		task.execute(pi_deviceId);
 	}
 	
-	public void CreateObject(E_TABLE_ID j, JSONObject pi_jsonObject) 
+	public void CreateObject(E_TABLE_ID j, JSONObject pi_jsonObject) throws Exception 
 	{
-		switch (j.getValue())
+		try
 		{
-			case 0:
+			switch (j.getValue())
 			{
-				CreateSchoolObjects(pi_jsonObject);
-				break;
+				case 0:
+				{
+					CreateSchoolObjects(pi_jsonObject);
+					break;
+				}
+				case 1:
+				{
+					CreateTripDestinationObjects(pi_jsonObject);
+					break;
+				}
+				case 2:
+				{
+					CreateTripObjects(pi_jsonObject);
+					break;
+				}
+				case 3:
+				{
+					CreateChildObjects(pi_jsonObject);
+					break;
+				}
+				case 4:
+				{
+					CreateTripChildObjects(pi_jsonObject);
+					break;
+				}
 			}
-			case 1:
-			{
-				CreateTripDestinationObjects(pi_jsonObject);
-				break;
-			}
-			case 2:
-			{
-				CreateTripObjects(pi_jsonObject);
-				break;
-			}
-			case 3:
-			{
-				CreateChildObjects(pi_jsonObject);
-				break;
-			}
-			case 4:
-			{
-				CreateTripChildObjects(pi_jsonObject);
-				break;
-			}
+		}
+		catch (Exception e)
+		{
+			Log.e("BackEnManager", "CreateObject");
+			throw e;
 		}
 	}
 
-	private void CreateTripDestinationObjects(JSONObject pi_jsonObject) 
+	private void CreateTripDestinationObjects(JSONObject pi_jsonObject) throws JSONException 
 	{
 		try {
 			JSONArray schools = pi_jsonObject.getJSONArray(TripDestinationDAO.TABLE);
@@ -327,13 +336,15 @@ public class BackEndManager
 				String destination = o.getString(KEY_TRIP_DESTINATION);
 				DataManager.GetInstance().InsertTripDestination(id, destination);
 			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} 
+		catch (JSONException e) 
+		{
+			Log.e("BackEnManager", "CreateTripDestinationObjects");
+			throw e;
 		}
 	}
 
-	public void CreateTripChildObjects(JSONObject jsonObject)
+	public void CreateTripChildObjects(JSONObject jsonObject) throws JSONException
 	{
 		try {
 			JSONArray schools = jsonObject.getJSONArray(TripChildAssociationDAO.TABLE);
@@ -349,11 +360,12 @@ public class BackEndManager
 			}
 		} catch (JSONException e) 
 		{
-			e.printStackTrace();
+			Log.e("BackEnManager", "CreateTripChildObjects");
+			throw e;
 		}
 	}
 
-	public void CreateChildObjects(JSONObject jsonObject) 
+	public void CreateChildObjects(JSONObject jsonObject) throws JSONException 
 	{
 		try {
 			JSONArray childs = jsonObject.getJSONArray(ChildDAO.TABLE);
@@ -378,11 +390,12 @@ public class BackEndManager
 		} 
 		catch (JSONException e) 
 		{
-			e.printStackTrace();
+			Log.e("BackEnManager", "CreateChildObjects");
+			throw e;
 		}
 	}
 
-	public void CreateTripObjects(JSONObject jsonObject) 
+	public void CreateTripObjects(JSONObject jsonObject) throws JSONException 
 	{
 		try {
 			JSONArray trip = jsonObject.getJSONArray(TripDAO.TABLE);
@@ -400,11 +413,12 @@ public class BackEndManager
 			}
 		} catch (JSONException e) 
 		{
-			e.printStackTrace();
+			Log.e("BackEnManager", "CreateTripObjects");
+			throw e;
 		}
 	}
 
-	public void CreateSchoolObjects(JSONObject jsonObject) 
+	public void CreateSchoolObjects(JSONObject jsonObject) throws JSONException 
 	{
 		try {
 			JSONArray schools = jsonObject.getJSONArray(SchoolDAO.TABLE);
@@ -415,9 +429,11 @@ public class BackEndManager
 				String name = o.getString(KEY_SCHOOL_NAME);
 				DataManager.GetInstance().InsertSchool(id, name);
 			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} 
+		catch (JSONException e) 
+		{
+			Log.e("BackEnManager", "CreateSchoolObjects");
+			throw e;
 		}
 	}
 
@@ -444,7 +460,7 @@ public class BackEndManager
 			}
 			case 3:
 			{
-				sJson = "{\"result\":true,\"child\":[{\"id\":\"0\",\"fn\":\"john\",\"ln\":\"travolta\",\"ad1\":\"21 Jump street\",\"ad2\":\"1813 Santan street\",\"lid\":\"0\",\"cd\":\"2014:09:01\",\"ad\":\"2014:10:21\",\"mon\":\"foot until 3:30\",\"tue\":\"...\",\"wed\":\"...\",\"thu\":\"...\",\"fri\":\"...\"},{\"id\":\"1\",\"fn\":\"steve\",\"ln\":\"jobs\",\"ad1\":\"42 Kalamansi street\",\"ad2\":\"1796 Accacia street\",\"lid\":\"0\",\"cd\":\"2014:09:01\",\"ad\":\"2014:10:21\",\"mon\":\"hip-hop until 3:30\",\"tue\":\"...\",\"wed\":\"...\",\"thu\":\"...\",\"fri\":\"...\"}]}";
+				sJson = "{\"result\":true,\"child\":[{\"id\":\"0\",\"fn\":\"john\",\"ln\":\"travolta\",\"ad1\":\"21 Jump street\",\"ad2\":\"1813 Santan street\",\"lid\":\"0\",\"cd\":\"2014:09:01\",\"ad\":\"2014:10:21\",\"mon\":\"foot until 3:30\",\"tue\":\"...\",\"wed\":\"...\",\"thu\":\"...\",\"fri\":\"...\"},{\"id\":\"1\",\"fn\":\"steve\",\"ln\":\"jobs\",\"ad1\":\"42 Kalamansi street\",\"ad2\":\"1795 Accacia street\",\"lid\":\"0\",\"cd\":\"2014:09:01\",\"ad\":\"2014:10:21\",\"mon\":\"hip-hop until 3:30\",\"tue\":\"...\",\"wed\":\"...\",\"thu\":\"...\",\"fri\":\"...\"}]}";
 				break;
 			}
 			case 4:
@@ -460,7 +476,6 @@ public class BackEndManager
 		} 
 		catch (JSONException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json;
@@ -468,12 +483,43 @@ public class BackEndManager
 
 	public JSONObject GetFakeTableVersion(int value) 
 	{
-		String sJson = "{\"result\":true,\"version\":\"1\"}";
+		String sJson = null;
+		switch (value) 
+		{
+			case 0:
+			{
+				sJson = "{\"result\":true,\"version\":\"3\"}";
+				break;
+			}
+			case 1:
+			{
+				sJson = "{\"result\":true,\"version\":\"1\"}";
+				break;
+			}
+			case 2:
+			{
+				sJson = "{\"result\":true,\"version\":\"1\"}";
+				break;
+			}
+			case 3:
+			{
+				sJson = "{\"result\":true,\"version\":\"2\"}";
+				break;
+			}
+			case 4:
+			{
+				sJson = "{\"result\":true,\"version\":\"1\"}";
+				break;
+			}
+		}
+		
 		JSONObject json = null;
-		try {
+		try 
+		{
 			json = new JSONObject(sJson);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (JSONException e) 
+		{
 			e.printStackTrace();
 		}
 		return json;
@@ -483,10 +529,12 @@ public class BackEndManager
 	{
 		String sJson = "{\"result\":true,\"id\":\"43\",\"gateway\":\"09267420123\"}";
 		JSONObject json = null;
-		try {
+		try 
+		{
 			json = new JSONObject(sJson);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (JSONException e) 
+		{
 			e.printStackTrace();
 		}
 		return json;

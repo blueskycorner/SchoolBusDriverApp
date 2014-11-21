@@ -81,8 +81,6 @@ public class SchoolDAO extends SchoolBusDAO
         return school;
 	}
 	
-
-	
 	public void InsertSchool(int pi_schoolId, String pi_name)
 	{
 		ContentValues values = new ContentValues();
@@ -91,5 +89,11 @@ public class SchoolDAO extends SchoolBusDAO
 		
 	    // 1. build the query
 		m_database.insert(TABLE, null, values);
+	}
+
+	@Override
+	protected String GetTableName() 
+	{
+		return TABLE;
 	}
 }

@@ -81,4 +81,10 @@ public class TripChildAssociationDAO extends SchoolBusDAO
 	    // 1. build the query
 		m_database.insert(TABLE, null, values);
 	}
+
+	@Override
+	protected String GetTableName() 
+	{
+		return TABLE;
+	}
 }
