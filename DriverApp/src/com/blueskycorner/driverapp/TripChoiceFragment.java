@@ -24,9 +24,6 @@ import android.widget.ToggleButton;
 public class TripChoiceFragment extends DriverAppFragment implements OnClickListener, OnItemClickListener
 {
 	public static final String NAME = "TRIP_CHOICE_FRAGMENT";
-	private static final String TRIP_INDEX = "TRIP_INDEX";
-	private static final String SCHOOL_ID = "SCHOOL_ID";
-	private static final String TRIP_ID = "TRIP_ID";
 
 	private Button m_buttonSchool = null;
 	private Button m_buttonTrip = null;
@@ -50,6 +47,18 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	{
 		super.onCreate(savedInstanceState);
 		
+		Init();
+	}
+	
+	@Override
+	public void onResume() 
+	{
+		super.onResume();
+		Init();
+	}
+
+	private void Init() 
+	{
 		int schoolId = DriverAppParamHelper.GetLastSchoolId(getActivity());
 		int tripId = DriverAppParamHelper.GetLastTripId(getActivity());
 		

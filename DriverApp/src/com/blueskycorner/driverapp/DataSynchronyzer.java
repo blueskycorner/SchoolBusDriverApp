@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.blueskycorner.mediaLib.IMobileDataListener;
 import com.blueskycorner.mediaLib.NetworkManager;
 
 import android.app.AlarmManager;
@@ -16,8 +17,13 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.SystemClock;
 
-public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManagerListener 
+public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManagerListener, IMobileDataListener 
 {
+	private static final int CHECK_DEVICE_INFO = 0;
+	private static final int CHECK_DB_UPDATE = 1;
+	private static final int ON_DEVICE_INFO_GRABBED = 2;
+	private static final int ON_DB_MODIFCATION_GRABBED = 3;
+	
 	private BackEndManager m_backEndManager = null;
 	private Context m_context = null;
 	private ArrayList<ISynchronizerListener> m_listeners = new ArrayList<ISynchronizerListener>();
@@ -92,13 +98,15 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	{
 		if (DriverAppParamHelper.IsDeviceInfoOutdated(m_context) == true)
 		{
+			BroadcastStepChanged(E_INIT_STEP.STEP_DEVICE_UPDATE);
 			if (NetworkManager.GetInstance().IsNetworkAvailable() == false)
 			{
-				NetworkManager.setMobileDataEnabled(m_context, true);
+				NetworkManager.SetMobileDataEnabled(m_context, true, this, CHECK_DEVICE_INFO, true);
 			}
-			BroadcastStepChanged(E_INIT_STEP.STEP_DEVICE_UPDATE);
-			
-			m_backEndManager.launchDeviceInfoGrabing(com.blueskycorner.system.System.GetSimSerialNumber(m_context));
+			else
+			{
+				m_backEndManager.launchDeviceInfoGrabing(com.blueskycorner.system.System.GetSimSerialNumber(m_context));
+			}
 		}
 		else
 		{
@@ -110,19 +118,15 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	{
 		if (DriverAppParamHelper.IsDbOutdated(m_context) == true)
 		{
+			BroadcastStepChanged(E_INIT_STEP.STEP_DB_UPDATE);
 			if (NetworkManager.GetInstance().IsNetworkAvailable() == false)
 			{
-				NetworkManager.setMobileDataEnabled(m_context, true);
-				m_handler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						m_backEndManager.launchDbModificationGrabing(DriverAppParamHelper.GetDeviceId(m_context));
-					    }
-					}, 5000);
+				NetworkManager.SetMobileDataEnabled(m_context, true, this, CHECK_DB_UPDATE, true);
 			}
-			BroadcastStepChanged(E_INIT_STEP.STEP_DB_UPDATE);
-			
-//			m_backEndManager.launchDbModificationGrabing(DriverAppParamHelper.GetDeviceId(m_context));
+			else
+			{
+				m_backEndManager.launchDbModificationGrabing(DriverAppParamHelper.GetDeviceId(m_context));
+			}
 		}
 		else
 		{
@@ -145,53 +149,58 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 		
 		try
 		{
-			NetworkManager.setMobileDataEnabled(m_context, false);
-			
-			if (pi_bResult)
+			if (NetworkManager.GetInstance().IsMobileDataEnabled() == true)
 			{
-				DriverAppParamHelper.SetLastDeviceInfoUpdate(m_context, System.currentTimeMillis());
-				DriverAppParamHelper.SetDeviceId(m_context, deviceInfo.m_id);
-				DriverAppParamHelper.SetDeviceGateway(m_context, deviceInfo.m_gateway);
-				CheckDbUpdate();
+				NetworkManager.SetMobileDataEnabled(m_context, false, this, ON_DEVICE_INFO_GRABBED, pi_bResult);
 			}
 			else
 			{
-				if ( (m_mode == E_SYNCHRONISATION_MODE.MODE_STARTUP) || (m_mode == E_SYNCHRONISATION_MODE.MODE_MANUALY) )
+				if (pi_bResult)
 				{
-					AlertDialog.Builder builder = new AlertDialog.Builder(m_context);
-					builder.setMessage(R.string.server_unavailable)
-						   .setTitle(R.string.error)
-					       .setCancelable(false)
-					       .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() 
-					       {
-					           public void onClick(DialogInterface dialog, int id) 
-					           {
-					        	   dialog.dismiss();
-					               CheckDeviceInfo();
-					           }
-					       })
-					       .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
-					       {
-					           public void onClick(DialogInterface dialog, int id) 
-					           {
-					        	   android.os.Process.killProcess(android.os.Process.myPid());
-				                   System.exit(1);
-					           }
-					       });
-					AlertDialog alert = builder.create();
-					alert.show();
+					DriverAppParamHelper.SetLastDeviceInfoUpdate(m_context, System.currentTimeMillis());
+					DriverAppParamHelper.SetDeviceId(m_context, deviceInfo.m_id);
+					DriverAppParamHelper.SetDeviceGateway(m_context, deviceInfo.m_gateway);
+					CheckDbUpdate();
 				}
 				else
 				{
-					if (m_attemptNumber < DriverAppParamHelper.GetMaxUpdateAttempts(m_context))
+					if ( (m_mode == E_SYNCHRONISATION_MODE.MODE_STARTUP) || (m_mode == E_SYNCHRONISATION_MODE.MODE_MANUALY) )
 					{
-						m_attemptNumber ++;
-						CheckDeviceInfo();
+						AlertDialog.Builder builder = new AlertDialog.Builder(m_context);
+						builder.setMessage(R.string.server_unavailable)
+							   .setTitle(R.string.error)
+						       .setCancelable(false)
+						       .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() 
+						       {
+						           public void onClick(DialogInterface dialog, int id) 
+						           {
+						        	   dialog.dismiss();
+						               CheckDeviceInfo();
+						           }
+						       })
+						       .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
+						       {
+						           public void onClick(DialogInterface dialog, int id) 
+						           {
+						        	   android.os.Process.killProcess(android.os.Process.myPid());
+					                   System.exit(1);
+						           }
+						       });
+						AlertDialog alert = builder.create();
+						alert.show();
 					}
 					else
 					{
-						m_attemptNumber = 0;
-						CheckDbUpdate();
+						if (m_attemptNumber < DriverAppParamHelper.GetMaxUpdateAttempts(m_context))
+						{
+							m_attemptNumber ++;
+							CheckDeviceInfo();
+						}
+						else
+						{
+							m_attemptNumber = 0;
+							CheckDbUpdate();
+						}
 					}
 				}
 			}
@@ -207,53 +216,58 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	{
 		try
 		{
-			NetworkManager.setMobileDataEnabled(m_context, false);
-			
-			if (pi_bResult)
+			if (NetworkManager.GetInstance().IsMobileDataEnabled() == true)
 			{
-				DriverAppParamHelper.SetLastDBUpdateTime(m_context, System.currentTimeMillis());
-				BroadcastDataSynchronized();
+				NetworkManager.SetMobileDataEnabled(m_context, false, this, ON_DB_MODIFCATION_GRABBED, pi_bResult);
 			}
 			else
 			{
-				if ( (m_mode == E_SYNCHRONISATION_MODE.MODE_STARTUP) || (m_mode == E_SYNCHRONISATION_MODE.MODE_MANUALY) )
+				if (pi_bResult)
 				{
-					AlertDialog.Builder builder = new AlertDialog.Builder(m_context);
-					builder.setMessage(R.string.db_update_failed)
-						   .setTitle(R.string.error)
-					       .setCancelable(false)
-					       .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() 
-					       {
-					           public void onClick(DialogInterface dialog, int id) 
-					           {
-					        	   dialog.dismiss();
-					        	   CheckDbUpdate();
-					           }
-					       })
-					       .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
-					       {
-					           public void onClick(DialogInterface dialog, int id) 
-					           {
-//					        	   android.os.Process.killProcess(android.os.Process.myPid());
-//				                   System.exit(1);
-					        	   dialog.dismiss();
-					        	   BroadcastDataSynchronized();
-					           }
-					       });
-					AlertDialog alert = builder.create();
-					alert.show();
+					DriverAppParamHelper.SetLastDBUpdateTime(m_context, System.currentTimeMillis());
+					BroadcastDataSynchronized();
 				}
 				else
 				{
-					if (m_attemptNumber < DriverAppParamHelper.GetMaxUpdateAttempts(m_context))
+					if ( (m_mode == E_SYNCHRONISATION_MODE.MODE_STARTUP) || (m_mode == E_SYNCHRONISATION_MODE.MODE_MANUALY) )
 					{
-						m_attemptNumber ++;
-						CheckDbUpdate();
+						AlertDialog.Builder builder = new AlertDialog.Builder(m_context);
+						builder.setMessage(R.string.db_update_failed)
+							   .setTitle(R.string.error)
+						       .setCancelable(false)
+						       .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() 
+						       {
+						           public void onClick(DialogInterface dialog, int id) 
+						           {
+						        	   dialog.dismiss();
+						        	   CheckDbUpdate();
+						           }
+						       })
+						       .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
+						       {
+						           public void onClick(DialogInterface dialog, int id) 
+						           {
+	//					        	   android.os.Process.killProcess(android.os.Process.myPid());
+	//				                   System.exit(1);
+						        	   dialog.dismiss();
+						        	   BroadcastDataSynchronized();
+						           }
+						       });
+						AlertDialog alert = builder.create();
+						alert.show();
 					}
 					else
 					{
-						m_attemptNumber = 0;
-						BroadcastDataSynchronized();
+						if (m_attemptNumber < DriverAppParamHelper.GetMaxUpdateAttempts(m_context))
+						{
+							m_attemptNumber ++;
+							CheckDbUpdate();
+						}
+						else
+						{
+							m_attemptNumber = 0;
+							BroadcastDataSynchronized();
+						}
 					}
 				}
 			}
@@ -272,5 +286,33 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 		}
 		
 		m_lock.unlock();
+	}
+
+	@Override
+	public void OnMobileDataUpdated(int pi_id, boolean pi_bData) 
+	{
+		switch (pi_id) 
+		{
+			case CHECK_DEVICE_INFO:
+			{
+				CheckDeviceInfo();
+				break;
+			}
+			case CHECK_DB_UPDATE:
+			{
+				CheckDbUpdate();
+				break;
+			}
+			case ON_DEVICE_INFO_GRABBED:
+			{
+				OnDeviceInfoGrabed(pi_bData);
+				break;
+			}
+			case ON_DB_MODIFCATION_GRABBED:
+			{
+				OnDbModificationGrabed(pi_bData);
+				break;
+			}
+		}
 	}
 }
