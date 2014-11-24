@@ -252,7 +252,7 @@ public class DriverAppParamHelper
 		{
 			b = true;
 		}
-		return b;
+		return false;
 	}
 
 	public static int GetAutoUpdateCheckHour(Context pi_context) 

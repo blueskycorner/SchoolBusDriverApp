@@ -13,6 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.SystemClock;
 
 public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManagerListener 
@@ -23,6 +24,8 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	private ReentrantLock m_lock = new ReentrantLock();
 	private E_SYNCHRONISATION_MODE m_mode = E_SYNCHRONISATION_MODE.MODE_AUTO;
 	private int m_attemptNumber = 0;
+	
+	Handler m_handler = new Handler();
 	
 	static public void SetAlarm(Context context)
     {
@@ -91,7 +94,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 		{
 			if (NetworkManager.GetInstance().IsNetworkAvailable() == false)
 			{
-				//TODO
+				NetworkManager.setMobileDataEnabled(m_context, true);
 			}
 			BroadcastStepChanged(E_INIT_STEP.STEP_DEVICE_UPDATE);
 			
@@ -109,11 +112,17 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 		{
 			if (NetworkManager.GetInstance().IsNetworkAvailable() == false)
 			{
-				// TODO
+				NetworkManager.setMobileDataEnabled(m_context, true);
+				m_handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						m_backEndManager.launchDbModificationGrabing(DriverAppParamHelper.GetDeviceId(m_context));
+					    }
+					}, 5000);
 			}
 			BroadcastStepChanged(E_INIT_STEP.STEP_DB_UPDATE);
 			
-			m_backEndManager.launchDbModificationGrabing(DriverAppParamHelper.GetDeviceId(m_context));
+//			m_backEndManager.launchDbModificationGrabing(DriverAppParamHelper.GetDeviceId(m_context));
 		}
 		else
 		{
@@ -136,6 +145,8 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 		
 		try
 		{
+			NetworkManager.setMobileDataEnabled(m_context, false);
+			
 			if (pi_bResult)
 			{
 				DriverAppParamHelper.SetLastDeviceInfoUpdate(m_context, System.currentTimeMillis());
@@ -196,6 +207,8 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	{
 		try
 		{
+			NetworkManager.setMobileDataEnabled(m_context, false);
+			
 			if (pi_bResult)
 			{
 				DriverAppParamHelper.SetLastDBUpdateTime(m_context, System.currentTimeMillis());

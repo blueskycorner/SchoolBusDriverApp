@@ -118,27 +118,6 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		}
 	}
 	
-	private void setMobileDataEnabled(Context context, boolean enabled) 
-	{
-		try
-		{
-		    final ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		    final Class conmanClass = Class.forName(conman.getClass().getName());
-		    final Field iConnectivityManagerField = conmanClass.getDeclaredField("mService");
-		    iConnectivityManagerField.setAccessible(true);
-		    final Object iConnectivityManager = iConnectivityManagerField.get(conman);
-		    final Class iConnectivityManagerClass = Class.forName(iConnectivityManager.getClass().getName());
-		    final Method setMobileDataEnabledMethod = iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
-		    setMobileDataEnabledMethod.setAccessible(true);
-	
-		    setMobileDataEnabledMethod.invoke(iConnectivityManager, enabled);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	private void LaunchTripFragment(Trip pi_trip) 
 	{
 		TripFragment f = (TripFragment) getSupportFragmentManager().findFragmentByTag(TripFragment.NAME);
