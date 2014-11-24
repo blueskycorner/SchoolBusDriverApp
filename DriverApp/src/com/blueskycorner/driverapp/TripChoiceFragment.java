@@ -104,7 +104,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		String tripName = "";
 		if (pi_trip != null)
 		{
-			tripName = pi_trip.m_destination + " @ " + pi_trip.GetTime();
+			tripName = pi_trip.ToString();
 		}
 		else
 		{
@@ -286,7 +286,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 			tripNames = new String[pi_trips.size()];
 			for (int i=0; i<pi_trips.size(); i++)
 			{
-				tripNames[i] = pi_trips.get(i).m_destination;
+				tripNames[i] = pi_trips.get(i).ToString();
 			}
 		}
 		return tripNames;

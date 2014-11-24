@@ -45,7 +45,8 @@ public class Trip
 		}
 		return child;
 	}
-	public String GetTime() 
+	
+	private String GetTime() 
 	{
 		int hour = m_hour;
 		String s = "AM";
@@ -84,5 +85,11 @@ public class Trip
 			}
 		}
 		return addedChilds;
+	}
+	
+	public String ToString() 
+	{
+		String s = m_destination + " @ " + GetTime();
+		return s;
 	}
 }
