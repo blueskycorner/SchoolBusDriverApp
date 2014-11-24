@@ -6,7 +6,6 @@ import android.os.Parcelable;
 public class DriverAppSmsMessage implements Parcelable
 {
 	static final int SEPARATOR_INT = '|';
-	static final String SEPARATOR_STRING = "|";
 	
 	private static final int TYPE_FIELD_NUMBER = 0;
 	private static final int CHILD_FIELD_NUMBER = 1;

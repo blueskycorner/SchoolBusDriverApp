@@ -27,6 +27,7 @@ public class DriverAppParamHelper
 	private static final String DEVICE_ID = "DEVICE_ID";
 	private static final String AUTO_UPDATE_CHECK_HOUR = "AUTO_UPDATE_CHECK_HOUR";
 	private static final String MAX_UPDATE_ATTEMPTS = "MAX_UPDATE_ATTEMPTS";
+	private static final String REAL_SMS = "REAL_SMS";
 
 	public static Date Long2Date(Long pi_date)
 	{
@@ -282,4 +283,16 @@ public class DriverAppParamHelper
 		sharedPref.edit().putInt(MAX_UPDATE_ATTEMPTS, pi_max).commit();
 	}
 
+	public static boolean GetRealSms(Context pi_context) 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		boolean val = sharedPref.getBoolean(REAL_SMS, false);
+		return val;
+	}
+	
+	public static void SetRealSms(Context pi_context, boolean pi_realSms) 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		sharedPref.edit().putBoolean(REAL_SMS, pi_realSms).commit();
+	}
 }

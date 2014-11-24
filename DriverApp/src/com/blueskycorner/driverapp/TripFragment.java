@@ -97,12 +97,12 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 				img = m_activity.getResources().getDrawable(R.drawable.waiting);
 				break;
 			}
-			case STATE_FINISH:
+			case STATE_ON_THE_WAY_FINISHED:
 			{	
 				img = m_activity.getResources().getDrawable(R.drawable.happy);
 				break;
 			}
-			case STATE_SKIPPED:
+			case STATE_ON_THE_WAY_CANCELED:
 			case STATE_MISSING:
 			{	
 				img = m_activity.getResources().getDrawable(R.drawable.skip);

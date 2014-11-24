@@ -36,6 +36,7 @@ public class Child
 	public String m_fridayInfo = "";
 	// Other fields
 	public boolean m_isPresent = false;
+	public boolean m_isAdded = false;
 	public E_CHILD_STATE m_state;
 	
 	public void Init() 

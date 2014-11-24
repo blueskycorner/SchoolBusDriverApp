@@ -58,4 +58,31 @@ public class Trip
 
 		return time;
 	}
+	
+	public ArrayList<Integer> GetMissingChilds() 
+	{
+		ArrayList<Integer> missingChilds = new ArrayList<Integer>();
+		
+		for (Child child : m_childs) 
+		{
+			if ( (child.m_isAdded == false) && (child.m_isPresent == false) )
+			{
+				missingChilds.add(child.m_id);
+			}
+		}
+		return missingChilds;
+	}
+	public ArrayList<Integer> GetAddedChilds() 
+	{
+		ArrayList<Integer> addedChilds = new ArrayList<Integer>();
+		
+		for (Child child : m_childs) 
+		{
+			if ( (child.m_isAdded == true) && (child.m_isPresent == true) )
+			{
+				addedChilds.add(child.m_id);
+			}
+		}
+		return addedChilds;
+	}
 }

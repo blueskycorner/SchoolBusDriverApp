@@ -99,7 +99,14 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	public void TripStarted(Trip pi_trip)
 	{
 		m_trip = pi_trip;
-		SmsSender.SendTripStarted(this, m_trip.m_id);
+		if (m_trip.m_isReturn == false)
+		{
+			SmsSender.SendTripSchoolStarted(this, m_trip.m_id);
+		}
+		else
+		{
+			SmsSender.SendTripHomeStarted(this, m_trip);
+		}
 		
 		try
 		{
@@ -110,6 +117,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 			e.printStackTrace();
 		}
 	}
+	
 	private void setMobileDataEnabled(Context context, boolean enabled) 
 	{
 		try
@@ -171,11 +179,31 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	@Override
 	public void childStateUpdated(Child pi_child) 
 	{
-		if ( (pi_child.m_state != E_CHILD_STATE.STATE_WAITING) && (pi_child.m_state != E_CHILD_STATE.STATE_MISSING) )
+		switch (pi_child.m_state) 
 		{
-			SmsSender.SendChildState(pi_child);
+			case STATE_ON_THE_WAY_STARTED:
+			{
+				SmsSender.SendOntheWayStarted(this, pi_child.m_id);
+				break;
+			}
+			case STATE_ON_THE_WAY_FINISHED:
+			{
+				SmsSender.SendOntheWayFinished(this, pi_child.m_id);
+				break;
+			}
+			case STATE_ON_THE_WAY_CANCELED:
+			{
+				SmsSender.SendOntheWayCanceled(this, pi_child.m_id);
+				break;
+			}
+			case STATE_MISSING:
+			case STATE_WAITING:
+			{
+				// Nothing to do
+				break;
+			}
 		}
-		if (pi_child.m_state != E_CHILD_STATE.STATE_ON_THE_WAY)
+		if (pi_child.m_state != E_CHILD_STATE.STATE_ON_THE_WAY_STARTED)
 		{			
 			LaunchTripFragment(m_trip);
 		}
@@ -197,7 +225,14 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	@Override
 	public void TripFinished()
 	{
-		SmsSender.SendTripFinished(m_trip.m_id);
+		if (m_trip.m_isCancel == false)
+		{
+			SmsSender.SendTripFinished(this, m_trip.m_id);
+		}
+		else
+		{
+			SmsSender.SendTripCanceled(this, m_trip.m_id);
+		}
 		LaunchTripChoiceFragment();
 	}
 	
@@ -211,7 +246,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	public void onCheckedChanged(CompoundButton arg0, boolean arg1)
 	{
 		m_currentFragment.SetEnabled(!arg1);
-		SmsSender.SendEmergency(arg1);
+		SmsSender.SendEmergency(this, arg1);
 	}
 
 	@Override
