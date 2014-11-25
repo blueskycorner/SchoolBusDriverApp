@@ -46,18 +46,16 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		
-		Init();
+		m_fragmentName = NAME;
 	}
 	
 	@Override
 	public void onResume() 
 	{
 		super.onResume();
-		Init();
 	}
 
-	private void Init() 
+	public void Init() 
 	{
 		int schoolId = DriverAppParamHelper.GetInstance().GetLastSchoolId();
 		int tripId = DriverAppParamHelper.GetInstance().GetLastTripId();
@@ -85,6 +83,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
+		setRetainInstance(true);
 		
 		m_buttonSchool = (Button)getActivity().findViewById(R.id.buttonSchool);	
 		m_buttonSchool.setOnClickListener(this);
@@ -384,5 +383,10 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	public void RefreshState(Child pi_child) 
 	{
 		
+	}
+
+	public Trip GetTrip() 
+	{
+		return m_trip;
 	}
 }

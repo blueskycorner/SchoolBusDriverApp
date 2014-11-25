@@ -6,11 +6,18 @@ import android.view.ViewGroup;
 
 public abstract class DriverAppFragment extends Fragment
 {
+	protected String m_fragmentName = null;
+	
 	public abstract void BackPressed();
 
 	public abstract ViewGroup GetViewGroup();
 	
 	public abstract void RefreshState(Child pi_child);
+	
+	public String GetName()
+	{
+		return m_fragmentName;
+	}
 	
 	public void SetEnabled(boolean b)
 	{

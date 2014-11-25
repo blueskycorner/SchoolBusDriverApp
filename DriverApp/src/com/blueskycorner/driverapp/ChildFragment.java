@@ -3,34 +3,39 @@ package com.blueskycorner.driverapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class ChildFragment extends DriverAppFragment implements OnClickListener, OnCheckedChangeListener
+public class ChildFragment extends DriverAppFragment implements OnClickListener
 {
 	public static final String NAME = "CHILD_FRAGMENT";
 	private Child m_child;
 	private TextView m_name = null;
 	private TextView m_address = null;
 	private TextView m_pickupTime = null;
-	private ToggleButton m_buttonStart = null;
+	private Button m_buttonStart = null;
 	private Button m_buttonFinish = null;
 	private Button m_buttonSkip = null;
 	private Button m_buttonBack = null;
 	private IDriverAppCommunicator m_comm;
 	private boolean m_bIsReturn;
+	private boolean m_isActivated = false;
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) 
+	{
+		super.onCreate(savedInstanceState);
+		m_fragmentName = NAME;
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater,@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) 
 	{
@@ -48,21 +53,22 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) 
 	{
 		super.onActivityCreated(savedInstanceState);
+		setRetainInstance(true);
 		
 		m_name = (TextView) getActivity().findViewById(R.id.textViewName);
 		m_address = (TextView) getActivity().findViewById(R.id.textViewAddress);
 		m_pickupTime  = (TextView) getActivity().findViewById(R.id.textViewPickupTime);
-		m_buttonStart = (ToggleButton) getActivity().findViewById(R.id.buttonStart);
+		m_buttonStart = (Button) getActivity().findViewById(R.id.buttonStart);
 		m_buttonFinish = (Button) getActivity().findViewById(R.id.buttonFinish);
 		m_buttonSkip = (Button) getActivity().findViewById(R.id.buttonSkip);
 		m_buttonBack = (Button) getActivity().findViewById(R.id.buttonBack);
 		
-		m_buttonStart.setOnCheckedChangeListener(this);
+		m_buttonStart.setOnClickListener(this);
 		m_buttonFinish.setOnClickListener(this);
 		m_buttonSkip.setOnClickListener(this);
 		m_buttonBack.setOnClickListener(this);
 		
-		m_buttonFinish.setEnabled(false);
+		InitButtons();
 		
 		if (m_child != null)
 		{
@@ -70,6 +76,15 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 			m_address.setText(m_child.GetAddress());
 			m_pickupTime.setText(GetPickupText() + " @ " + m_child.GetPickupTime());
 		}
+	}
+
+	private void InitButtons() 
+	{
+		m_isActivated = false;
+		m_buttonStart.setText(getActivity().getResources().getString(R.string.start));
+		m_buttonFinish.setEnabled(false);
+		m_buttonSkip.setEnabled(true);
+		m_buttonBack.setEnabled(true);
 	}
 	
 	private String GetPickupText() 
@@ -114,24 +129,26 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 				m_comm.childStateUpdated(m_child);
 				break;
 			}
+			case R.id.buttonStart:
+			{
+				m_isActivated = !m_isActivated;
+				m_buttonBack.setEnabled(!m_isActivated);
+				m_buttonFinish.setEnabled(m_isActivated);
+				
+				if (m_isActivated == true)
+				{
+					m_buttonStart.setText(getActivity().getResources().getString(R.string.on_the_way));
+					m_child.m_state = E_CHILD_STATE.STATE_ON_THE_WAY_STARTED;
+				}
+				else
+				{
+					m_buttonStart.setText(getActivity().getResources().getString(R.string.start));
+					m_child.m_state = E_CHILD_STATE.STATE_WAITING;
+				}
+				m_comm.childStateUpdated(m_child);
+				break;
+			}
 		}
-	}
-
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-	{
-		m_buttonBack.setEnabled(!isChecked);
-		m_buttonFinish.setEnabled(isChecked);
-		
-		if (isChecked == true)
-		{
-			m_child.m_state = E_CHILD_STATE.STATE_ON_THE_WAY_STARTED;
-		}
-		else
-		{
-			m_child.m_state = E_CHILD_STATE.STATE_WAITING;
-		}
-		m_comm.childStateUpdated(m_child);
 	}
 
 	@Override
@@ -166,5 +183,10 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener,
 	public void SetReturn(boolean pi_isReturn) 
 	{
 		m_bIsReturn = pi_isReturn;
+	}
+
+	public Child GetChild() 
+	{
+		return m_child;
 	}
 }

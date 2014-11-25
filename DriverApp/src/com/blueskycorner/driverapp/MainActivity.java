@@ -1,20 +1,13 @@
 package com.blueskycorner.driverapp;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import android.support.v4.app.FragmentActivity;
@@ -22,11 +15,14 @@ import android.support.v4.app.FragmentTransaction;
 
 public class MainActivity extends FragmentActivity implements IDriverAppCommunicator, OnCheckedChangeListener, IMessageListener, IDeviceDataListener
 {
-	private Trip m_trip;
 	DriverAppFragment m_currentFragment = null;
 	private MessageManager m_messageManager = null;
 	private ToggleButton m_buttonEmergency = null;
 	private TimerManager m_timerManager = null;
+	
+	private TripChoiceFragment m_tripChoiceFragment = null;
+	private TripFragment m_tripFragment = null;
+	private ChildFragment m_childFragment = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -44,34 +40,50 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		m_buttonEmergency = (ToggleButton) findViewById(R.id.toggleButtonEmmergency);
 		m_buttonEmergency .setOnCheckedChangeListener(this);
 		
-		LaunchTripChoiceFragment();
+		InitFragments(savedInstanceState);
 		
 		m_timerManager = new TimerManager(this);
 		m_timerManager.StartTimer();
-		
-//		DriverAppSmsMessage m = new DriverAppSmsMessage();
-//		m.m_body = "3|";
-//		onMessageReceived(m);
-//		int i = m.GetChildId();
 	}
-
-	private void LaunchTripChoiceFragment() 
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) 
 	{
-		TripChoiceFragment f1 = (TripChoiceFragment) getSupportFragmentManager().findFragmentByTag(TripChoiceFragment.NAME);
-		
-		if (f1 == null)
-		{
-			f1 = new TripChoiceFragment();
-		}
-		
-		m_currentFragment = f1;
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.replace(R.id.main_content_frame, f1, TripChoiceFragment.NAME);
-//	        ft.add(R.id.main_content_frame, f2, TripFragment.NAME);
-        ft.commit();
+		super.onSaveInstanceState(outState);
+		Trip trip = m_tripChoiceFragment.GetTrip();
+		Child child = m_childFragment.GetChild();
+		String currentFragment = m_currentFragment.GetName();
 	}
 
+	private void InitFragments(Bundle pi_savedInstanceState) 
+	{
+		m_tripChoiceFragment = new TripChoiceFragment();
+		m_tripFragment = new TripFragment();
+		m_childFragment = new ChildFragment();
+		
+		if (pi_savedInstanceState != null)
+		{
+			// TODO get name of current fragment
+			// TODO get trip and child info
+		}
+		else
+		{
+			m_tripChoiceFragment.Init();
+			ActivateFragment(m_tripChoiceFragment);
+		}
+	}
+
+	private void ActivateFragment(DriverAppFragment pi_fragment)
+	{
+		if (pi_fragment != null)
+		{
+			m_currentFragment = pi_fragment;
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+	        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+	        ft.replace(R.id.main_content_frame, pi_fragment, pi_fragment.GetName()).commit();
+		}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
@@ -98,19 +110,19 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	@Override
 	public void TripStarted(Trip pi_trip)
 	{
-		m_trip = pi_trip;
-		if (m_trip.m_isReturn == false)
+		if (pi_trip.m_isReturn == false)
 		{
-			SmsSender.SendTripSchoolStarted(this, m_trip.m_id);
+			SmsSender.SendTripSchoolStarted(this, pi_trip.m_id);
 		}
 		else
 		{
-			SmsSender.SendTripHomeStarted(this, m_trip);
+			SmsSender.SendTripHomeStarted(this, pi_trip);
 		}
 		
 		try
 		{
-			LaunchTripFragment(m_trip);
+			m_tripFragment.UpdateTrip(pi_trip);
+			ActivateFragment(m_tripFragment);
 		}
 		catch (Exception e)
 		{
@@ -118,41 +130,17 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		}
 	}
 	
-	private void LaunchTripFragment(Trip pi_trip) 
-	{
-		TripFragment f = (TripFragment) getSupportFragmentManager().findFragmentByTag(TripFragment.NAME);
-		
-		if (f == null)
-		{
-			f = new TripFragment();
-		}
-		
-		m_currentFragment = f;
-		f.UpdateTrip(pi_trip);
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.replace(R.id.main_content_frame, f, TripFragment.NAME);
-        ft.commit();
-	}
-
 	@Override
 	public void ChildSelected(Child pi_child) 
 	{
-		ChildFragment f = (ChildFragment) getSupportFragmentManager().findFragmentByTag(ChildFragment.NAME);
-		
-		if (f == null)
-		{
-			f = new ChildFragment();
-		}
-		
-		m_currentFragment = f;
-		f.SetChild(pi_child);
-		f.SetReturn(m_trip.m_isReturn);
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.replace(R.id.main_content_frame, f, ChildFragment.NAME);
-        ft.commit();
+        m_childFragment.SetChild(pi_child);
+        m_childFragment.SetReturn(GetTrip().m_isReturn);
+        ActivateFragment(m_childFragment);
+	}
 
+	private Trip GetTrip() 
+	{
+		return m_tripChoiceFragment.GetTrip();
 	}
 
 	@Override
@@ -183,8 +171,9 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 			}
 		}
 		if (pi_child.m_state != E_CHILD_STATE.STATE_ON_THE_WAY_STARTED)
-		{			
-			LaunchTripFragment(m_trip);
+		{
+			m_tripFragment.UpdateUI();
+			ActivateFragment(m_tripFragment);
 		}
 	}
 	
@@ -204,15 +193,16 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	@Override
 	public void TripFinished()
 	{
-		if (m_trip.m_isCancel == false)
+		if (GetTrip().m_isCancel == false)
 		{
-			SmsSender.SendTripFinished(this, m_trip.m_id);
+			SmsSender.SendTripFinished(this, GetTrip().m_id);
 		}
 		else
 		{
-			SmsSender.SendTripCanceled(this, m_trip.m_id);
+			SmsSender.SendTripCanceled(this, GetTrip().m_id);
 		}
-		LaunchTripChoiceFragment();
+		m_tripChoiceFragment.GetTrip().Init();
+		ActivateFragment(m_tripChoiceFragment);
 	}
 	
 	@Override

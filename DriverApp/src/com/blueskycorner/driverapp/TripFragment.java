@@ -30,6 +30,13 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 	private Button m_buttonEndTrip = null;
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) 
+	{
+		super.onCreate(savedInstanceState);
+		m_fragmentName = NAME;
+	}
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater,@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) 
 	{
 		View v = inflater.inflate(R.layout.trip_fragment, container, false);
@@ -40,6 +47,13 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 		UpdateUI();
 		
 		return v;
+	}
+	
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) 
+	{
+		super.onActivityCreated(savedInstanceState);
+		setRetainInstance(true);
 	}
 
 	public void UpdateUI() 

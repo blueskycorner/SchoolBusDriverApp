@@ -12,6 +12,11 @@
     <string name="db_update_failed">Data base update failed</string>
     <string name="retry">Retry</string>
     <string name="ok">Ok</string>
+    <string name="skip">Skip</string>
+    <string name="back">Back</string>
+    <string name="finish">Finish</string>
+    <string name="on_the_way">On the way</string>
+    <string name="start">Start</string>
     <string name="pickup">Pick up</string>
     <string name="dropoff">Drop off</string>
     <string name="later">Later</string>

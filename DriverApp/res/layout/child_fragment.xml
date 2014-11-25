@@ -50,14 +50,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Back" />
+            android:text="@string/back" />
 
         <Button
             android:id="@+id/buttonFinish"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Finish" />
+            android:text="@string/finish" />
     </LinearLayout>
 
     <LinearLayout
@@ -67,20 +67,18 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true" >
 
-        <ToggleButton
+        <Button
             android:id="@+id/buttonStart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textOff="Start"
-            android:textOn="On the way" />
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/buttonSkip"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Skip" />
+            android:text="@string/skip" />
     </LinearLayout>
 
 </RelativeLayout>
