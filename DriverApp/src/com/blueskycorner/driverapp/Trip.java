@@ -55,7 +55,8 @@ public class Trip
 			hour -= 12;
 			s = "PM";
 		}
-		String time = Integer.toString(hour) + ":" + Integer.toString(m_minute) + " " + s;
+		String format = "%1$02d";
+		String time = String.format(format, hour) + ":" + String.format(format, m_minute) + " " + s;
 
 		return time;
 	}

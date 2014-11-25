@@ -1,6 +1,7 @@
 package com.blueskycorner.driverapp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.concurrent.locks.ReentrantLock;
 
 import android.content.Context;
@@ -132,8 +133,22 @@ public class DataManager
 
 	public ArrayList<Trip> GetTrips(int pi_schoolId, boolean pi_dayFilter, boolean pi_timeFilter) 
 	{
-		E_DAY day = E_DAY.TUESDAY;
-		return m_tripDAO.GetTrips(pi_schoolId, day, 10, 0);
+		
+		E_DAY day = null;
+		int hour = -1, minute = -1;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		if (DriverAppParamHelper.GetTripFilterByDay(m_context) == true)
+		{
+			int iday = calendar.get(Calendar.DAY_OF_WEEK);
+			day = E_DAY.FromCalendarInt(iday);
+		}
+		if (DriverAppParamHelper.GetTripFilterByTime(m_context) == true)
+		{
+			hour = calendar.get(Calendar.HOUR_OF_DAY);
+			minute = calendar.get(Calendar.MINUTE);
+		}
+		return m_tripDAO.GetTrips(pi_schoolId, day, hour, minute);
 	}
 
 	public Trip getTrip(int pi_tripId) 

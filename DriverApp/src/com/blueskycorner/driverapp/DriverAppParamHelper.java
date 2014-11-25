@@ -28,6 +28,8 @@ public class DriverAppParamHelper
 	private static final String AUTO_UPDATE_CHECK_HOUR = "AUTO_UPDATE_CHECK_HOUR";
 	private static final String MAX_UPDATE_ATTEMPTS = "MAX_UPDATE_ATTEMPTS";
 	private static final String REAL_SMS = "REAL_SMS";
+	private static final String TRIP_FILTER_BY_DAY = "FILTER_BY_DAY";
+	private static final String TRIP_FILTER_BY_TIME = "TRIP_FILTER_BY_TIME";
 
 	public static Date Long2Date(Long pi_date)
 	{
@@ -294,5 +296,31 @@ public class DriverAppParamHelper
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
 		sharedPref.edit().putBoolean(REAL_SMS, pi_realSms).commit();
+	}
+
+	public static boolean GetTripFilterByDay(Context pi_context)
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		boolean val = sharedPref.getBoolean(TRIP_FILTER_BY_DAY, true);
+		return val;
+	}
+	
+	public static void SetFilterByDay(Context pi_context, boolean pi_filterByDay) 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		sharedPref.edit().putBoolean(TRIP_FILTER_BY_DAY, pi_filterByDay).commit();
+	}
+
+	public static boolean GetTripFilterByTime(Context pi_context)
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		boolean val = sharedPref.getBoolean(TRIP_FILTER_BY_TIME, false);
+		return val;
+	}
+	
+	public static void SetFilterByTime(Context pi_context, boolean pi_filterByDay) 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		sharedPref.edit().putBoolean(TRIP_FILTER_BY_TIME, pi_filterByDay).commit();
 	}
 }

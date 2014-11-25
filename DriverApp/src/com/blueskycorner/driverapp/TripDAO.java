@@ -45,14 +45,15 @@ public class TripDAO extends SchoolBusDAO
         {
         	query += " AND " + KEY_DAY_ID + " = " + Integer.toString(pi_day.getValue());
         }
-//        if (pi_hour != -1)
-//        {
-//        	query += "";
-//        }
-//        if (pi_minute != -1)
-//        {
-//        	query += "";
-//        }
+        if (pi_hour != -1)
+        {
+        	query += " AND " + KEY_HOUR + " > " + Integer.toString(pi_hour);
+        }
+        if (pi_minute != -1)
+        {
+        	query += " AND " + KEY_MINUTE + " > " + Integer.toString(pi_minute);
+        }
+        query += " ORDER BY " + KEY_HOUR + " ASC, " + KEY_MINUTE + " ASC";
     	
         // 2. get reference to writable DB
         Cursor cursor = m_database.rawQuery(query, null);

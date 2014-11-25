@@ -6,7 +6,9 @@ public enum E_DAY
 	TUESDAY(1),
 	WEDNESDAY(2),
 	THURSDAY(3),
-	FRIDAY(4);
+	FRIDAY(4),
+	SATURDAY(5),
+	SUNDAY(6);
 	
 	private final int id;
 	E_DAY(int id) { this.id = id; }
@@ -40,6 +42,60 @@ public enum E_DAY
 			case 4:
 			{
 				s = FRIDAY;
+				break;
+			}
+			case 5:
+			{
+				s = SATURDAY;
+				break;
+			}
+			case 6:
+			{
+				s = SUNDAY;
+				break;
+			}
+		}
+		return s;
+	}
+
+	public static E_DAY FromCalendarInt(int pi_value)
+	{
+		E_DAY s = null;
+		switch (pi_value) 
+		{
+			case 1:
+			{
+				s = SUNDAY;
+				break;
+			}
+			case 2:
+			{
+				s = MONDAY;
+				break;
+			}
+			case 3:
+			{
+				s = TUESDAY;
+				break;
+			}
+			case 4:
+			{
+				s = WEDNESDAY;
+				break;
+			}
+			case 5:
+			{
+				s = THURSDAY;
+				break;
+			}
+			case 6:
+			{
+				s = FRIDAY;
+				break;
+			}
+			case 7:
+			{
+				s = SATURDAY;
 				break;
 			}
 		}
