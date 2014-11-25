@@ -138,6 +138,7 @@ public class DataManager
 		int hour = -1, minute = -1;
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
+		calendar.add(Calendar.MINUTE, -9);
 		if (DriverAppParamHelper.GetTripFilterByDay(m_context) == true)
 		{
 			int iday = calendar.get(Calendar.DAY_OF_WEEK);

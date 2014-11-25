@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.blueskycorner.mediaLib.NetworkManager;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -11,6 +13,9 @@ import android.preference.PreferenceManager;
 
 public class DriverAppParamHelper 
 {
+	private static Context m_context = null;
+	private static DriverAppParamHelper m_driverParamHelper = new DriverAppParamHelper();
+	
 	private static SimpleDateFormat m_dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	
 	private static final String LAST_SCHOOL_ID = "LAST_SCHOOL_ID";
@@ -30,7 +35,17 @@ public class DriverAppParamHelper
 	private static final String REAL_SMS = "REAL_SMS";
 	private static final String TRIP_FILTER_BY_DAY = "FILTER_BY_DAY";
 	private static final String TRIP_FILTER_BY_TIME = "TRIP_FILTER_BY_TIME";
+	
+	public static DriverAppParamHelper GetInstance() 
+    {
+	   return m_driverParamHelper;
+    }
 
+	public void SetContext(Context pi_context)
+	{
+		m_context = pi_context;
+	}
+	
 	public static Date Long2Date(Long pi_date)
 	{
 		Date d = null;
@@ -73,29 +88,29 @@ public class DriverAppParamHelper
 		return d;
 	}
 
-	public static int GetLastSchoolId(Context pi_context) 
+	public int GetLastSchoolId() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(LAST_SCHOOL_ID, -1);
 		return val;
 	}
 
-	public static int GetLastTripId(Context pi_context) 
+	public int GetLastTripId() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(LAST_TRIP_ID, -1);
 		return val;
 	}
 
-	public static void SetLastSchoolId(Context pi_context, int m_id) 
+	public void SetLastSchoolId(int m_id) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putInt(LAST_SCHOOL_ID, m_id).commit();
 	}
 	
-	public static void SetLastTripId(Context pi_context, int m_id) 
+	public void SetLastTripId(int m_id) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putInt(LAST_TRIP_ID, m_id).commit();		
 	}
 	
@@ -314,7 +329,7 @@ public class DriverAppParamHelper
 	public static boolean GetTripFilterByTime(Context pi_context)
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
-		boolean val = sharedPref.getBoolean(TRIP_FILTER_BY_TIME, false);
+		boolean val = sharedPref.getBoolean(TRIP_FILTER_BY_TIME, true);
 		return val;
 	}
 	

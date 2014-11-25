@@ -26,6 +26,7 @@ public class InitActivity extends Activity implements ISynchronizerListener
 		
 		NetworkManager.GetInstance().SetContext(this);
 		DataManager.GetInstance().SetContext(this);
+		DriverAppParamHelper.GetInstance().SetContext(this);
 		
 		m_tvInitState = (TextView) findViewById(R.id.textViewInitState);
 		m_progressBar = (ProgressBar) findViewById(R.id.progressBarInit);

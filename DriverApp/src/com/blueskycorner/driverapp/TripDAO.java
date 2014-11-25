@@ -47,11 +47,11 @@ public class TripDAO extends SchoolBusDAO
         }
         if (pi_hour != -1)
         {
-        	query += " AND " + KEY_HOUR + " > " + Integer.toString(pi_hour);
+        	query += " AND " + KEY_HOUR + " >= " + Integer.toString(pi_hour);
         }
         if (pi_minute != -1)
         {
-        	query += " AND " + KEY_MINUTE + " > " + Integer.toString(pi_minute);
+        	query += " AND " + KEY_MINUTE + " >= " + Integer.toString(pi_minute);
         }
         query += " ORDER BY " + KEY_HOUR + " ASC, " + KEY_MINUTE + " ASC";
     	

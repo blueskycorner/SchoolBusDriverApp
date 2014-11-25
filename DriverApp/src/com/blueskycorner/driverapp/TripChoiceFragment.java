@@ -59,8 +59,8 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 
 	private void Init() 
 	{
-		int schoolId = DriverAppParamHelper.GetLastSchoolId(getActivity());
-		int tripId = DriverAppParamHelper.GetLastTripId(getActivity());
+		int schoolId = DriverAppParamHelper.GetInstance().GetLastSchoolId();
+		int tripId = DriverAppParamHelper.GetInstance().GetLastTripId();
 		
 		if (schoolId != -1)
 		{
@@ -172,7 +172,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 							((ChildListAdapter)m_childList.getAdapter()).SetTrip(null);
 						}
 						m_childList.invalidateViews();
-						DriverAppParamHelper.SetLastSchoolId(getActivity(),m_school.m_id);
+						DriverAppParamHelper.GetInstance().SetLastSchoolId(m_school.m_id);
 						dialog.dismiss();
 					}
 				});
@@ -207,7 +207,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 							m_trip.Init(list);
 							((ChildListAdapter)m_childList.getAdapter()).SetTrip(m_trip);
 							m_childList.invalidateViews();
-							DriverAppParamHelper.SetLastTripId(getActivity(),m_trip.m_id);
+							DriverAppParamHelper.GetInstance().SetLastTripId(m_trip.m_id);
 							dialog.dismiss();
 						}
 					});
