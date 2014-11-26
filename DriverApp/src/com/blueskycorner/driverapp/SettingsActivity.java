@@ -13,20 +13,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class SettingsActivity extends Activity implements OnClickListener 
+public class SettingsActivity extends Activity implements OnClickListener, OnCheckedChangeListener 
 {
 	private TextView m_appVersion = null;
 	private TextView m_lastDeviceUpdate = null;
 	private TextView m_lastDBUpdate = null;
 	private TextView m_deviceID = null;
 	private TextView m_gateway = null;
-	private EditText m_autoUpdateHour = null;
-	private EditText m_AutoUpdatePeriod = null;
-	private EditText m_checkPeriod = null;
+//	private EditText m_autoUpdateHour = null;
+//	private EditText m_AutoUpdatePeriod = null;
+//	private EditText m_checkPeriod = null;
 	private Button m_buttonSchool = null;
+	private CheckBox m_realSMS = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -39,9 +43,10 @@ public class SettingsActivity extends Activity implements OnClickListener
 		m_lastDBUpdate = (TextView) findViewById(R.id.textViewLastDbUpdateData);
 		m_deviceID = (TextView) findViewById(R.id.textViewDeviceIdData);
 		m_gateway = (TextView) findViewById(R.id.textViewGatewayData);
-		m_autoUpdateHour = (EditText) findViewById(R.id.editTextAutoUpdateHourData);
-		m_AutoUpdatePeriod = (EditText) findViewById(R.id.editTextAutoUpdatePeriodData);
-		m_checkPeriod = (EditText) findViewById(R.id.editTextDeviceCheckPeriodData);
+//		m_autoUpdateHour = (EditText) findViewById(R.id.editTextAutoUpdateHourData);
+//		m_AutoUpdatePeriod = (EditText) findViewById(R.id.editTextAutoUpdatePeriodData);
+//		m_checkPeriod = (EditText) findViewById(R.id.editTextDeviceCheckPeriodData);
+		m_realSMS = (CheckBox) findViewById(R.id.checkBoxRealSMS);
 		
 		try 
 		{
@@ -59,11 +64,14 @@ public class SettingsActivity extends Activity implements OnClickListener
 			
 			m_gateway.setText(DriverAppParamHelper.GetInstance().GetDeviceGateway());
 			
-			m_autoUpdateHour.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour()));
+//			m_autoUpdateHour.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour()));
+//			
+//			m_AutoUpdatePeriod.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetAutoUpdatePeriod()/(60*1000)));
+//			
+//			m_checkPeriod.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetCheckTimerPeriod()/(60*1000)));
 			
-			m_AutoUpdatePeriod.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetAutoUpdatePeriod()/(60*1000)));
-			
-			m_checkPeriod.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetCheckTimerPeriod()/(60*1000)));
+			m_realSMS.setChecked(DriverAppParamHelper.GetInstance().GetRealSms());
+			m_realSMS.setOnCheckedChangeListener(this);
 			
 			m_buttonSchool = (Button) findViewById(R.id.buttonSchool);	
 			
@@ -118,7 +126,7 @@ public class SettingsActivity extends Activity implements OnClickListener
 	{
 		int index = -1;
 		int currentSchoolId = DriverAppParamHelper.GetInstance().GetLastSchoolId();
-		if (currentSchoolId != -1)
+		if (currentSchoolId != DriverAppParamHelper.NO_SCHOOL_ID)
 		{
 			for (int i=0; i<pi_schools.size(); i++) 
 			{
@@ -163,25 +171,31 @@ public class SettingsActivity extends Activity implements OnClickListener
 		DriverAppParamHelper.GetInstance().SetDeviceGateway(s);
 	}
 
-	public void Hour(View v)
+	@Override
+	public void onCheckedChanged(CompoundButton arg0, boolean arg1)
 	{
-		String s = m_autoUpdateHour.getText().toString();
-		DriverAppParamHelper.GetInstance().SetAutoUpdateCheckHour(Integer.parseInt(s));
-		DataSynchronyzer.CancelAlarm(this);
-		DataSynchronyzer.SetAlarm(this);
+		DriverAppParamHelper.GetInstance().SetRealSms(arg1);
 	}
 
-	public void Period(View v)
-	{
-		String s = m_AutoUpdatePeriod.getText().toString();
-		DriverAppParamHelper.GetInstance().SetAutoUpdatePeriod(Integer.parseInt(s) * 60 * 1000);
-		DataSynchronyzer.CancelAlarm(this);
-		DataSynchronyzer.SetAlarm(this);
-	}
-
-	public void Check(View v)
-	{
-		String s = m_checkPeriod.getText().toString();
-		DriverAppParamHelper.GetInstance().SetCheckTimerPeriod(Integer.parseInt(s) * 60 * 1000);
-	}
+//	public void Hour(View v)
+//	{
+//		String s = m_autoUpdateHour.getText().toString();
+//		DriverAppParamHelper.GetInstance().SetAutoUpdateCheckHour(Integer.parseInt(s));
+//		DataSynchronyzer.CancelAlarm(this);
+//		DataSynchronyzer.SetAlarm(this);
+//	}
+//
+//	public void Period(View v)
+//	{
+//		String s = m_AutoUpdatePeriod.getText().toString();
+//		DriverAppParamHelper.GetInstance().SetAutoUpdatePeriod(Integer.parseInt(s) * 60 * 1000);
+//		DataSynchronyzer.CancelAlarm(this);
+//		DataSynchronyzer.SetAlarm(this);
+//	}
+//
+//	public void Check(View v)
+//	{
+//		String s = m_checkPeriod.getText().toString();
+//		DriverAppParamHelper.GetInstance().SetCheckTimerPeriod(Integer.parseInt(s) * 60 * 1000);
+//	}
 }

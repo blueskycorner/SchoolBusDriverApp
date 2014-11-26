@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Trip 
 {
-	public int m_id = -1;
+	public int m_id = DriverAppParamHelper.NO_TRIP_ID;
 	public String m_destination = null;
-	public int m_hour = 0;
-	public int m_minute = 0;
+	public int m_hour = -1;
+	public int m_minute = -1;
 	public ArrayList<Child> m_childs = null;
 	public boolean m_isCancel = false;
 	public boolean m_isReturn = false;
@@ -35,9 +35,12 @@ public class Trip
 
 	public void Init() 
 	{
-		for (Child child : m_childs) 
+		if (m_childs != null)
 		{
-			child.Init();
+			for (Child child : m_childs) 
+			{
+				child.Init();
+			}
 		}
 	}
 	
@@ -56,16 +59,21 @@ public class Trip
 	
 	private String GetTime() 
 	{
-		int hour = m_hour;
-		String s = "AM";
-		if (m_hour > 12)
+		String time = null;
+		
+		if ( (m_hour != -1) && (m_minute != -1) )
 		{
-			hour -= 12;
-			s = "PM";
+			int hour = m_hour;
+			String s = "AM";
+			if (m_hour > 12)
+			{
+				hour -= 12;
+				s = "PM";
+			}
+			String format = "%1$02d";
+			time = String.format(format, hour) + ":" + String.format(format, m_minute) + " " + s;
 		}
-		String format = "%1$02d";
-		String time = String.format(format, hour) + ":" + String.format(format, m_minute) + " " + s;
-
+		
 		return time;
 	}
 	
@@ -98,7 +106,14 @@ public class Trip
 	
 	public String ToString() 
 	{
-		String s = m_destination + " @ " + GetTime();
+		String s = "";
+		String sTime = GetTime();
+		s = m_destination;
+		if (sTime != null)
+		{
+			s += " @ " + sTime;
+		}
+		
 		return s;
 	}
 

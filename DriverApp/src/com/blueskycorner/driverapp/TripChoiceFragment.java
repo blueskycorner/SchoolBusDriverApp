@@ -94,9 +94,16 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		{
 			case R.id.buttonTrip:
 			{
-				if (GetSchoolId() != -1)
+				if (GetSchoolId() != DriverAppParamHelper.NO_SCHOOL_ID)
 				{
 					final ArrayList<Trip> trips = DataManager.GetInstance().GetTrips(GetSchoolId(), true, true);
+					
+					Trip specialTripHome = DataManager.GetSpecialHomeTrip(getActivity());
+					Trip specialTripSchool = DataManager.GetSpecialSchoolTrip(getActivity());
+					
+					trips.add(specialTripHome);
+					trips.add(specialTripSchool);
+					
 					String[] tripNames = GetTripNames(trips);
 					int currentIndex = GetCurrentTripIndex(trips);
 					AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
@@ -135,13 +142,17 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 			}
 			case R.id.buttonStartTrip:
 			{
-				if (GetSchoolId() == -1)
+				if (GetSchoolId() == DriverAppParamHelper.NO_SCHOOL_ID)
 				{
 					ChooseSchoolFirst();
 				} 
 				else if (m_trip == null)
 				{
 					ChooseTripFirst();
+				}
+				else if (m_trip.GetRemainChildCount() == 0)
+				{
+					NoChildsInThisTrip();
 				}
 				else
 				{
@@ -151,6 +162,22 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 				break;
 			}
 		}
+	}
+
+	private void NoChildsInThisTrip() 
+	{
+		AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+		builder.setTitle(R.string.warning);
+		builder.setMessage(R.string.no_childs_in_this_trip);
+		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() 
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which) 
+			{
+				dialog.dismiss();
+			}
+		});
+		builder.show();
 	}
 
 	private int GetSchoolId() 
@@ -209,7 +236,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	private String[] GetTripNames(ArrayList<Trip> pi_trips) 
 	{
 		String[] tripNames = null;
-		if (GetSchoolId() != -1)
+		if (GetSchoolId() != DriverAppParamHelper.NO_SCHOOL_ID)
 		{
 			tripNames = new String[pi_trips.size()];
 			for (int i=0; i<pi_trips.size(); i++)

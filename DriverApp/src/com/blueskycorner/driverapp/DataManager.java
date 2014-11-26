@@ -156,13 +156,62 @@ public class DataManager
 
 	public Trip getTrip(int pi_tripId) 
 	{
-		return m_tripDAO.GetTrip(pi_tripId);
+		Trip trip = null;
+		switch (pi_tripId)
+		{
+			case DriverAppParamHelper.SPECIAL_TRIP_HOME_ID:
+			{
+				trip = GetSpecialHomeTrip(m_context);
+				break;
+			}
+			case DriverAppParamHelper.SPECIAL_TRIP_SCHOOL_ID:
+			{
+				trip = GetSpecialSchoolTrip(m_context);
+				break;
+			}
+			default:
+			{
+				trip = m_tripDAO.GetTrip(pi_tripId);
+				break;
+			}
+		}
+		return trip;
+	}
+
+	static public Trip GetSpecialSchoolTrip(Context pi_context) 
+	{
+		Trip trip;
+		trip = new Trip();
+		trip.m_id = DriverAppParamHelper.SPECIAL_TRIP_SCHOOL_ID;
+		trip.m_destination = pi_context.getResources().getString(R.string.special_school_trip_name);
+		trip.m_isReturn = false;
+		trip.m_childs = new ArrayList<Child>();
+		return trip;
+	}
+
+	static public Trip GetSpecialHomeTrip(Context pi_context) 
+	{
+		Trip trip;
+		trip = new Trip();
+		trip.m_id = DriverAppParamHelper.SPECIAL_TRIP_HOME_ID;
+		trip.m_destination = pi_context.getResources().getString(R.string.special_home_trip_name);
+		trip.m_isReturn = true;
+		trip.m_childs = new ArrayList<Child>();
+		return trip;
 	}
 
 	public ArrayList<Child> GetChilds(int pi_tripId)
 	{
-		ArrayList<Child> childs = m_tripChildAssociationDAO.GetChilds(pi_tripId);
-		childs = m_childDAO.GetChildInfo(childs);
+		ArrayList<Child> childs = null;
+		if ( (pi_tripId != DriverAppParamHelper.SPECIAL_TRIP_HOME_ID) && (pi_tripId != DriverAppParamHelper.SPECIAL_TRIP_SCHOOL_ID) )
+		{
+			childs = m_tripChildAssociationDAO.GetChilds(pi_tripId);
+			childs = m_childDAO.GetChildInfo(childs);
+		}
+		else
+		{
+			childs = new ArrayList<Child>();
+		}
 		
 		return childs;
 	}

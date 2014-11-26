@@ -34,6 +34,13 @@ public class DriverAppParamHelper
 	private static final String TRIP_FILTER_BY_DAY = "FILTER_BY_DAY";
 	private static final String TRIP_FILTER_BY_TIME = "TRIP_FILTER_BY_TIME";
 	
+	public static final int NO_SCHOOL_ID = -2;
+	public static final int NO_DEVICE_ID = -2;
+	
+	public static final int SPECIAL_TRIP_HOME_ID = -1;
+	public static final int SPECIAL_TRIP_SCHOOL_ID = -2;
+	public static final int NO_TRIP_ID = -3;
+	
 	public static DriverAppParamHelper GetInstance() 
     {
 	   return m_driverParamHelper;
@@ -89,14 +96,14 @@ public class DriverAppParamHelper
 	public int GetLastSchoolId() 
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
-		int val = sharedPref.getInt(LAST_SCHOOL_ID, -1);
+		int val = sharedPref.getInt(LAST_SCHOOL_ID, NO_SCHOOL_ID);
 		return val;
 	}
 
 	public int GetLastTripId() 
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
-		int val = sharedPref.getInt(LAST_TRIP_ID, -1);
+		int val = sharedPref.getInt(LAST_TRIP_ID, NO_TRIP_ID);
 		return val;
 	}
 
@@ -215,7 +222,7 @@ public class DriverAppParamHelper
 	public int GetDeviceId() 
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
-		int val = sharedPref.getInt(DEVICE_ID, -1);	
+		int val = sharedPref.getInt(DEVICE_ID, NO_DEVICE_ID);	
 		return val;
 	}
 

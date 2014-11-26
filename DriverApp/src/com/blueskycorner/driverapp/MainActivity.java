@@ -86,7 +86,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		{
 			int tripId = DriverAppParamHelper.GetInstance().GetLastTripId();
 			
-			if (tripId != -1)
+			if (tripId != DriverAppParamHelper.NO_TRIP_ID)
 			{
 				trip = DataManager.GetInstance().getTrip(tripId);
 				ArrayList<Child> list = DataManager.GetInstance().GetChilds(trip.m_id);

@@ -294,7 +294,7 @@ public class BackEndManager
 				case 0:
 				{
 					CreateSchoolObjects(pi_jsonObject);
-					DriverAppParamHelper.GetInstance().SetLastSchoolId(-1);
+					DriverAppParamHelper.GetInstance().SetLastSchoolId(DriverAppParamHelper.NO_SCHOOL_ID);
 					break;
 				}
 				case 1:
@@ -305,7 +305,7 @@ public class BackEndManager
 				case 2:
 				{
 					CreateTripObjects(pi_jsonObject);
-					DriverAppParamHelper.GetInstance().SetLastTripId(-1);
+					DriverAppParamHelper.GetInstance().SetLastTripId(DriverAppParamHelper.NO_TRIP_ID);
 					break;
 				}
 				case 3:
