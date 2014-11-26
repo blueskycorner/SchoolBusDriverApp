@@ -47,7 +47,7 @@ public class TimerManager
 		               public void onClick(final DialogInterface dialog, final int id) 
 		               {
 		                   m_context.startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-		                   m_handler.postDelayed(m_checkRunnable, DriverAppParamHelper.GetCheckTimerPeriod(m_context));
+		                   m_handler.postDelayed(m_checkRunnable, DriverAppParamHelper.GetInstance().GetCheckTimerPeriod());
 		               }
 		           })
 		           .setNegativeButton(m_context.getResources().getText(R.string.later), new DialogInterface.OnClickListener() 
@@ -55,7 +55,7 @@ public class TimerManager
 		               public void onClick(final DialogInterface dialog, final int id) 
 		               {
 		                    dialog.cancel();
-		                    m_handler.postDelayed(m_checkRunnable, DriverAppParamHelper.GetCheckTimerPeriod(m_context));
+		                    m_handler.postDelayed(m_checkRunnable, DriverAppParamHelper.GetInstance().GetCheckTimerPeriod());
 		               }
 		           });
 		    final AlertDialog alert = builder.create();

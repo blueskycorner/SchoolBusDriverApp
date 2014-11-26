@@ -141,12 +141,12 @@ public class DataManager
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
 		calendar.add(Calendar.MINUTE, -30);
-		if (DriverAppParamHelper.GetTripFilterByDay(m_context) == true)
+		if (DriverAppParamHelper.GetInstance().GetTripFilterByDay() == true)
 		{
 			int iday = calendar.get(Calendar.DAY_OF_WEEK);
 			day = E_DAY.FromCalendarInt(iday);
 		}
-		if (DriverAppParamHelper.GetTripFilterByTime(m_context) == true)
+		if (DriverAppParamHelper.GetInstance().GetTripFilterByTime() == true)
 		{
 			hour = calendar.get(Calendar.HOUR_OF_DAY);
 			minute = calendar.get(Calendar.MINUTE);

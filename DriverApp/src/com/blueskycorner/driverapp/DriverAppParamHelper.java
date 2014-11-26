@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.blueskycorner.mediaLib.NetworkManager;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -13,7 +11,7 @@ import android.preference.PreferenceManager;
 
 public class DriverAppParamHelper 
 {
-	private static Context m_context = null;
+	private Context m_context = null;
 	private static DriverAppParamHelper m_driverParamHelper = new DriverAppParamHelper();
 	
 	private static SimpleDateFormat m_dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -114,117 +112,117 @@ public class DriverAppParamHelper
 		sharedPref.edit().putInt(LAST_TRIP_ID, m_id).commit();		
 	}
 	
-	public static String GetDeviceGateway(Context pi_context)
+	public String GetDeviceGateway()
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		String sGatewayNumber = sharedPref.getString(DEVICE_GETWAY, "+639157912584");
 		return sGatewayNumber;
 	}
 
-	public static void SetDeviceGateway(Context pi_context, String m_gateway) 
+	public void SetDeviceGateway(String m_gateway) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putString(DEVICE_GETWAY, m_gateway).commit();
 	}
 
-	public static int GetParentBackgroudColor(Context pi_context) 
+	public int GetParentBackgroudColor() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(PARENT_BACKGROUND_COLOR, Color.YELLOW);
 		return val;
 	}
 
-	public static int GetSchoolBackgroudColor(Context pi_context) 
+	public int GetSchoolBackgroudColor() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(SCHOOL_BACKGROUND_COLOR, Color.RED);
 		return val;
 	}
 
-	public static int GetCompanyBackgroudColor(Context pi_context) 
+	public int GetCompanyBackgroudColor() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(COMPANY_BACKGROUND_COLOR, Color.GREEN);
 		return val;
 	}
 
-	public static int GetUnknownBackgroudColor(Context pi_context) 
+	public int GetUnknownBackgroudColor() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(UNKNOWN_BACKGROUND_COLOR, Color.WHITE);
 		return val;
 	}
 
-	public static int GetCheckTimerPeriod(Context pi_context) 
+	public int GetCheckTimerPeriod() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(CHECK_TIMER_PERIOD, 1000*60*5);
 		return val;
 	}
 	
-	public static void SetCheckTimerPeriod(Context pi_context, int m_period) 
+	public void SetCheckTimerPeriod(int m_period) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putInt(CHECK_TIMER_PERIOD, m_period).commit();
 	}
 
 	
-	public static int GetAutoUpdatePeriod(Context pi_context) 
+	public int GetAutoUpdatePeriod() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(AUTO_UPDATE_PERIOD, 24*60*60*1000);
 		return val;
 	}
 	
-	public static void SetAutoUpdatePeriod(Context pi_context, int m_period) 
+	public void SetAutoUpdatePeriod(int m_period) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putInt(AUTO_UPDATE_PERIOD, m_period).commit();
 	}
 
-	public static long GetLastDBUpdateTime(Context pi_context) 
+	public long GetLastDBUpdateTime() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		long val = sharedPref.getLong(LAST_DB_UPDATE_TIME, 0);
 		return val;
 	}
 	
-	public static void SetLastDBUpdateTime(Context pi_context, long pi_time) 
+	public void SetLastDBUpdateTime(long pi_time) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putLong(LAST_DB_UPDATE_TIME, pi_time).commit();		
 	}
 
-	public static void SetLastDeviceInfoUpdate(Context pi_context, long pi_time) 
+	public void SetLastDeviceInfoUpdate(long pi_time) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putLong(LAST_DEVICE_INFO_UPDATE, pi_time).commit();
 	}
 
-	public static long GetLastDeviceInfoUpdate(Context pi_context) 
+	public long GetLastDeviceInfoUpdate() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		long time = sharedPref.getLong(LAST_DEVICE_INFO_UPDATE, 0);	
 		return time;
 	}
 
-	public static void SetDeviceId(Context pi_context, int m_id) 
+	public void SetDeviceId(int m_id) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putInt(DEVICE_ID, m_id).commit();
 	}
 
-	public static int GetDeviceId(Context pi_context) 
+	public int GetDeviceId() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(DEVICE_ID, -1);	
 		return val;
 	}
 
-	public static boolean IsDbOutdated(Context pi_context) 
+	public boolean IsDbOutdated() 
 	{
 		Boolean b = false;
-		long l = DriverAppParamHelper.GetLastDBUpdateTime(pi_context);
+		long l = GetLastDBUpdateTime();
 		if (DriverAppParamHelper.HasDayChanged(l))
 		{
 			b = true;
@@ -261,10 +259,10 @@ public class DriverAppParamHelper
 		return b;
 	}
 
-	public static boolean IsDeviceInfoOutdated(Context pi_context) 
+	public boolean IsDeviceInfoOutdated() 
 	{
 		Boolean b = false;
-		long l = DriverAppParamHelper.GetLastDeviceInfoUpdate(pi_context);
+		long l = GetLastDeviceInfoUpdate();
 		if (DriverAppParamHelper.HasDayChanged(l))
 		{
 			b = true;
@@ -272,70 +270,70 @@ public class DriverAppParamHelper
 		return false;
 	}
 
-	public static int GetAutoUpdateCheckHour(Context pi_context) 
+	public int GetAutoUpdateCheckHour() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(AUTO_UPDATE_CHECK_HOUR, 2);
 		return val;
 	}
 
-	public static void SetAutoUpdateCheckHour(Context pi_context, int pi_time) 
+	public void SetAutoUpdateCheckHour(int pi_time) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putInt(AUTO_UPDATE_CHECK_HOUR, pi_time).commit();
-		DataSynchronyzer.CancelAlarm(pi_context);
-		DataSynchronyzer.SetAlarm(pi_context);
+		DataSynchronyzer.CancelAlarm(m_context);
+		DataSynchronyzer.SetAlarm(m_context);
 	}
 
-	public static int GetMaxUpdateAttempts(Context pi_context) 
+	public int GetMaxUpdateAttempts() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		int val = sharedPref.getInt(MAX_UPDATE_ATTEMPTS, 3);
 		return val;
 	}
 
-	public static void SetMaxUpdateAttempts(Context pi_context, int pi_max) 
+	public void SetMaxUpdateAttempts(int pi_max) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putInt(MAX_UPDATE_ATTEMPTS, pi_max).commit();
 	}
 
-	public static boolean GetRealSms(Context pi_context) 
+	public boolean GetRealSms() 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		boolean val = sharedPref.getBoolean(REAL_SMS, false);
 		return val;
 	}
 	
-	public static void SetRealSms(Context pi_context, boolean pi_realSms) 
+	public void SetRealSms(boolean pi_realSms) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putBoolean(REAL_SMS, pi_realSms).commit();
 	}
 
-	public static boolean GetTripFilterByDay(Context pi_context)
+	public boolean GetTripFilterByDay()
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		boolean val = sharedPref.getBoolean(TRIP_FILTER_BY_DAY, true);
 		return val;
 	}
 	
-	public static void SetFilterByDay(Context pi_context, boolean pi_filterByDay) 
+	public void SetFilterByDay(boolean pi_filterByDay) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putBoolean(TRIP_FILTER_BY_DAY, pi_filterByDay).commit();
 	}
 
-	public static boolean GetTripFilterByTime(Context pi_context)
+	public boolean GetTripFilterByTime()
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		boolean val = sharedPref.getBoolean(TRIP_FILTER_BY_TIME, true);
 		return val;
 	}
 	
-	public static void SetFilterByTime(Context pi_context, boolean pi_filterByDay) 
+	public void SetFilterByTime(boolean pi_filterByDay) 
 	{
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(pi_context);
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putBoolean(TRIP_FILTER_BY_TIME, pi_filterByDay).commit();
 	}
 }

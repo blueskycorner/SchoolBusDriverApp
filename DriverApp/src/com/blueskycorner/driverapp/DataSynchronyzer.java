@@ -37,11 +37,11 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
     {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		if (calendar.get(Calendar.HOUR_OF_DAY) >= DriverAppParamHelper.GetAutoUpdateCheckHour(context))
+		if (calendar.get(Calendar.HOUR_OF_DAY) >= DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour())
 		{
 			calendar.add(Calendar.HOUR_OF_DAY, 24);
 		}
-		calendar.set(Calendar.HOUR_OF_DAY, DriverAppParamHelper.GetAutoUpdateCheckHour(context));
+		calendar.set(Calendar.HOUR_OF_DAY, DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour());
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		
@@ -49,7 +49,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
         AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, DataSynchronyzer.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), DriverAppParamHelper.GetAutoUpdatePeriod(context), pi); // Millisec * Second * Minute
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), DriverAppParamHelper.GetInstance().GetAutoUpdatePeriod(), pi); // Millisec * Second * Minute
 //        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, DriverAppParamHelper.GetAutoUpdatePeriod(context), pi); // Millisec * Second * Minute
     }
 
@@ -96,7 +96,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
     
 	private void CheckDeviceInfo() 
 	{
-		if (DriverAppParamHelper.IsDeviceInfoOutdated(m_context) == true)
+		if (DriverAppParamHelper.GetInstance().IsDeviceInfoOutdated() == true)
 		{
 			BroadcastStepChanged(E_INIT_STEP.STEP_DEVICE_UPDATE);
 			if (NetworkManager.GetInstance().IsNetworkAvailable() == false)
@@ -116,7 +116,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	
 	private void CheckDbUpdate() 
 	{
-		if (DriverAppParamHelper.IsDbOutdated(m_context) == true)
+		if (DriverAppParamHelper.GetInstance().IsDbOutdated() == true)
 		{
 			BroadcastStepChanged(E_INIT_STEP.STEP_DB_UPDATE);
 			if (NetworkManager.GetInstance().IsNetworkAvailable() == false)
@@ -125,7 +125,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 			}
 			else
 			{
-				m_backEndManager.launchDbModificationGrabing(DriverAppParamHelper.GetDeviceId(m_context));
+				m_backEndManager.launchDbModificationGrabing(DriverAppParamHelper.GetInstance().GetDeviceId());
 			}
 		}
 		else
@@ -157,9 +157,9 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 			{
 				if (pi_bResult)
 				{
-					DriverAppParamHelper.SetLastDeviceInfoUpdate(m_context, System.currentTimeMillis());
-					DriverAppParamHelper.SetDeviceId(m_context, deviceInfo.m_id);
-					DriverAppParamHelper.SetDeviceGateway(m_context, deviceInfo.m_gateway);
+					DriverAppParamHelper.GetInstance().SetLastDeviceInfoUpdate(System.currentTimeMillis());
+					DriverAppParamHelper.GetInstance().SetDeviceId(deviceInfo.m_id);
+					DriverAppParamHelper.GetInstance().SetDeviceGateway(deviceInfo.m_gateway);
 					CheckDbUpdate();
 				}
 				else
@@ -191,7 +191,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 					}
 					else
 					{
-						if (m_attemptNumber < DriverAppParamHelper.GetMaxUpdateAttempts(m_context))
+						if (m_attemptNumber < DriverAppParamHelper.GetInstance().GetMaxUpdateAttempts())
 						{
 							m_attemptNumber ++;
 							CheckDeviceInfo();
@@ -224,7 +224,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 			{
 				if (pi_bResult)
 				{
-					DriverAppParamHelper.SetLastDBUpdateTime(m_context, System.currentTimeMillis());
+					DriverAppParamHelper.GetInstance().SetLastDBUpdateTime(System.currentTimeMillis());
 					BroadcastDataSynchronized();
 				}
 				else
@@ -258,7 +258,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 					}
 					else
 					{
-						if (m_attemptNumber < DriverAppParamHelper.GetMaxUpdateAttempts(m_context))
+						if (m_attemptNumber < DriverAppParamHelper.GetInstance().GetMaxUpdateAttempts())
 						{
 							m_attemptNumber ++;
 							CheckDbUpdate();

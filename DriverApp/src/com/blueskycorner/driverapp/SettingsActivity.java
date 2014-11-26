@@ -47,23 +47,23 @@ public class SettingsActivity extends Activity implements OnClickListener
 		{
 			m_appVersion.setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
 			
-			Date lastDeviceUpdate = DriverAppParamHelper.Long2Date(DriverAppParamHelper.GetLastDeviceInfoUpdate(this));
+			Date lastDeviceUpdate = DriverAppParamHelper.Long2Date(DriverAppParamHelper.GetInstance().GetLastDeviceInfoUpdate());
 			String sLastDeviceUpdate = DriverAppParamHelper.Date2String(lastDeviceUpdate);
 			m_lastDeviceUpdate.setText(sLastDeviceUpdate);
 			
-			Date lastDbUpdate = DriverAppParamHelper.Long2Date(DriverAppParamHelper.GetLastDBUpdateTime(this));
+			Date lastDbUpdate = DriverAppParamHelper.Long2Date(DriverAppParamHelper.GetInstance().GetLastDBUpdateTime());
 			String sLastDbUpdate = DriverAppParamHelper.Date2String(lastDbUpdate);
 			m_lastDBUpdate.setText(sLastDbUpdate);
 			
-			m_deviceID.setText(Integer.toString(DriverAppParamHelper.GetDeviceId(this)));
+			m_deviceID.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetDeviceId()));
 			
-			m_gateway.setText(DriverAppParamHelper.GetDeviceGateway(this));
+			m_gateway.setText(DriverAppParamHelper.GetInstance().GetDeviceGateway());
 			
-			m_autoUpdateHour.setText(Integer.toString(DriverAppParamHelper.GetAutoUpdateCheckHour(this)));
+			m_autoUpdateHour.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour()));
 			
-			m_AutoUpdatePeriod.setText(Integer.toString(DriverAppParamHelper.GetAutoUpdatePeriod(this)/(60*1000)));
+			m_AutoUpdatePeriod.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetAutoUpdatePeriod()/(60*1000)));
 			
-			m_checkPeriod.setText(Integer.toString(DriverAppParamHelper.GetCheckTimerPeriod(this)/(60*1000)));
+			m_checkPeriod.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetCheckTimerPeriod()/(60*1000)));
 			
 			m_buttonSchool = (Button) findViewById(R.id.buttonSchool);	
 			
@@ -160,13 +160,13 @@ public class SettingsActivity extends Activity implements OnClickListener
 	public void Gateway(View v)
 	{
 		String s = m_gateway.getText().toString();
-		DriverAppParamHelper.SetDeviceGateway(this, s);
+		DriverAppParamHelper.GetInstance().SetDeviceGateway(s);
 	}
 
 	public void Hour(View v)
 	{
 		String s = m_autoUpdateHour.getText().toString();
-		DriverAppParamHelper.SetAutoUpdateCheckHour(this, Integer.parseInt(s));
+		DriverAppParamHelper.GetInstance().SetAutoUpdateCheckHour(Integer.parseInt(s));
 		DataSynchronyzer.CancelAlarm(this);
 		DataSynchronyzer.SetAlarm(this);
 	}
@@ -174,7 +174,7 @@ public class SettingsActivity extends Activity implements OnClickListener
 	public void Period(View v)
 	{
 		String s = m_AutoUpdatePeriod.getText().toString();
-		DriverAppParamHelper.SetAutoUpdatePeriod(this, Integer.parseInt(s) * 60 * 1000);
+		DriverAppParamHelper.GetInstance().SetAutoUpdatePeriod(Integer.parseInt(s) * 60 * 1000);
 		DataSynchronyzer.CancelAlarm(this);
 		DataSynchronyzer.SetAlarm(this);
 	}
@@ -182,6 +182,6 @@ public class SettingsActivity extends Activity implements OnClickListener
 	public void Check(View v)
 	{
 		String s = m_checkPeriod.getText().toString();
-		DriverAppParamHelper.SetCheckTimerPeriod(this, Integer.parseInt(s) * 60 * 1000);
+		DriverAppParamHelper.GetInstance().SetCheckTimerPeriod(Integer.parseInt(s) * 60 * 1000);
 	}
 }

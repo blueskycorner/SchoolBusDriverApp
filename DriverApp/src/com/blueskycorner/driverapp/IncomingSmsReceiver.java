@@ -34,7 +34,7 @@ public class IncomingSmsReceiver extends BroadcastReceiver {
                 for (int i = 0; i < pdusObj.length; i++) 
                 {
                 	SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
-                	if (currentMessage.getOriginatingAddress().equals(DriverAppParamHelper.GetDeviceGateway(context)) == false)
+                	if (currentMessage.getOriginatingAddress().equals(DriverAppParamHelper.GetInstance().GetDeviceGateway()) == false)
                 	{
                 		return;
                 	}

@@ -45,25 +45,25 @@ public class MessageActivity extends Activity
 			case 0:
 			case 1:
 			{
-				color = DriverAppParamHelper.GetParentBackgroudColor(this);
+				color = DriverAppParamHelper.GetInstance().GetParentBackgroudColor();
 				sFrom = (String) getResources().getText(R.string.from_parent);
 				break;
 			}
 			case 2:
 			{
-				color = DriverAppParamHelper.GetSchoolBackgroudColor(this);
+				color = DriverAppParamHelper.GetInstance().GetSchoolBackgroudColor();
 				sFrom = (String) getResources().getText(R.string.from_school);
 				break;
 			}
 			case 4:
 			{
-				color = DriverAppParamHelper.GetCompanyBackgroudColor(this);
+				color = DriverAppParamHelper.GetInstance().GetCompanyBackgroudColor();
 				sFrom = (String) getResources().getText(R.string.from_company);
 				break;
 			}
 			default:
 			{
-				color = DriverAppParamHelper.GetUnknownBackgroudColor(this);
+				color = DriverAppParamHelper.GetInstance().GetUnknownBackgroudColor();
 				sFrom = (String) getResources().getText(R.string.from_unknown);
 				break;
 			}
