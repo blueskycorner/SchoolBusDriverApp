@@ -1,17 +1,22 @@
 package com.blueskycorner.driverapp;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class SettingsActivity extends Activity 
+public class SettingsActivity extends Activity implements OnClickListener 
 {
 	private TextView m_appVersion = null;
 	private TextView m_lastDeviceUpdate = null;
@@ -21,6 +26,7 @@ public class SettingsActivity extends Activity
 	private EditText m_autoUpdateHour = null;
 	private EditText m_AutoUpdatePeriod = null;
 	private EditText m_checkPeriod = null;
+	private Button m_buttonSchool = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -58,12 +64,98 @@ public class SettingsActivity extends Activity
 			m_AutoUpdatePeriod.setText(Integer.toString(DriverAppParamHelper.GetAutoUpdatePeriod(this)/(60*1000)));
 			
 			m_checkPeriod.setText(Integer.toString(DriverAppParamHelper.GetCheckTimerPeriod(this)/(60*1000)));
+			
+			m_buttonSchool = (Button) findViewById(R.id.buttonSchool);	
+			
+			m_buttonSchool.setOnClickListener(this);
+			School s = DataManager.GetInstance().getSchool(DriverAppParamHelper.GetInstance().GetLastSchoolId());
+			SetSchoolButtonText(s);
 		} 
 		catch (NameNotFoundException e) 
 		{
 			e.printStackTrace();
 		}
+	}	
+	
+	@Override
+	public void onClick(View v) 
+	{
+		switch (v.getId())
+		{
+			case R.id.buttonSchool:
+			{
+				final ArrayList<School> schools = DataManager.GetInstance().GetSchools();
+				String[] schoolNames = GetSchoolNames(schools);
+				final int currentIndex = GetCurrentSchoolIndex(schools);
+				AlertDialog.Builder builder=new AlertDialog.Builder(this);
+		    	builder.setTitle(R.string.school);
+		    	builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
+		     	{
+					@Override
+					public void onClick(DialogInterface dialog, int which) 
+					{
+						dialog.dismiss();
+					}
+				});
+		     	builder.setSingleChoiceItems(schoolNames,currentIndex, new DialogInterface.OnClickListener() 
+		     	{
+					@Override
+					public void onClick(DialogInterface dialog, int which) 
+					{
+						School school = schools.get(which);
+						SetSchoolButtonText(school);
+						DriverAppParamHelper.GetInstance().SetLastSchoolId(school.m_id);
+						dialog.dismiss();
+					}
+				});
+		    	builder.show();
+				break;
+			}
+		}
 	}
+	
+	private int GetCurrentSchoolIndex(ArrayList<School> pi_schools)
+	{
+		int index = -1;
+		int currentSchoolId = DriverAppParamHelper.GetInstance().GetLastSchoolId();
+		if (currentSchoolId != -1)
+		{
+			for (int i=0; i<pi_schools.size(); i++) 
+			{
+				if (pi_schools.get(i).m_id == currentSchoolId)
+				{
+					index = i;
+				}
+			}
+		}
+		return index;
+	}
+	
+	private String[] GetSchoolNames(ArrayList<School> pi_schools) 
+	{
+		String[] schoolNames = new String[pi_schools.size()];
+		for (int i=0; i<pi_schools.size(); i++)
+		{
+			schoolNames[i] = pi_schools.get(i).m_name;
+		}
+		return schoolNames;
+	}
+
+	private void SetSchoolButtonText(School pi_school) 
+	{
+		String schoolName = "";
+		if (pi_school != null)
+		{
+			schoolName = pi_school.m_name;
+		}
+		else
+		{
+			schoolName = getResources().getString(R.string.choose_one);
+		}
+		String text = getString(R.string.school) + " :  " + schoolName;
+		m_buttonSchool.setText(text);
+	}
+
 
 	public void Gateway(View v)
 	{

@@ -84,13 +84,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		}
 		else
 		{
-			int schoolId = DriverAppParamHelper.GetInstance().GetLastSchoolId();
 			int tripId = DriverAppParamHelper.GetInstance().GetLastTripId();
-			School s = null;
-			if (schoolId != -1)
-			{
-				s = DataManager.GetInstance().getSchool(schoolId);
-			}
 			
 			if (tripId != -1)
 			{
@@ -100,7 +94,6 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 				DataManager.GetInstance().SetCurrentTrip(trip);
 			}
 			
-			m_tripChoiceFragment.SetSchool(s);
 			m_currentFragment = m_tripChoiceFragment;
 		}
 

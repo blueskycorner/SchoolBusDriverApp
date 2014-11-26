@@ -19,13 +19,10 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 {
 	public static final String NAME = "TRIP_CHOICE_FRAGMENT";
 
-	private Button m_buttonSchool = null;
 	private Button m_buttonTrip = null;
 	private Button m_buttonStartTrip = null;
 	private ListView m_childList = null;
-	
-	private School m_school = null;
-	
+		
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
@@ -56,11 +53,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	{
 		super.onActivityCreated(savedInstanceState);
 		setRetainInstance(true);
-		
-		m_buttonSchool = (Button)getActivity().findViewById(R.id.buttonSchool);	
-		m_buttonSchool.setOnClickListener(this);
-		SetSchoolButtonText(m_school);
-		
+				
 		m_buttonTrip = (Button)getActivity().findViewById(R.id.buttonTrip);	
 		m_buttonTrip.setOnClickListener(this);
 		SetTripButtonText(m_trip);
@@ -94,67 +87,16 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		m_buttonTrip.setText(text);
 	}
 
-	private void SetSchoolButtonText(School pi_school) 
-	{
-		String schoolName = "";
-		if (pi_school != null)
-		{
-			schoolName = pi_school.m_name;
-		}
-		else
-		{
-			schoolName = getActivity().getResources().getString(R.string.choose_one);
-		}
-		String text = getString(R.string.school) + " :  " + schoolName;
-		m_buttonSchool.setText(text);
-	}
-
 	@Override
 	public void onClick(View v) 
 	{
 		switch (v.getId())
 		{
-			case R.id.buttonSchool:
-			{
-				final ArrayList<School> schools = DataManager.GetInstance().GetSchools();
-				String[] schoolNames = GetSchoolNames(schools);
-				final int currentIndex = GetCurrentSchoolIndex(schools);
-				AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-		    	builder.setTitle(R.string.school);
-		    	builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() 
-		     	{
-					@Override
-					public void onClick(DialogInterface dialog, int which) 
-					{
-						dialog.dismiss();
-					}
-				});
-		     	builder.setSingleChoiceItems(schoolNames,currentIndex, new DialogInterface.OnClickListener() 
-		     	{
-					@Override
-					public void onClick(DialogInterface dialog, int which) 
-					{
-						m_school = schools.get(which);
-						SetSchoolButtonText(m_school);
-						if (which != currentIndex)
-						{
-							m_trip = null;
-							SetTripButtonText(m_trip);
-							((ChildListAdapter)m_childList.getAdapter()).SetTrip(null);
-						}
-						m_childList.invalidateViews();
-						DriverAppParamHelper.GetInstance().SetLastSchoolId(m_school.m_id);
-						dialog.dismiss();
-					}
-				});
-		    	builder.show();
-				break;
-			}
 			case R.id.buttonTrip:
 			{
-				if (m_school != null)
+				if (GetSchoolId() != -1)
 				{
-					final ArrayList<Trip> trips = DataManager.GetInstance().GetTrips(m_school.m_id, true, true);
+					final ArrayList<Trip> trips = DataManager.GetInstance().GetTrips(GetSchoolId(), true, true);
 					String[] tripNames = GetTripNames(trips);
 					int currentIndex = GetCurrentTripIndex(trips);
 					AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
@@ -193,7 +135,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 			}
 			case R.id.buttonStartTrip:
 			{
-				if (m_school == null)
+				if (GetSchoolId() == -1)
 				{
 					ChooseSchoolFirst();
 				} 
@@ -209,6 +151,11 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 				break;
 			}
 		}
+	}
+
+	private int GetSchoolId() 
+	{
+		return DriverAppParamHelper.GetInstance().GetLastSchoolId();
 	}
 
 	private void ChooseTripFirst() 
@@ -262,7 +209,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	private String[] GetTripNames(ArrayList<Trip> pi_trips) 
 	{
 		String[] tripNames = null;
-		if (m_school != null)
+		if (GetSchoolId() != -1)
 		{
 			tripNames = new String[pi_trips.size()];
 			for (int i=0; i<pi_trips.size(); i++)
@@ -271,32 +218,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 			}
 		}
 		return tripNames;
-	}
-
-	private int GetCurrentSchoolIndex(ArrayList<School> pi_schools)
-	{
-		int index = -1;
-		if (m_school != null)
-		{
-			for (int i=0; i<pi_schools.size(); i++) 
-			{
-				if (pi_schools.get(i).m_id == m_school.m_id)
-				{
-					index = i;
-				}
-			}
-		}
-		return index;
-	}
-
-	private String[] GetSchoolNames(ArrayList<School> pi_schools) 
-	{
-		String[] schoolNames = new String[pi_schools.size()];
-		for (int i=0; i<pi_schools.size(); i++)
-		{
-			schoolNames[i] = pi_schools.get(i).m_name;
-		}
-		return schoolNames;
 	}
 
 	@Override
@@ -348,10 +269,5 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	public void RefreshState(Child pi_child) 
 	{
 		
-	}
-
-	public void SetSchool(School pi_school)
-	{
-		m_school = pi_school;
 	}
 }
