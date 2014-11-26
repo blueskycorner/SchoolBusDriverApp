@@ -2,12 +2,10 @@ package com.blueskycorner.driverapp;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,11 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ToggleButton;
 
 public class TripChoiceFragment extends DriverAppFragment implements OnClickListener, OnItemClickListener
 {
@@ -31,10 +25,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	private ListView m_childList = null;
 	
 	private School m_school = null;
-	private Trip m_trip = null;
-
-	private IDriverAppCommunicator m_communicator = null;
-	private Activity m_activity = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -53,24 +43,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	public void onResume() 
 	{
 		super.onResume();
-	}
-
-	public void Init() 
-	{
-		int schoolId = DriverAppParamHelper.GetInstance().GetLastSchoolId();
-		int tripId = DriverAppParamHelper.GetInstance().GetLastTripId();
-		
-		if (schoolId != -1)
-		{
-			m_school = DataManager.GetInstance().getSchool(schoolId);
-		}
-		
-		if (tripId != -1)
-		{
-			m_trip = DataManager.GetInstance().getTrip(tripId);
-			ArrayList<Child> list = DataManager.GetInstance().GetChilds(m_trip.m_id);
-			m_trip.Init(list);
-		}
 	}
 	
 	@Override
@@ -207,6 +179,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 							((ChildListAdapter)m_childList.getAdapter()).SetTrip(m_trip);
 							m_childList.invalidateViews();
 							DriverAppParamHelper.GetInstance().SetLastTripId(m_trip.m_id);
+							m_comm.TripSelected(m_trip);
 							dialog.dismiss();
 						}
 					});
@@ -230,7 +203,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 				}
 				else
 				{
-					m_communicator.TripStarted(m_trip);
+					m_comm.TripStarted();
 				}
 				
 				break;
@@ -338,14 +311,6 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	}
 
 	@Override
-	public void onAttach(Activity activity) 
-	{
-		m_activity = activity;
-		m_communicator  = (IDriverAppCommunicator) activity;
-		super.onAttach(activity);
-	}
-
-	@Override
 	public void BackPressed() 
 	{
 		AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
@@ -385,8 +350,8 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		
 	}
 
-	public Trip GetTrip() 
+	public void SetSchool(School pi_school)
 	{
-		return m_trip;
+		m_school = pi_school;
 	}
 }

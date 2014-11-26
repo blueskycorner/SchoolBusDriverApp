@@ -24,6 +24,8 @@ public class DataManager
 	private ChildDAO m_childDAO = null;
 	private TripDestinationDAO m_tripDestinationDAO = null;
 	private VersionDAO m_versionDAO = null;
+	private Trip m_currentTrip = null;
+	private Child m_currentChild = null;
 	
 	/* Static 'instance' method */
     public static DataManager GetInstance() 
@@ -138,7 +140,7 @@ public class DataManager
 		int hour = -1, minute = -1;
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		calendar.add(Calendar.MINUTE, -9);
+		calendar.add(Calendar.MINUTE, -30);
 		if (DriverAppParamHelper.GetTripFilterByDay(m_context) == true)
 		{
 			int iday = calendar.get(Calendar.DAY_OF_WEEK);
@@ -327,5 +329,15 @@ public class DataManager
 	public void SetTransactionSuccessful() 
 	{
 		m_database.setTransactionSuccessful();
+	}
+
+	public void SetCurrentTrip(Trip pi_trip) 
+	{
+		m_currentTrip = pi_trip;
+	}
+
+	public Trip GetCurrentTrip()
+	{
+		return m_currentTrip;
 	}
 }

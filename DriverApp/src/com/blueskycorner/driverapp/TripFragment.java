@@ -3,13 +3,11 @@ package com.blueskycorner.driverapp;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,11 +20,8 @@ import android.widget.Toast;
 public class TripFragment extends DriverAppFragment implements OnClickListener
 {
 	public static final String NAME = "TRIP_FRAGMENT";
-	private Trip m_trip = null;
 	private LinearLayout m_layout = null;
-	private Activity m_activity;
 	private HashMap<Integer, Child> m_childMap = null;
-	private IDriverAppCommunicator m_comm = null;
 	private Button m_buttonEndTrip = null;
 
 	@Override
@@ -124,20 +119,6 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 			}
 		}
 		return img;
-	}
-	
-	public void UpdateTrip(Trip pi_trip)
-	{
-		m_trip  = pi_trip;
-	}
-
-	@Override
-	public void onAttach(Activity activity) 
-	{
-		super.onAttach(activity);
-		m_activity = activity;
-		m_comm = (IDriverAppCommunicator) activity;
-		
 	}
 
 	@Override

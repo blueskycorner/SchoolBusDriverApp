@@ -1,5 +1,7 @@
 package com.blueskycorner.driverapp;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -15,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 
 public class MainActivity extends FragmentActivity implements IDriverAppCommunicator, OnCheckedChangeListener, IMessageListener, IDeviceDataListener
 {
+	private static final String CURRENT_FRAGMENT = "CURRENT_FRAGMENT";
 	DriverAppFragment m_currentFragment = null;
 	private MessageManager m_messageManager = null;
 	private ToggleButton m_buttonEmergency = null;
@@ -50,9 +53,8 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	protected void onSaveInstanceState(Bundle outState) 
 	{
 		super.onSaveInstanceState(outState);
-		Trip trip = m_tripChoiceFragment.GetTrip();
-		Child child = m_childFragment.GetChild();
-		String currentFragment = m_currentFragment.GetName();
+		
+		outState.putString(CURRENT_FRAGMENT, m_currentFragment.GetName());
 	}
 
 	private void InitFragments(Bundle pi_savedInstanceState) 
@@ -61,16 +63,52 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		m_tripFragment = new TripFragment();
 		m_childFragment = new ChildFragment();
 		
+		Trip trip = null;
 		if (pi_savedInstanceState != null)
 		{
-			// TODO get name of current fragment
-			// TODO get trip and child info
+			trip = DataManager.GetInstance().GetCurrentTrip();
+			
+			String sFragmentName = pi_savedInstanceState.getString(CURRENT_FRAGMENT);
+			if (sFragmentName.equals(TripChoiceFragment.NAME))
+			{
+				m_currentFragment = m_tripChoiceFragment;
+			}
+			else if (sFragmentName.equals(TripFragment.NAME))
+			{
+				m_currentFragment = m_tripFragment;
+			}
+			else if (sFragmentName.equals(ChildFragment.NAME))
+			{
+				m_currentFragment = m_childFragment;
+			}
 		}
 		else
 		{
-			m_tripChoiceFragment.Init();
-			ActivateFragment(m_tripChoiceFragment);
+			int schoolId = DriverAppParamHelper.GetInstance().GetLastSchoolId();
+			int tripId = DriverAppParamHelper.GetInstance().GetLastTripId();
+			School s = null;
+			if (schoolId != -1)
+			{
+				s = DataManager.GetInstance().getSchool(schoolId);
+			}
+			
+			if (tripId != -1)
+			{
+				trip = DataManager.GetInstance().getTrip(tripId);
+				ArrayList<Child> list = DataManager.GetInstance().GetChilds(trip.m_id);
+				trip.Init(list);
+				DataManager.GetInstance().SetCurrentTrip(trip);
+			}
+			
+			m_tripChoiceFragment.SetSchool(s);
+			m_currentFragment = m_tripChoiceFragment;
 		}
+
+		m_tripChoiceFragment.SetTrip(trip);
+		m_tripFragment.SetTrip(trip);
+		m_childFragment.SetTrip(trip);
+		
+		ActivateFragment(m_currentFragment);
 	}
 
 	private void ActivateFragment(DriverAppFragment pi_fragment)
@@ -108,20 +146,28 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	}
 
 	@Override
-	public void TripStarted(Trip pi_trip)
+	public void TripSelected(Trip pi_trip) 
 	{
-		if (pi_trip.m_isReturn == false)
+		m_tripFragment.SetTrip(pi_trip);
+		m_childFragment.SetTrip(pi_trip);
+		DataManager.GetInstance().SetCurrentTrip(pi_trip);
+	}
+
+	@Override
+	public void TripStarted()
+	{
+		Trip trip = DataManager.GetInstance().GetCurrentTrip();
+		if (trip.m_isReturn == false)
 		{
-			SmsSender.SendTripSchoolStarted(this, pi_trip.m_id);
+			SmsSender.SendTripSchoolStarted(this, trip.m_id);
 		}
 		else
 		{
-			SmsSender.SendTripHomeStarted(this, pi_trip);
+			SmsSender.SendTripHomeStarted(this, trip);
 		}
 		
 		try
 		{
-			m_tripFragment.UpdateTrip(pi_trip);
 			ActivateFragment(m_tripFragment);
 		}
 		catch (Exception e)
@@ -133,8 +179,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	@Override
 	public void ChildSelected(Child pi_child) 
 	{
-        m_childFragment.SetChild(pi_child);
-        m_childFragment.SetReturn(GetTrip().m_isReturn);
+		DataManager.GetInstance().GetCurrentTrip().SetCurrentChild(pi_child);
         ActivateFragment(m_childFragment);
 	}
 
@@ -172,8 +217,8 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		}
 		if (pi_child.m_state != E_CHILD_STATE.STATE_ON_THE_WAY_STARTED)
 		{
-			m_tripFragment.UpdateUI();
 			ActivateFragment(m_tripFragment);
+//			m_tripFragment.UpdateUI();
 		}
 	}
 	

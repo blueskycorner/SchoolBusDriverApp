@@ -1,6 +1,5 @@
 package com.blueskycorner.driverapp;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,16 +7,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Toast;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 public class ChildFragment extends DriverAppFragment implements OnClickListener
 {
 	public static final String NAME = "CHILD_FRAGMENT";
-	private Child m_child;
 	private TextView m_name = null;
 	private TextView m_address = null;
 	private TextView m_pickupTime = null;
@@ -25,8 +20,6 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 	private Button m_buttonFinish = null;
 	private Button m_buttonSkip = null;
 	private Button m_buttonBack = null;
-	private IDriverAppCommunicator m_comm;
-	private boolean m_bIsReturn;
 	private boolean m_isActivated = false;
 
 	@Override
@@ -40,13 +33,6 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 	public View onCreateView(LayoutInflater inflater,@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) 
 	{
 		return inflater.inflate(R.layout.child_fragment, container, false);
-	}
-	
-	@Override
-	public void onAttach(Activity activity) 
-	{
-		super.onAttach(activity);
-		m_comm = (IDriverAppCommunicator) activity;
 	}
 	
 	@Override
@@ -68,29 +54,50 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 		m_buttonSkip.setOnClickListener(this);
 		m_buttonBack.setOnClickListener(this);
 		
-		InitButtons();
-		
-		if (m_child != null)
+		if (GetCurrentChild().m_state == E_CHILD_STATE.STATE_ON_THE_WAY_STARTED)
 		{
-			m_name.setText(m_child.m_firstName + " " + m_child.m_lastName);
-			m_address.setText(m_child.GetAddress());
-			m_pickupTime.setText(GetPickupText() + " @ " + m_child.GetPickupTime());
+			m_isActivated = true;
+		}
+		else
+		{
+			m_isActivated = false;
+		}
+		InitButtons(m_isActivated);
+		
+		if (GetCurrentChild() != null)
+		{
+			m_name.setText(GetCurrentChild().m_firstName + " " + GetCurrentChild().m_lastName);
+			m_address.setText(GetCurrentChild().GetAddress());
+			m_pickupTime.setText(GetPickupText() + " @ " + GetCurrentChild().GetPickupTime());
 		}
 	}
 
-	private void InitButtons() 
+	private void InitButtons(boolean pi_isActivated) 
 	{
-		m_isActivated = false;
-		m_buttonStart.setText(getActivity().getResources().getString(R.string.start));
-		m_buttonFinish.setEnabled(false);
-		m_buttonSkip.setEnabled(true);
-		m_buttonBack.setEnabled(true);
+		m_buttonBack.setEnabled(!pi_isActivated);
+		m_buttonFinish.setEnabled(pi_isActivated);
+		
+		if (pi_isActivated == true)
+		{
+			m_buttonStart.setText(getActivity().getResources().getString(R.string.on_the_way));
+		}
+		else
+		{
+			m_buttonStart.setText(getActivity().getResources().getString(R.string.start));
+		}
+
+	}
+	
+	@Override
+	public void SetTrip(Trip pi_trip) 
+	{
+		super.SetTrip(pi_trip);
 	}
 	
 	private String GetPickupText() 
 	{
 		String s;
-		if (m_bIsReturn == false)
+		if (m_trip.m_isReturn == false)
 		{
 			s = getActivity().getResources().getString(R.string.pickup);
 		}
@@ -102,11 +109,6 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 		return s;
 	}
 
-	public void SetChild(Child pi_child)
-	{
-		m_child = pi_child;
-	}
-
 	@Override
 	public void onClick(View v) 
 	{
@@ -114,38 +116,35 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 		{
 			case R.id.buttonFinish:
 			{
-				m_child.m_state = E_CHILD_STATE.STATE_ON_THE_WAY_FINISHED;
-				m_comm.childStateUpdated(m_child);
+				GetCurrentChild().m_state = E_CHILD_STATE.STATE_ON_THE_WAY_FINISHED;
+				m_comm.childStateUpdated(GetCurrentChild());
 				break;
 			}
 			case R.id.buttonSkip:
 			{
-				m_child.m_state = E_CHILD_STATE.STATE_ON_THE_WAY_CANCELED;
-				m_comm.childStateUpdated(m_child);
+				GetCurrentChild().m_state = E_CHILD_STATE.STATE_ON_THE_WAY_CANCELED;
+				m_comm.childStateUpdated(GetCurrentChild());
 				break;
 			}
 			case R.id.buttonBack:
 			{
-				m_comm.childStateUpdated(m_child);
+				m_comm.childStateUpdated(GetCurrentChild());
 				break;
 			}
 			case R.id.buttonStart:
 			{
 				m_isActivated = !m_isActivated;
-				m_buttonBack.setEnabled(!m_isActivated);
-				m_buttonFinish.setEnabled(m_isActivated);
 				
 				if (m_isActivated == true)
 				{
-					m_buttonStart.setText(getActivity().getResources().getString(R.string.on_the_way));
-					m_child.m_state = E_CHILD_STATE.STATE_ON_THE_WAY_STARTED;
+					GetCurrentChild().m_state = E_CHILD_STATE.STATE_ON_THE_WAY_STARTED;
 				}
 				else
 				{
-					m_buttonStart.setText(getActivity().getResources().getString(R.string.start));
-					m_child.m_state = E_CHILD_STATE.STATE_WAITING;
+					GetCurrentChild().m_state = E_CHILD_STATE.STATE_WAITING;
 				}
-				m_comm.childStateUpdated(m_child);
+				InitButtons(m_isActivated);
+				m_comm.childStateUpdated(GetCurrentChild());
 				break;
 			}
 		}
@@ -156,7 +155,7 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 	{
 		if (m_buttonBack.isEnabled())
 		{
-			m_comm.childStateUpdated(m_child);
+			m_comm.childStateUpdated(GetCurrentChild());
 		}
 		else
 		{
@@ -174,19 +173,14 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 	@Override
 	public void RefreshState(Child pi_child) 
 	{
-		if (pi_child == m_child)
+		if (pi_child == GetCurrentChild())
 		{
-			m_comm.childStateUpdated(m_child);
+			m_comm.childStateUpdated(GetCurrentChild());
 		}
 	}
 
-	public void SetReturn(boolean pi_isReturn) 
+	private Child GetCurrentChild()
 	{
-		m_bIsReturn = pi_isReturn;
-	}
-
-	public Child GetChild() 
-	{
-		return m_child;
+		return m_trip.GetCurrentChild();
 	}
 }

@@ -1,12 +1,18 @@
 package com.blueskycorner.driverapp;
 
+import java.util.HashMap;
+
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 
 public abstract class DriverAppFragment extends Fragment
 {
+	protected Trip m_trip = null;
 	protected String m_fragmentName = null;
+	protected Activity m_activity;
+	protected IDriverAppCommunicator m_comm = null;
 	
 	public abstract void BackPressed();
 
@@ -17,6 +23,25 @@ public abstract class DriverAppFragment extends Fragment
 	public String GetName()
 	{
 		return m_fragmentName;
+	}
+
+	public Trip GetTrip() 
+	{
+		return m_trip;
+	}
+
+	public void SetTrip(Trip pi_trip) 
+	{
+		m_trip = pi_trip;
+	}
+
+	@Override
+	public void onAttach(Activity activity) 
+	{
+		super.onAttach(activity);
+		m_activity = activity;
+		m_comm = (IDriverAppCommunicator) activity;
+		
 	}
 	
 	public void SetEnabled(boolean b)

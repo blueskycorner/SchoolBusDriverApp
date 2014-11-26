@@ -11,6 +11,7 @@ public class Trip
 	public ArrayList<Child> m_childs = null;
 	public boolean m_isCancel = false;
 	public boolean m_isReturn = false;
+	private Child m_currentChild = null;
 	
 	public int GetRemainChildCount() 
 	{
@@ -99,5 +100,15 @@ public class Trip
 	{
 		String s = m_destination + " @ " + GetTime();
 		return s;
+	}
+
+	public void SetCurrentChild(Child pi_child) 
+	{
+		m_currentChild  = pi_child;
+	}
+	
+	public Child GetCurrentChild()
+	{
+		return m_currentChild;
 	}
 }
