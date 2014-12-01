@@ -63,11 +63,20 @@
         android:layout_weight="45"
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
-    <Button 
+
+    <ProgressBar
+        android:id="@+id/progressBarSettings"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:visibility="invisible"/>
+        android:visibility="gone" />
+
+    <Button 
+        android:id="@+id/buttonForceUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10" 
+        android:onClick="ForceUpdate"/>
     </LinearLayout>
     
     <LinearLayout

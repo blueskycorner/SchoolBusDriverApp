@@ -27,9 +27,10 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	private BackEndManager m_backEndManager = null;
 	private Context m_context = null;
 	private ArrayList<ISynchronizerListener> m_listeners = new ArrayList<ISynchronizerListener>();
-	private ReentrantLock m_lock = new ReentrantLock();
+	private static ReentrantLock m_lock = new ReentrantLock();
 	private E_SYNCHRONISATION_MODE m_mode = E_SYNCHRONISATION_MODE.MODE_AUTO;
 	private int m_attemptNumber = 0;
+	private Boolean m_bForce = false;
 	
 	Handler m_handler = new Handler();
 	
@@ -77,11 +78,12 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	    }
     }
 
-    public void Synchronize(Context pi_context, E_SYNCHRONISATION_MODE pi_mode)
+    public void Synchronize(Context pi_context, E_SYNCHRONISATION_MODE pi_mode, Boolean pi_bForce)
     {
     	m_lock.lock();
     	m_mode = pi_mode;
     	m_context = pi_context;
+    	m_bForce = pi_bForce;
     	m_backEndManager = new BackEndManager();
     	m_backEndManager.addListener(this);
     	
@@ -91,12 +93,12 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
     @Override
     public void onReceive(Context pi_context, Intent pi_intent) 
     {
-    	Synchronize(pi_context, E_SYNCHRONISATION_MODE.MODE_AUTO);
+    	Synchronize(pi_context, E_SYNCHRONISATION_MODE.MODE_AUTO, false);
     }
     
 	private void CheckDeviceInfo() 
 	{
-		if (DriverAppParamHelper.GetInstance().IsDeviceInfoOutdated() == true)
+		if ( (DriverAppParamHelper.GetInstance().IsDeviceInfoOutdated() == true) || (m_bForce == true) ) 
 		{
 			BroadcastStepChanged(E_INIT_STEP.STEP_DEVICE_UPDATE);
 			if (NetworkManager.GetInstance().IsNetworkAvailable() == false)
@@ -116,7 +118,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	
 	private void CheckDbUpdate() 
 	{
-		if (DriverAppParamHelper.GetInstance().IsDbOutdated() == true)
+		if ( (DriverAppParamHelper.GetInstance().IsDbOutdated() == true) || (m_bForce == true) ) 
 		{
 			BroadcastStepChanged(E_INIT_STEP.STEP_DB_UPDATE);
 			if (NetworkManager.GetInstance().IsNetworkAvailable() == false)

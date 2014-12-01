@@ -17,9 +17,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class SettingsActivity extends Activity implements OnClickListener, OnCheckedChangeListener 
+public class SettingsActivity extends Activity implements OnClickListener, OnCheckedChangeListener, ISynchronizerListener 
 {
 	private TextView m_appVersion = null;
 	private TextView m_lastDeviceUpdate = null;
@@ -30,6 +31,8 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 //	private EditText m_AutoUpdatePeriod = null;
 //	private EditText m_checkPeriod = null;
 	private Button m_buttonSchool = null;
+	private Button m_buttonForceUpdate = null;
+	private ProgressBar m_pbUpdate = null;
 	private CheckBox m_realSMS = null;
 	
 	@Override
@@ -50,39 +53,50 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 		
 		try 
 		{
-			m_appVersion.setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-			
-			Date lastDeviceUpdate = DriverAppParamHelper.Long2Date(DriverAppParamHelper.GetInstance().GetLastDeviceInfoUpdate());
-			String sLastDeviceUpdate = DriverAppParamHelper.Date2String(lastDeviceUpdate);
-			m_lastDeviceUpdate.setText(sLastDeviceUpdate);
-			
-			Date lastDbUpdate = DriverAppParamHelper.Long2Date(DriverAppParamHelper.GetInstance().GetLastDBUpdateTime());
-			String sLastDbUpdate = DriverAppParamHelper.Date2String(lastDbUpdate);
-			m_lastDBUpdate.setText(sLastDbUpdate);
-			
-			m_deviceID.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetDeviceId()));
-			
-			m_gateway.setText(DriverAppParamHelper.GetInstance().GetDeviceGateway());
-			
-//			m_autoUpdateHour.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour()));
-//			
-//			m_AutoUpdatePeriod.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetAutoUpdatePeriod()/(60*1000)));
-//			
-//			m_checkPeriod.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetCheckTimerPeriod()/(60*1000)));
-			
-			m_realSMS.setChecked(DriverAppParamHelper.GetInstance().GetRealSms());
-			m_realSMS.setOnCheckedChangeListener(this);
-			
 			m_buttonSchool = (Button) findViewById(R.id.buttonSchool);	
+			m_buttonForceUpdate = (Button) findViewById(R.id.buttonForceUpdate);
+			m_pbUpdate = (ProgressBar) findViewById(R.id.progressBarSettings);
+			m_pbUpdate.setVisibility(View.GONE);
 			
 			m_buttonSchool.setOnClickListener(this);
-			School s = DataManager.GetInstance().getSchool(DriverAppParamHelper.GetInstance().GetLastSchoolId());
-			SetSchoolButtonText(s);
+			m_buttonForceUpdate.setOnClickListener(this);
+			m_buttonForceUpdate.setText(getResources().getText(R.string.force_update));
+			
+			InitFields();
 		} 
 		catch (NameNotFoundException e) 
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public void InitFields() throws NameNotFoundException 
+	{
+		m_appVersion.setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+		
+		Date lastDeviceUpdate = DriverAppParamHelper.Long2Date(DriverAppParamHelper.GetInstance().GetLastDeviceInfoUpdate());
+		String sLastDeviceUpdate = DriverAppParamHelper.Date2String(lastDeviceUpdate);
+		m_lastDeviceUpdate.setText(sLastDeviceUpdate);
+		
+		Date lastDbUpdate = DriverAppParamHelper.Long2Date(DriverAppParamHelper.GetInstance().GetLastDBUpdateTime());
+		String sLastDbUpdate = DriverAppParamHelper.Date2String(lastDbUpdate);
+		m_lastDBUpdate.setText(sLastDbUpdate);
+		
+		m_deviceID.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetDeviceId()));
+		
+		m_gateway.setText(DriverAppParamHelper.GetInstance().GetDeviceGateway());
+		
+//			m_autoUpdateHour.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour()));
+//			
+//			m_AutoUpdatePeriod.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetAutoUpdatePeriod()/(60*1000)));
+//			
+//			m_checkPeriod.setText(Integer.toString(DriverAppParamHelper.GetInstance().GetCheckTimerPeriod()/(60*1000)));
+		
+		m_realSMS.setChecked(DriverAppParamHelper.GetInstance().GetRealSms());
+		m_realSMS.setOnCheckedChangeListener(this);
+		
+		School s = DataManager.GetInstance().getSchool(DriverAppParamHelper.GetInstance().GetLastSchoolId());
+		SetSchoolButtonText(s);
 	}	
 	
 	@Override
@@ -117,6 +131,15 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 					}
 				});
 		    	builder.show();
+				break;
+			}
+			case R.id.buttonForceUpdate:
+			{
+				m_buttonForceUpdate.setText(getResources().getText(R.string.updating));
+				m_pbUpdate.setVisibility(View.VISIBLE);
+				DataSynchronyzer sync = new DataSynchronyzer();
+				sync.addListener(this);
+				sync.Synchronize(this, E_SYNCHRONISATION_MODE.MODE_MANUALY, true);
 				break;
 			}
 		}
@@ -175,6 +198,27 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 	public void onCheckedChanged(CompoundButton arg0, boolean arg1)
 	{
 		DriverAppParamHelper.GetInstance().SetRealSms(arg1);
+	}
+
+	@Override
+	public void OnStepChanged(E_INIT_STEP pi_step) 
+	{
+		// Nothing to do
+	}
+
+	@Override
+	public void OnDataSynchronised() 
+	{
+		try 
+		{
+			m_pbUpdate.setVisibility(View.GONE);
+			m_buttonForceUpdate.setText(getResources().getText(R.string.force_update));
+			InitFields();
+		} 
+		catch (NameNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 
 //	public void Hour(View v)

@@ -35,7 +35,7 @@ public class InitActivity extends Activity implements ISynchronizerListener
 		m_dataSynchronizer.addListener(this);
 		
 		m_progressBar.setVisibility(View.VISIBLE);
-		m_dataSynchronizer.Synchronize(this, E_SYNCHRONISATION_MODE.MODE_STARTUP);
+		m_dataSynchronizer.Synchronize(this, E_SYNCHRONISATION_MODE.MODE_STARTUP, false);
 	}
 
 
