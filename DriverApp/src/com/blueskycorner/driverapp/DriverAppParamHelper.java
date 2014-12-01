@@ -40,6 +40,8 @@ public class DriverAppParamHelper
 	public static final int SPECIAL_TRIP_HOME_ID = -1;
 	public static final int SPECIAL_TRIP_SCHOOL_ID = -2;
 	public static final int NO_TRIP_ID = -3;
+	private static final String DEBUG_FORCE_DB_UPDATE = null;
+	private static final String DEBUG_FORCE_DEVICE_UPDATE = null;
 	
 	public static DriverAppParamHelper GetInstance() 
     {
@@ -234,7 +236,11 @@ public class DriverAppParamHelper
 		{
 			b = true;
 		}
-		return true;
+		if (GetDebugForceDbUpdate() == true)
+		{
+			b = false;
+		}
+		return b;
 	}
 
 	private static boolean HasDayChanged(long l) 
@@ -274,7 +280,11 @@ public class DriverAppParamHelper
 		{
 			b = true;
 		}
-		return false;
+		if (GetDebugForceDeviceUpdate() == true)
+		{
+			b = false;
+		}
+		return b;
 	}
 
 	public int GetAutoUpdateCheckHour() 
@@ -343,4 +353,33 @@ public class DriverAppParamHelper
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
 		sharedPref.edit().putBoolean(TRIP_FILTER_BY_TIME, pi_filterByDay).commit();
 	}
+	
+
+
+	private boolean GetDebugForceDbUpdate() 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
+		boolean val = sharedPref.getBoolean(DEBUG_FORCE_DB_UPDATE, false);
+		return val;
+	}
+
+	private boolean GetDebugForceDeviceUpdate() 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
+		boolean val = sharedPref.getBoolean(DEBUG_FORCE_DEVICE_UPDATE, false);
+		return val;
+	}
+	
+	public void SetDebugForceDbUpdate(boolean pi_debugForceDbUpdate) 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
+		sharedPref.edit().putBoolean(DEBUG_FORCE_DB_UPDATE, pi_debugForceDbUpdate).commit();
+	}
+
+	public void SetDebugForceDeviceUpdate(boolean pi_debugForceDeviceUpdate) 
+	{
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
+		sharedPref.edit().putBoolean(DEBUG_FORCE_DEVICE_UPDATE, pi_debugForceDeviceUpdate).commit();
+	}
+
 }

@@ -16,7 +16,7 @@ import com.blueskycorner.system.JSONParser;
 
 public class BackEndManager 
 {
-	public static final String deviceInfoURL = "http://www.";
+	public static final String deviceInfoURL = "http://testguest.hostei.com/DriverAppDeviceApi.php";
 	public static final String tableVersionURL = "http://testguest.hostei.com/DriverAppVersionApi.php";
 	public static final String getTableURL = "http://testguest.hostei.com/DriverAppTableApi.php";
 	public static final String KEY_RESULT = "result";
@@ -100,8 +100,8 @@ public class BackEndManager
 		        paramsJson.add(new BasicNameValuePair("simserialnumber", params[0]));
 		        JSONParser jsonParser = new JSONParser();
 		        java.lang.System.out.println("Calling back end server : getDevideInfo");
-//		        json = jsonParser.getJSONFromUrl(deviceInfoURL, paramsJson);
-		        json = GetFakeDeviceInfo();
+		        json = jsonParser.getJSONFromUrl(deviceInfoURL, paramsJson);
+//		        json = GetFakeDeviceInfo();
 			} 
 			catch (Exception e) 
 			{
@@ -126,8 +126,8 @@ public class BackEndManager
 	                if(bResult)
 	                {
 	                	java.lang.System.out.println("Calling back end server : get device info successful");
-//	                	m_deviceInfo.m_id = json.getInt(DeviceInfo.DEVICE_ID);
-//	                	m_deviceInfo.m_gateway = json.getString(DeviceInfo.DEVICE_GATEWAY);
+	                	m_deviceInfo.m_id = json.getInt(DeviceInfo.DEVICE_ID);
+	                	m_deviceInfo.m_gateway = json.getString(DeviceInfo.DEVICE_GATEWAY);
 	                }
 	                // User is a not a guest
 	                else

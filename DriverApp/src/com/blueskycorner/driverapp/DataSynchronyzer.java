@@ -167,7 +167,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 					if ( (m_mode == E_SYNCHRONISATION_MODE.MODE_STARTUP) || (m_mode == E_SYNCHRONISATION_MODE.MODE_MANUALY) )
 					{
 						AlertDialog.Builder builder = new AlertDialog.Builder(m_context);
-						builder.setMessage(R.string.server_unavailable)
+						builder.setMessage(R.string.device_update_failed)
 							   .setTitle(R.string.error)
 						       .setCancelable(false)
 						       .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() 
@@ -182,8 +182,9 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 						       {
 						           public void onClick(DialogInterface dialog, int id) 
 						           {
-						        	   android.os.Process.killProcess(android.os.Process.myPid());
-					                   System.exit(1);
+						        	   CheckDbUpdate();
+//						        	   android.os.Process.killProcess(android.os.Process.myPid());
+//					                   System.exit(1);
 						           }
 						       });
 						AlertDialog alert = builder.create();

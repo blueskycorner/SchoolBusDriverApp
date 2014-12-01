@@ -7,7 +7,7 @@
     <string name="school">School</string>
     <string name="trip">Trip</string>
     <string name="cancel">Cancel</string>
-    <string name="server_unavailable">Server unavailable</string>
+    <string name="device_update_failed">Device update failed</string>
     <string name="error">Error</string>
     <string name="db_update_failed">Data base update failed</string>
     <string name="retry">Retry</string>
