@@ -47,14 +47,18 @@ public class Child
 
 	public String GetPickupTime() 
 	{
-		int hour = m_pickupTimeHour;
-		String s = "AM";
-		if (m_pickupTimeHour > 12)
+		String time = "";
+		if ( (m_pickupTimeHour != 0) && (m_pickupTimeMinute != 0) )
 		{
-			hour -= 12;
-			s = "PM";
+			int hour = m_pickupTimeHour;
+			String s = "AM";
+			if (m_pickupTimeHour > 12)
+			{
+				hour -= 12;
+				s = "PM";
+			}
+			time = Integer.toString(hour) + ":" + Integer.toString(m_pickupTimeMinute) + " " + s;
 		}
-		String time = Integer.toString(hour) + ":" + Integer.toString(m_pickupTimeMinute) + " " + s;
 
 		return time;
 

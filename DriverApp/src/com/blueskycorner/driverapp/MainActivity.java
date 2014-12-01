@@ -311,7 +311,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 
 	public void AddChild(View v)
 	{
-		AddChildDialog d = new AddChildDialog(this, this);
+		AddChildDialog d = new AddChildDialog(this, this, DataManager.GetInstance().GetCurrentTrip().m_childs);
 		d.show();
 	}
 

@@ -21,7 +21,7 @@ public class AddChildDialog extends Dialog implements android.view.View.OnClickL
 	private Child m_child = null;
 	private HashMap<String, Child> m_map = null;
 	
-	public AddChildDialog(Context context, IDriverAppCommunicator pi_communicator) 
+	public AddChildDialog(Context context, IDriverAppCommunicator pi_communicator, ArrayList<Child> pi_childAlreadyPresent) 
 	{
 		super(context);
 		m_comm = pi_communicator;
@@ -40,14 +40,32 @@ public class AddChildDialog extends Dialog implements android.view.View.OnClickL
 		m_map = new HashMap<String, Child>();
 		for (Child child : childs) 
 		{
-			String s = child.m_lastName + " " + child.m_firstName;
-			m_proposals.add(s);
-			m_map.put(s, child);
+			if (ChildAlreadyInTrip(child, pi_childAlreadyPresent) == false)
+			{
+				String s = child.m_lastName + " " + child.m_firstName;
+				m_proposals.add(s);
+				m_map.put(s, child);
+			}
 		}
 
 		ArrayAdapter<String> a = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, m_proposals);
 		m_childName.setAdapter(a);
 		m_childName.setThreshold(2);
+	}
+
+	private boolean ChildAlreadyInTrip(Child pi_child,
+			ArrayList<Child> pi_childAlreadyPresent) 
+	{
+		boolean b = false;
+		
+		for (Child child : pi_childAlreadyPresent) 
+		{
+			if (pi_child.m_id == child.m_id)
+			{
+				b = true;
+			}
+		}
+		return b;
 	}
 
 	@Override

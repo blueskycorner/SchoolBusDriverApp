@@ -295,12 +295,12 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	@Override
 	public void RefreshState(Child pi_child) 
 	{
-		
+		// Nothing to do
 	}
 
 	@Override
 	public void UpdateUI() 
 	{
-		// Nothing to do
+		m_childList.invalidateViews();
 	}
 }
