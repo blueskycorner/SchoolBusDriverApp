@@ -63,7 +63,7 @@ public class TimerManager
 		}
 		else
 		{
-			m_handler.postDelayed(m_checkRunnable, 15000);
+			m_handler.postDelayed(m_checkRunnable, DriverAppParamHelper.GetInstance().GetCheckTimerPeriod());
 		}
 	}
 	

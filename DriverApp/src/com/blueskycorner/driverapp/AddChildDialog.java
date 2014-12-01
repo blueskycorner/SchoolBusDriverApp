@@ -18,6 +18,7 @@ public class AddChildDialog extends Dialog implements android.view.View.OnClickL
 	private AutoCompleteTextView m_childName = null;
 	private ArrayList<String> m_proposals = null;
 	private Button m_okButton = null;
+	private Button m_cancelButton = null;
 	private Child m_child = null;
 	private HashMap<String, Child> m_map = null;
 	
@@ -31,9 +32,13 @@ public class AddChildDialog extends Dialog implements android.view.View.OnClickL
 		
 		m_childName = (AutoCompleteTextView) findViewById(R.id.editTextAddChild);
 		m_childName.setOnItemClickListener(this);
+		
 		m_okButton = (Button) findViewById(R.id.buttonAddChildConfirmed);
 		m_okButton.setEnabled(false);
 		m_okButton.setOnClickListener(this);
+		
+		m_cancelButton = (Button) findViewById(R.id.buttonAddChildCancelled);
+		m_cancelButton.setOnClickListener(this);
 		ArrayList<Child> childs = DataManager.GetInstance().GetChilds();
 		
 		m_proposals = new ArrayList<String>();
@@ -74,8 +79,13 @@ public class AddChildDialog extends Dialog implements android.view.View.OnClickL
 		if (v.getId() == R.id.buttonAddChildConfirmed)
 		{
 			m_comm.ChildAdded(m_child);
+			this.dismiss();
 		}
-		this.dismiss();
+		else if (v.getId() == R.id.buttonAddChildCancelled)
+		{
+			this.dismiss();
+		}
+		
 	}
 
 	@Override
