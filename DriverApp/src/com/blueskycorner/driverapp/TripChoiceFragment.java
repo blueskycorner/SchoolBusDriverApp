@@ -281,7 +281,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 				m_activity.finish();
 			}
 		});
-    	builder.show();
+//    	builder.show();
 
 	}
 
