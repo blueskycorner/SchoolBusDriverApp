@@ -297,4 +297,10 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	{
 		
 	}
+
+	@Override
+	public void UpdateUI() 
+	{
+		// Nothing to do
+	}
 }

@@ -215,6 +215,13 @@ public class DataManager
 		
 		return childs;
 	}
+
+	public ArrayList<Child> GetChilds() 
+	{
+		ArrayList<Child> childs = m_childDAO.GetAllChilds();
+		
+		return childs;
+	}
 	
 	public void InsertVersion(int pi_id, int pi_version) throws Exception 
 	{

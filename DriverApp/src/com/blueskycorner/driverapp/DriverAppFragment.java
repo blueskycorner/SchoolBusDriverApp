@@ -20,6 +20,8 @@ public abstract class DriverAppFragment extends Fragment
 	
 	public abstract void RefreshState(Child pi_child);
 	
+	public abstract void UpdateUI();
+	
 	public String GetName()
 	{
 		return m_fragmentName;

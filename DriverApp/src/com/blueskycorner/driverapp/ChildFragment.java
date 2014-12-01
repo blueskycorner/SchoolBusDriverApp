@@ -183,4 +183,10 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 	{
 		return m_trip.GetCurrentChild();
 	}
+
+	@Override
+	public void UpdateUI() 
+	{
+		
+	}
 }

@@ -37,7 +37,7 @@ public class Child
 	// Other fields
 	public boolean m_isPresent = false;
 	public boolean m_isAdded = false;
-	public E_CHILD_STATE m_state;
+	public E_CHILD_STATE m_state = E_CHILD_STATE.STATE_WAITING;
 	
 	public void Init() 
 	{

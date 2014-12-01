@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
@@ -21,6 +23,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	DriverAppFragment m_currentFragment = null;
 	private MessageManager m_messageManager = null;
 	private ToggleButton m_buttonEmergency = null;
+	private Button m_buttonAddChild = null;
 	private TimerManager m_timerManager = null;
 	
 	private TripChoiceFragment m_tripChoiceFragment = null;
@@ -42,6 +45,9 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		
 		m_buttonEmergency = (ToggleButton) findViewById(R.id.toggleButtonEmmergency);
 		m_buttonEmergency .setOnCheckedChangeListener(this);
+		
+		m_buttonAddChild = (Button) findViewById(R.id.buttonAddChild);
+		m_buttonAddChild.setEnabled(false);
 		
 		InitFragments(savedInstanceState);
 		
@@ -101,6 +107,11 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		m_tripFragment.SetTrip(trip);
 		m_childFragment.SetTrip(trip);
 		
+		if (trip != null)
+		{
+			m_buttonAddChild.setEnabled(true);
+		}
+		
 		ActivateFragment(m_currentFragment);
 	}
 
@@ -144,6 +155,11 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		m_tripFragment.SetTrip(pi_trip);
 		m_childFragment.SetTrip(pi_trip);
 		DataManager.GetInstance().SetCurrentTrip(pi_trip);
+		
+		if (pi_trip != null)
+		{
+			m_buttonAddChild.setEnabled(true);
+		}
 	}
 
 	@Override
@@ -293,4 +309,24 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		SmsSender.SendDeviceState(this, pi_deviceState);
 	}
 
+	public void AddChild(View v)
+	{
+		AddChildDialog d = new AddChildDialog(this, this);
+		d.show();
+	}
+
+	@Override
+	public void ChildAdded(Child pi_child) 
+	{
+		if (pi_child != null)
+		{
+			Trip trip = DataManager.GetInstance().GetCurrentTrip();
+			if (trip != null)
+			{
+				pi_child.m_isPresent = true;
+				trip.AddChild(pi_child);
+			}
+			m_currentFragment.UpdateUI();
+		}
+	}
 }

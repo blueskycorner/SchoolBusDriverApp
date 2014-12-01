@@ -1,5 +1,6 @@
 package com.blueskycorner.driverapp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -23,6 +24,7 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 	private LinearLayout m_layout = null;
 	private HashMap<Integer, Child> m_childMap = null;
 	private Button m_buttonEndTrip = null;
+	private ArrayList<Button> m_buttonList = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -39,6 +41,8 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 		m_buttonEndTrip = (Button) v.findViewById(R.id.buttonEndTrip);
 		m_buttonEndTrip.setOnClickListener(this);
 		
+		m_buttonList = new ArrayList<Button>();
+		
 		UpdateUI();
 		
 		return v;
@@ -53,6 +57,7 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 
 	public void UpdateUI() 
 	{
+		m_layout.removeAllViews();
 		if (m_trip != null)
 		{
 			int i = 0;
@@ -90,7 +95,6 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 			}
 			else
 			{
-
 				m_buttonEndTrip.setText(m_activity.getResources().getText(R.string.cancel_trip));
 			}
 		}

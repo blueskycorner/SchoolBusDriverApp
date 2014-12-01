@@ -11,4 +11,6 @@ public interface IDriverAppCommunicator
 	void childStateUpdated(Child pi_child);
 	
 	void TripFinished();
+
+	void ChildAdded(Child m_child);
 }

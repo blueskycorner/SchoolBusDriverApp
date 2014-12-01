@@ -1,5 +1,6 @@
 package com.blueskycorner.driverapp;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class ChildDAO extends SchoolBusDAO
     private static final String KEY_THURSDAY_INFO = "thursday_info";
     private static final String KEY_FRIDAY_INFO = "friday_info";
     
-    private SimpleDateFormat m_parser = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private SimpleDateFormat m_parser = new SimpleDateFormat("yyyy:MM:dd");
     
     public ChildDAO(SqlLiteHelper pi_sqliteHelper) 
     {
@@ -78,20 +79,7 @@ public class ChildDAO extends SchoolBusDAO
 	        
 	        if ( (c != null) && (c.moveToFirst()) )
 	        {
-	        	child = new Child();
-	        	child.m_id = c.getInt(c.getColumnIndex(KEY_ID));
-	        	child.m_firstName = c.getString(c.getColumnIndex(KEY_FIRST_NAME));
-	        	child.m_lastName = c.getString(c.getColumnIndex(KEY_LAST_NAME));
-	        	child.m_address.add(c.getString(c.getColumnIndex(KEY_ADDRESS_1)));
-	        	child.m_address.add(c.getString(c.getColumnIndex(KEY_ADDRESS_2)));
-	        	child.m_language = E_LANGUAGE.FromInt(c.getInt(c.getColumnIndex(KEY_LANGUAGE_ID)));
-	        	child.m_creationDate = m_parser.parse(c.getString(c.getColumnIndex(KEY_CREATION_DATE)));
-	        	child.m_modificationDate = m_parser.parse(c.getString(c.getColumnIndex(KEY_MODIFICATION_DATE)));
-	        	child.m_mondayInfo = c.getString(c.getColumnIndex(KEY_MONDAY_INFO));
-	        	child.m_tuesdayInfo = c.getString(c.getColumnIndex(KEY_TUESDAY_INFO));
-	        	child.m_wednesdayInfo = c.getString(c.getColumnIndex(KEY_WEDNESDAY_INFO));
-	        	child.m_thursdayInfo = c.getString(c.getColumnIndex(KEY_THURSDAY_INFO));
-	        	child.m_fridayInfo = c.getString(c.getColumnIndex(KEY_FRIDAY_INFO));
+	        	child = FillupChild(c);
 	        }
 		}
 		catch (Exception e)
@@ -100,6 +88,25 @@ public class ChildDAO extends SchoolBusDAO
 		}
 
         return child;
+	}
+
+	public Child FillupChild(Cursor c) throws ParseException 
+	{
+		Child child = new Child();
+		child.m_id = c.getInt(c.getColumnIndex(KEY_ID));
+		child.m_firstName = c.getString(c.getColumnIndex(KEY_FIRST_NAME));
+		child.m_lastName = c.getString(c.getColumnIndex(KEY_LAST_NAME));
+		child.m_address.add(c.getString(c.getColumnIndex(KEY_ADDRESS_1)));
+		child.m_address.add(c.getString(c.getColumnIndex(KEY_ADDRESS_2)));
+		child.m_language = E_LANGUAGE.FromInt(c.getInt(c.getColumnIndex(KEY_LANGUAGE_ID)));
+		child.m_creationDate = m_parser.parse(c.getString(c.getColumnIndex(KEY_CREATION_DATE)));
+		child.m_modificationDate = m_parser.parse(c.getString(c.getColumnIndex(KEY_MODIFICATION_DATE)));
+		child.m_mondayInfo = c.getString(c.getColumnIndex(KEY_MONDAY_INFO));
+		child.m_tuesdayInfo = c.getString(c.getColumnIndex(KEY_TUESDAY_INFO));
+		child.m_wednesdayInfo = c.getString(c.getColumnIndex(KEY_WEDNESDAY_INFO));
+		child.m_thursdayInfo = c.getString(c.getColumnIndex(KEY_THURSDAY_INFO));
+		child.m_fridayInfo = c.getString(c.getColumnIndex(KEY_FRIDAY_INFO));
+		return child;
 	}
 
 	public void InsertChild(int pi_childId, 
@@ -139,5 +146,40 @@ public class ChildDAO extends SchoolBusDAO
 	protected String GetTableName() 
 	{
 		return TABLE;
+	}
+
+	public ArrayList<Child> GetAllChilds() 
+	{
+		ArrayList<Child> childs = new ArrayList<Child>();
+		
+		try
+		{
+	        // 1. build the query
+	        String query = "SELECT * FROM " + TABLE;
+	    	
+	        // 2. get reference to writable DB
+	        Cursor c = m_database.rawQuery(query, null);
+	        
+	        if (c.moveToFirst()) {
+	            do {
+	            	try
+	            	{
+	            		Child child = FillupChild(c);
+	            		childs.add(child);
+	            	}
+	            	catch (Exception e) 
+	            	{
+						e.printStackTrace();
+					}
+	 
+	            } while (c.moveToNext());
+	        }
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+        return childs;
 	}
 }

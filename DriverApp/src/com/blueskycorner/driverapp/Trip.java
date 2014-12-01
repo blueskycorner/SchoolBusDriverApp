@@ -18,7 +18,7 @@ public class Trip
 		int remainCount = 0;
 		for (Child child : m_childs) 
 		{
-			if (child.m_state == E_CHILD_STATE.STATE_WAITING)
+			if ( (child.m_state == E_CHILD_STATE.STATE_WAITING) && (child.m_isPresent == true) )
 			{
 				remainCount ++;
 			}
@@ -125,5 +125,10 @@ public class Trip
 	public Child GetCurrentChild()
 	{
 		return m_currentChild;
+	}
+
+	public void AddChild(Child pi_child) 
+	{
+		m_childs.add(pi_child);
 	}
 }
