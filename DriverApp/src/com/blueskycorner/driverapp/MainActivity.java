@@ -24,7 +24,6 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	private MessageManager m_messageManager = null;
 	private ToggleButton m_buttonEmergency = null;
 	private Button m_buttonAddChild = null;
-	private TimerManager m_timerManager = null;
 	
 	private TripChoiceFragment m_tripChoiceFragment = null;
 	private TripFragment m_tripFragment = null;
@@ -52,8 +51,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		
 		DriverAppParamHelper.GetInstance().AddListener(this);
 		
-		m_timerManager = new TimerManager(this);
-		m_timerManager.StartTimer();
+		TimerManager.GetInstance().SetContext(this);
 	}
 	
 	@Override

@@ -36,6 +36,8 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	
 	static public void SetAlarm(Context context)
     {
+		DriverAppParamHelper.GetInstance().SetContext(context);
+		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
 		if (calendar.get(Calendar.HOUR_OF_DAY) >= DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour())
@@ -43,8 +45,8 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 			calendar.add(Calendar.HOUR_OF_DAY, 24);
 		}
 //		calendar.set(Calendar.HOUR_OF_DAY, DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour());
-		calendar.set(Calendar.HOUR_OF_DAY, 10);
-		calendar.set(Calendar.MINUTE, 10);
+		calendar.set(Calendar.HOUR_OF_DAY, 17);
+		calendar.set(Calendar.MINUTE, 42);
 		calendar.set(Calendar.SECOND, 0);
 		
 		
@@ -95,7 +97,7 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
     @Override
     public void onReceive(Context pi_context, Intent pi_intent) 
     {
-    	Synchronize(pi_context, E_SYNCHRONISATION_MODE.MODE_AUTO, false);
+    	Synchronize(pi_context, E_SYNCHRONISATION_MODE.MODE_AUTO, true);
     }
     
 	private void CheckDeviceInfo() 

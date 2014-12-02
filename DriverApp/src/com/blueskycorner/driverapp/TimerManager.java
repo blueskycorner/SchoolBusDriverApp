@@ -12,13 +12,25 @@ import android.os.Handler;
 
 public class TimerManager 
 {
+	private static TimerManager m_timerManager = new TimerManager();
+	
 	private Context m_context = null;
 	private Handler m_handler = null;
 	private Runnable m_checkRunnable = null;
+	private Boolean m_bInit = false;
 	
-	public TimerManager(Context pi_context) 
+	public static TimerManager GetInstance() 
+    {
+	   return m_timerManager;
+    }
+	
+	public void SetContext(Context pi_context)
 	{
 		m_context = pi_context;
+	}
+
+	public TimerManager() 
+	{
 		m_handler = new Handler();
 		m_checkRunnable = new Runnable() 
 		{
@@ -28,13 +40,9 @@ public class TimerManager
 				CheckBattery();
 			}
 		};
-	}
-	
-	public void StartTimer()
-	{
 		m_handler.post(m_checkRunnable);
 	}
-
+	
 	private void CheckGps() 
 	{
 		if (System.IsGpsActivated(m_context) == false)
