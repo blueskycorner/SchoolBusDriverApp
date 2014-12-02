@@ -36,6 +36,8 @@ public class BackEndManager
 	private static final String KEY_CHILD_ID = "id";
 	private static final String KEY_CHILD_FIRST_NAME = "fn";
 	private static final String KEY_CHILD_LAST_NAME = "ln";
+	private static final String KEY_CHILD_BIRTHDATE = "bd";
+	private static final String KEY_CHILD_GRADE_ID = "gid";
 	private static final String KEY_CHILD_ADDRESS1 = "ad1";
 	private static final String KEY_CHILD_ADDRESS2 = "ad2";
 	private static final String KEY_CHILD_LANGUAGE_ID = "lid";
@@ -377,6 +379,8 @@ public class BackEndManager
 				int childId = o.getInt(KEY_CHILD_ID);
 				String firstName = o.getString(KEY_CHILD_FIRST_NAME);
 				String lastName = o.getString(KEY_CHILD_LAST_NAME);
+				String birthdate = o.getString(KEY_CHILD_BIRTHDATE);
+				int gradeId = o.getInt(KEY_CHILD_GRADE_ID);
 				String address1 = o.getString(KEY_CHILD_ADDRESS1);
 				String address2 = o.getString(KEY_CHILD_ADDRESS2);
 				int languageId = o.getInt(KEY_CHILD_LANGUAGE_ID);
@@ -387,7 +391,7 @@ public class BackEndManager
 				String wednesdayInfo = o.getString(KEY_CHILD_WEDNESDAY_INFO);
 				String thursdayInfo = o.getString(KEY_CHILD_THURSDAY_INFO);
 				String fridayInfo = o.getString(KEY_CHILD_FRIDAY_INFO);
-				DataManager.GetInstance().InsertChild(childId, firstName, lastName, address1, address2, languageId, creationDate, modificationDate, mondayInfo, tuesdayInfo, wednesdayInfo, thursdayInfo, fridayInfo);
+				DataManager.GetInstance().InsertChild(childId, firstName, lastName, birthdate, gradeId, address1, address2, languageId, creationDate, modificationDate, mondayInfo, tuesdayInfo, wednesdayInfo, thursdayInfo, fridayInfo);
 			}
 		} 
 		catch (Exception e) 

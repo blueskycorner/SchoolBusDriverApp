@@ -19,6 +19,8 @@ public class ChildDAO extends SchoolBusDAO
     private static final String KEY_ID = "id";
     private static final String KEY_FIRST_NAME = "first_name";
     private static final String KEY_LAST_NAME = "last_name";
+    private static final String KEY_BIRTHDATE = "birthdate";
+    private static final String KEY_GRADE_ID = "grade_id";
     private static final String KEY_ADDRESS_1 = "address1";
     private static final String KEY_ADDRESS_2 = "address2";
     private static final String KEY_LANGUAGE_ID = "language_id";
@@ -39,7 +41,7 @@ public class ChildDAO extends SchoolBusDAO
 	
 	static public String GetOnUpgrade() 
 	{
-        String s = "DROP TABLE IF EXISTS" + TABLE;
+        String s = "DROP TABLE IF EXISTS " + TABLE;
  
         return s;
 	}
@@ -51,6 +53,8 @@ public class ChildDAO extends SchoolBusDAO
 			Child info = GetChild(m_database, child.m_id);
 			child.m_firstName = info.m_firstName;
 			child.m_lastName = info.m_lastName;
+			child.m_birthdate = info.m_birthdate;
+			child.m_grade = info.m_grade;
 			child.m_address = info.m_address;
 			child.m_language = info.m_language;
 			child.m_creationDate = info.m_creationDate;
@@ -96,6 +100,8 @@ public class ChildDAO extends SchoolBusDAO
 		child.m_id = c.getInt(c.getColumnIndex(KEY_ID));
 		child.m_firstName = c.getString(c.getColumnIndex(KEY_FIRST_NAME));
 		child.m_lastName = c.getString(c.getColumnIndex(KEY_LAST_NAME));
+		child.m_birthdate = m_parser.parse(c.getString(c.getColumnIndex(KEY_BIRTHDATE)));
+		child.m_grade = E_GRADE.FromInt(c.getInt(c.getColumnIndex(KEY_GRADE_ID)));
 		child.m_address.add(c.getString(c.getColumnIndex(KEY_ADDRESS_1)));
 		child.m_address.add(c.getString(c.getColumnIndex(KEY_ADDRESS_2)));
 		child.m_language = E_LANGUAGE.FromInt(c.getInt(c.getColumnIndex(KEY_LANGUAGE_ID)));
@@ -111,7 +117,9 @@ public class ChildDAO extends SchoolBusDAO
 
 	public void InsertChild(int pi_childId, 
 							String pi_firstName, 
-							String pi_lastName, 
+							String pi_lastName,
+							String pi_birthdate,
+							int pi_gradeId,
 							String pi_address1, 
 							String pi_address2, 
 							int pi_languageId, 
@@ -127,6 +135,8 @@ public class ChildDAO extends SchoolBusDAO
 		values.put(KEY_ID, pi_childId);
 		values.put(KEY_FIRST_NAME, pi_firstName);
 		values.put(KEY_LAST_NAME, pi_lastName);
+		values.put(KEY_BIRTHDATE, pi_birthdate);
+		values.put(KEY_GRADE_ID, pi_gradeId);
 		values.put(KEY_ADDRESS_1, pi_address1);
 		values.put(KEY_ADDRESS_2, pi_address2);
 		values.put(KEY_LANGUAGE_ID, pi_languageId);

@@ -230,7 +230,9 @@ public class DataManager
 	
 	public void InsertChild(int pi_childId, 
 							String pi_firstName, 
-							String pi_lastName, 
+							String pi_lastName,
+							String pi_birthdate,
+							int pi_gradeId,
 							String pi_address1,
 							String pi_address2,
 							int pi_languageId, 
@@ -242,7 +244,7 @@ public class DataManager
 							String pi_thursdayInfo,
 							String pi_fridayInfo) throws Exception
 	{
-		m_childDAO.InsertChild(pi_childId, pi_firstName, pi_lastName, pi_address1, pi_address2, pi_languageId, pi_creationDate, pi_modificationDate, pi_mondayInfo, pi_tuesdayInfo, pi_wednesdayInfo, pi_thursdayInfo, pi_fridayInfo);
+		m_childDAO.InsertChild(pi_childId, pi_firstName, pi_lastName, pi_birthdate, pi_gradeId, pi_address1, pi_address2, pi_languageId, pi_creationDate, pi_modificationDate, pi_mondayInfo, pi_tuesdayInfo, pi_wednesdayInfo, pi_thursdayInfo, pi_fridayInfo);
 	}
 	
 	public void InsertSchool(int pi_schoolId, String pi_name) throws Exception

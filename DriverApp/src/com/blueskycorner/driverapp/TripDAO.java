@@ -30,7 +30,7 @@ public class TripDAO extends SchoolBusDAO
 	
 	static public String GetOnUpgrade() 
 	{
-        String s = "DROP TABLE IF EXISTS" + TABLE;
+        String s = "DROP TABLE IF EXISTS " + TABLE;
  
         return s;
 	}

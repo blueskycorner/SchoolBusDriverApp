@@ -41,6 +41,8 @@ CREATE TABLE child
   id INTEGER NOT NULL,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
+  birthdate date NOT NULL,
+  grade_id INTEGER NOT NULL,
   address1 TEXT NOT NULL,
   address2 TEXT NOT NULL,
   language_id INTEGER NOT NULL,
