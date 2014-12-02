@@ -42,15 +42,17 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 		{
 			calendar.add(Calendar.HOUR_OF_DAY, 24);
 		}
-		calendar.set(Calendar.HOUR_OF_DAY, DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour());
-		calendar.set(Calendar.MINUTE, 0);
+//		calendar.set(Calendar.HOUR_OF_DAY, DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour());
+		calendar.set(Calendar.HOUR_OF_DAY, 10);
+		calendar.set(Calendar.MINUTE, 10);
 		calendar.set(Calendar.SECOND, 0);
 		
 		
         AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, DataSynchronyzer.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), DriverAppParamHelper.GetInstance().GetAutoUpdatePeriod(), pi); // Millisec * Second * Minute
+//        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), DriverAppParamHelper.GetInstance().GetAutoUpdatePeriod(), pi); // Millisec * Second * Minute
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60*5, pi); // Millisec * Second * Minute
 //        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, DriverAppParamHelper.GetAutoUpdatePeriod(context), pi); // Millisec * Second * Minute
     }
 

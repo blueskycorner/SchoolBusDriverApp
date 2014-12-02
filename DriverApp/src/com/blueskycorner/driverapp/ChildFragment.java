@@ -69,7 +69,7 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 			m_name.setText(GetCurrentChild().m_firstName + " " + GetCurrentChild().m_lastName);
 			m_address.setText(GetCurrentChild().GetAddress());
 			String s = GetCurrentChild().GetPickupTime();
-			if (s.endsWith("") == false)
+			if (s.equals("") == false)
 			{
 				m_pickupTime.setText(GetPickupText() + " @ " + s);
 			}

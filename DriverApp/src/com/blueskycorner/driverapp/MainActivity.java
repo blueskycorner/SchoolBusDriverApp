@@ -12,12 +12,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-public class MainActivity extends FragmentActivity implements IDriverAppCommunicator, OnCheckedChangeListener, IMessageListener, IDeviceDataListener
+public class MainActivity extends FragmentActivity implements IDriverAppCommunicator, OnCheckedChangeListener
 {
 	private static final String CURRENT_FRAGMENT = "CURRENT_FRAGMENT";
 	DriverAppFragment m_currentFragment = null;
@@ -40,8 +41,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		Settings.System.putInt(this.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE,
 	            Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
 
-		m_messageManager = new MessageManager(this);
-		m_messageManager.AddMessageListener(this);
+		m_messageManager = new MessageManager(this,this);
 		
 		m_buttonEmergency = (ToggleButton) findViewById(R.id.toggleButtonEmmergency);
 		m_buttonEmergency .setOnCheckedChangeListener(this);
@@ -227,7 +227,6 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		if (pi_child.m_state != E_CHILD_STATE.STATE_ON_THE_WAY_STARTED)
 		{
 			ActivateFragment(m_tripFragment);
-//			m_tripFragment.UpdateUI();
 		}
 	}
 	
@@ -273,43 +272,6 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		SmsSender.SendEmergency(this, arg1);
 	}
 
-	@Override
-	public void onMessageReceived(DriverAppSmsMessage pi_message) 
-	{
-		switch (pi_message.GetType())
-		{
-			case 0:
-			{
-//				if (m_trip != null)
-//				{
-//					Child c = m_trip.GetChild(pi_message.GetChildId());
-//					if (c != null)
-//					{
-//						c.m_state = E_CHILD_STATE.STATE_SKIPPED;
-//						m_currentFragment.RefreshState(c);
-//					}
-//					else
-//					{
-//						// TODO reply to parent
-//						Toast.makeText(this, R.string.child_is_not_part_of_current_trip, Toast.LENGTH_SHORT).show();
-//					}
-//				}
-
-			}
-			case 3:
-			{
-				DataGrabber dg = new DataGrabber();
-				dg.GetDeviceState(this, this);
-			}
-		}
-	}
-
-	@Override
-	public void onDeviceDataChanged(DeviceState pi_deviceState) 
-	{
-		SmsSender.SendDeviceState(this, pi_deviceState);
-	}
-
 	public void AddChild(View v)
 	{
 		AddChildDialog d = new AddChildDialog(this, this, DataManager.GetInstance().GetCurrentTrip().m_childs);
@@ -329,5 +291,11 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 			}
 			m_currentFragment.UpdateUI();
 		}
+	}
+
+	@Override
+	public void childStateImplicitlyUpdated(Child pi_child) 
+	{
+		m_currentFragment.RefreshState(pi_child);
 	}
 }

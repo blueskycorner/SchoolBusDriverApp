@@ -64,7 +64,7 @@ public class InitActivity extends Activity implements ISynchronizerListener
 		{
 			case STEP_DEVICE_UPDATE:
 			{
-				m_tvInitState.setText(getResources().getText(R.string.app_initialisation));
+				m_tvInitState.setText(getResources().getText(R.string.device_update));
 				break;
 			}
 			case STEP_DB_UPDATE:

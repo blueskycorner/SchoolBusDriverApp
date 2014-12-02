@@ -1,6 +1,5 @@
 package com.blueskycorner.driverapp;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -10,25 +9,23 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings.System;
-import android.telephony.SmsMessage;
+import android.widget.Toast;
 
-public class MessageManager implements ISmsListener 
+public class MessageManager implements ISmsListener, IDeviceDataListener 
 {
 	private IncomingSmsReceiver m_incommingSmsReceiver = null;
 	private Activity m_activity = null;
+	private IDriverAppCommunicator m_comm = null;
 	private ReentrantLock m_lock = null;
 	private int m_messageId = 0;
 	private HashMap<Integer, MessageThread> m_messageThreads = null;
-	private Trip m_trip = null;
-	private ArrayList<IMessageListener> m_messageListener;
 	
-	public MessageManager(Activity pi_activity) 
+	public MessageManager(Activity pi_activity, IDriverAppCommunicator pi_communicator) 
 	{
 		m_activity = pi_activity;
+		m_comm = pi_communicator;
 		m_messageThreads = new HashMap<Integer, MessageManager.MessageThread>();
 		m_lock = new ReentrantLock();
-		m_messageListener = new ArrayList<IMessageListener>();
 		
 		m_incommingSmsReceiver = new IncomingSmsReceiver();
 		m_incommingSmsReceiver.AddListener(this);
@@ -37,49 +34,52 @@ public class MessageManager implements ISmsListener
 		filter.setPriority(Integer.MAX_VALUE);
         m_activity.registerReceiver(m_incommingSmsReceiver, filter);
 	}
-	
-	public void SetTrip(Trip pi_trip)
-	{
-		m_trip = pi_trip;
-	}
 
 	@Override
 	public void OnSmsReceived(DriverAppSmsMessage pi_sms) 
 	{
-		if (pi_sms.HasToBeShown() == true)
+		switch (pi_sms.GetType())
 		{
-			MessageThread t = new MessageThread(pi_sms, m_messageId);
-			m_messageThreads.put(m_messageId, t);
-			m_messageId ++;
-			t.start();	
+			case 0:
+			{
+				Trip trip = DataManager.GetInstance().GetCurrentTrip();
+				if (trip != null)
+				{
+					Child c = trip.GetChild(pi_sms.GetChildId());
+					if (c != null)
+					{
+						UserMessage um = new UserMessage();
+						um.m_sender = E_SENDER.SENDER_PARENT;
+						um.m_message = c.m_firstName + " " + c.m_lastName + " " + m_activity.getResources().getText(R.string.doesnt_take_the_bus);
+						um.m_action = E_USER_ACTION.ACTION_ACK;
+						c.m_state = E_CHILD_STATE.STATE_ON_THE_WAY_CANCELED;
+						StartMessageActivity(um);
+						m_comm.childStateImplicitlyUpdated(c);
+					}
+					else
+					{
+						// TODO reply to server
+						Toast.makeText(m_activity, R.string.child_is_not_part_of_current_trip, Toast.LENGTH_SHORT).show();
+					}
+				}
+			}
+			case 3:
+			{
+				DataGrabber dg = new DataGrabber();
+				dg.GetDeviceState(m_activity, this);
+			}
 		}
-		BroadCastMessage(pi_sms);
-	}
-	
-	private void BroadCastMessage(DriverAppSmsMessage pi_sms) 
-	{
-		for (IMessageListener l : m_messageListener)
-		{
-			l.onMessageReceived(pi_sms);
-		}
-	}
-	
-	public void AddMessageListener(IMessageListener pi_listener)
-	{
-		if (m_messageListener.contains(pi_listener) == false)
-		{
-			m_messageListener.add(pi_listener);
-		}
-	}
-	
-	public void RemoveMessageListener(IMessageListener pi_listener)
-	{
-		if (m_messageListener.contains(pi_listener) == true)
-		{
-			m_messageListener.remove(pi_listener);
-		}
+
 	}
 
+	public void StartMessageActivity(UserMessage um) 
+	{
+		MessageThread t = new MessageThread(um, m_messageId);
+		m_messageThreads.put(m_messageId, t);
+		m_messageId ++;
+		t.start();
+	}
+	
 	public void OnMessageAcknowledge(int pi_messageId)
 	{
 		MessageThread t = m_messageThreads.get(pi_messageId);
@@ -99,13 +99,13 @@ public class MessageManager implements ISmsListener
 	
 	private class MessageThread extends Thread
 	{
-		private DriverAppSmsMessage m_message;
+		private UserMessage m_message;
 		private int m_messageId;
 		Handler m_handler = null;
 		
-		public MessageThread(DriverAppSmsMessage pi_message, int pi_messageId)
+		public MessageThread(UserMessage um, int pi_messageId)
 		{
-			m_message = pi_message;
+			m_message = um;
 			m_messageId = pi_messageId;
 		}
 		
@@ -125,5 +125,11 @@ public class MessageManager implements ISmsListener
 	        m_activity.startActivityForResult(it, m_messageId);
 	        Looper.loop();
 		}
+	}
+
+	@Override
+	public void onDeviceDataChanged(DeviceState pi_deviceState) 
+	{
+		SmsSender.SendDeviceState(m_activity, pi_deviceState);
 	}
 }

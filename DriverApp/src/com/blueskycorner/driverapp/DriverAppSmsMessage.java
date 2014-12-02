@@ -17,13 +17,17 @@ public class DriverAppSmsMessage implements Parcelable
 	{
 		
 	}
-	
-	public boolean HasToBeShown() 
+
+	public int GetChildId() 
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return GetField(CHILD_FIELD_NUMBER);	
 	}
 
+	public int GetType()
+	{
+		return GetField(TYPE_FIELD_NUMBER);
+	}
+	
 	@Override
 	public int describeContents() 
 	{
@@ -59,11 +63,6 @@ public class DriverAppSmsMessage implements Parcelable
 	{
 		String s = "";
 		return s;
-	}
-
-	public int GetType()
-	{
-		return GetField(TYPE_FIELD_NUMBER);
 	}
 	
 	private int GetField(int pi_field)
@@ -104,11 +103,6 @@ public class DriverAppSmsMessage implements Parcelable
 			start = m_body.indexOf(SEPARATOR_INT, start+1);
 		}
 		return start;
-	}
-
-	public int GetChildId() 
-	{
-		return GetField(CHILD_FIELD_NUMBER);	
 	}
 
 }

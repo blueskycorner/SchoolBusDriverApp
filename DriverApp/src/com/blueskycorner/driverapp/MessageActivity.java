@@ -14,10 +14,8 @@ import android.widget.TextView;
 public class MessageActivity extends Activity 
 {
 	public static final String MESSAGE = "MESSAGE";
-	private TextView m_from = null;
-	private TextView m_cellNumber = null;
 	private TextView m_message = null;
-	private Button m_buttonOK = null;
+	private Button m_buttonAck = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -31,56 +29,49 @@ public class MessageActivity extends Activity
 	    wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 	    wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 		
-		m_from = (TextView) findViewById(R.id.textViewFrom);
 		m_message = (TextView) findViewById(R.id.textViewMessage);
-		m_buttonOK = (Button) findViewById(R.id.buttonMessageOk);
+		m_buttonAck = (Button) findViewById(R.id.buttonMessageOk);
 		
-		DriverAppSmsMessage message = getIntent().getParcelableExtra(MESSAGE);
-		m_message.setText(message.GetText());
+		UserMessage userMessage = getIntent().getParcelableExtra(MESSAGE);
+		m_message.setText(userMessage.m_message);
 		
 		int color = 0;
-		String sFrom = "";
-		switch (message.GetType()) 
+		switch (userMessage.m_sender) 
 		{
-			case 0:
-			case 1:
+			case SENDER_PARENT:
 			{
 				color = DriverAppParamHelper.GetInstance().GetParentBackgroudColor();
-				sFrom = (String) getResources().getText(R.string.from_parent);
 				break;
 			}
-			case 2:
+			case SENDER_SCHOOL:
 			{
 				color = DriverAppParamHelper.GetInstance().GetSchoolBackgroudColor();
-				sFrom = (String) getResources().getText(R.string.from_school);
 				break;
 			}
-			case 4:
+			case SENDER_DRIVER_COMPANY:
 			{
 				color = DriverAppParamHelper.GetInstance().GetCompanyBackgroudColor();
-				sFrom = (String) getResources().getText(R.string.from_company);
-				break;
-			}
-			default:
-			{
-				color = DriverAppParamHelper.GetInstance().GetUnknownBackgroudColor();
-				sFrom = (String) getResources().getText(R.string.from_unknown);
 				break;
 			}
 		}
 		View someView = findViewById(R.id.message_activity);
 		View root = someView.getRootView();
 		root.setBackgroundColor(color);
-		
-		m_from.setText(sFrom);
-		
-		m_buttonOK.setOnClickListener(new OnClickListener() 
+				
+		switch (userMessage.m_action)
 		{
-			@Override
-			public void onClick(View v) 
+			case ACTION_ACK:
 			{
-				finish();
+				m_buttonAck.setVisibility(View.VISIBLE);
+				m_buttonAck.setOnClickListener(new OnClickListener() 
+				{
+					@Override
+					public void onClick(View v) 
+					{
+						finish();
+					}
+				});
 			}
-		});
+		}
 	}
 }
