@@ -12,7 +12,8 @@ public class BootUpReceiver extends BroadcastReceiver
 	{
 		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) 
 		{   
-			DataSynchronyzer.SetAlarm(context);
+//			DataSynchronyzer.SetAlarm(context);
+			DataSynchronyzer.CancelAlarm(context);
 			
 			Intent i = new Intent(context, InitActivity.class);  
 	        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

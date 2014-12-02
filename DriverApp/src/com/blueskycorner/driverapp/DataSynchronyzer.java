@@ -44,9 +44,9 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 		{
 			calendar.add(Calendar.HOUR_OF_DAY, 24);
 		}
-//		calendar.set(Calendar.HOUR_OF_DAY, DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour());
-		calendar.set(Calendar.HOUR_OF_DAY, 17);
-		calendar.set(Calendar.MINUTE, 42);
+		calendar.set(Calendar.HOUR_OF_DAY, DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour());
+
+		calendar.set(Calendar.MINUTE, 20);
 		calendar.set(Calendar.SECOND, 0);
 		
 		

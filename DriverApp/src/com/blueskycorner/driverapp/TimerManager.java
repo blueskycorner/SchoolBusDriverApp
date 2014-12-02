@@ -1,5 +1,10 @@
 package com.blueskycorner.driverapp;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.blueskycorner.system.BatteryState;
 import com.blueskycorner.system.System;
 
@@ -17,7 +22,7 @@ public class TimerManager
 	private Context m_context = null;
 	private Handler m_handler = null;
 	private Runnable m_checkRunnable = null;
-	private Boolean m_bInit = false;
+	private Timer m_updateTimer = null;
 	
 	public static TimerManager GetInstance() 
     {
@@ -41,6 +46,28 @@ public class TimerManager
 			}
 		};
 		m_handler.post(m_checkRunnable);
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(java.lang.System.currentTimeMillis());
+		if (calendar.get(Calendar.HOUR_OF_DAY) >= DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour())
+		{
+			calendar.add(Calendar.HOUR_OF_DAY, 24);
+		}
+		calendar.set(Calendar.HOUR_OF_DAY, DriverAppParamHelper.GetInstance().GetAutoUpdateCheckHour());
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		Date d = new Date(calendar.getTimeInMillis());
+
+		m_updateTimer = new Timer();
+//		m_updateTimer.schedule(new TimerTask() {
+//			
+//			@Override
+//			public void run() 
+//			{
+//				DataSynchronyzer ds = new DataSynchronyzer();
+//				ds.Synchronize(m_context, E_SYNCHRONISATION_MODE.MODE_AUTO, false);
+//			}
+//		}, d, DriverAppParamHelper.GetInstance().GetAutoUpdatePeriod());
 	}
 	
 	private void CheckGps() 
