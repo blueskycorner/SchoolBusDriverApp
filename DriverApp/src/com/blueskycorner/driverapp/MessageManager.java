@@ -58,8 +58,7 @@ public class MessageManager implements ISmsListener, IDeviceDataListener
 					}
 					else
 					{
-						// TODO reply to server
-						Toast.makeText(m_activity, R.string.child_is_not_part_of_current_trip, Toast.LENGTH_SHORT).show();
+						SmsSender.SendCancelationProblem(m_activity, pi_sms.GetChildId());
 					}
 				}
 			}

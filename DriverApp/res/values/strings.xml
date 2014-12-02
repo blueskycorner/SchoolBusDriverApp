@@ -15,6 +15,7 @@
     <string name="db_update_failed">Data base update failed</string>
     <string name="retry">Retry</string>
     <string name="ok">Ok</string>
+    <string name="impossible_to_update_when_a_trip_is_ongoing">Impossible to update when a trip is ongoing</string>
     <string name="force_update">Force update</string>
     <string name="updating">Updating ...</string>
     <string name="skip">Skip</string>

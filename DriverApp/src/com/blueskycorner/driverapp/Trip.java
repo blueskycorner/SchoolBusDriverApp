@@ -12,6 +12,7 @@ public class Trip
 	public boolean m_isCancel = false;
 	public boolean m_isReturn = false;
 	private Child m_currentChild = null;
+	public boolean m_isStarted = false;
 	
 	public int GetRemainChildCount() 
 	{
@@ -28,13 +29,15 @@ public class Trip
 	
 	public void Init(ArrayList<Child> pi_childs) 
 	{
-		m_isCancel = false;
 		m_childs = pi_childs;
 		Init();
 	}
 
 	public void Init() 
 	{
+		m_isCancel = false;
+		m_isStarted = false;
+
 		if (m_childs != null)
 		{
 			for (Child child : m_childs) 

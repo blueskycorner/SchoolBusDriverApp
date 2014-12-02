@@ -166,6 +166,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	public void TripStarted()
 	{
 		Trip trip = DataManager.GetInstance().GetCurrentTrip();
+		trip.m_isStarted = true;
 		if (trip.m_isReturn == false)
 		{
 			SmsSender.SendTripSchoolStarted(this, trip.m_id);
@@ -194,7 +195,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 
 	private Trip GetTrip() 
 	{
-		return m_tripChoiceFragment.GetTrip();
+		return DataManager.GetInstance().GetCurrentTrip();
 	}
 
 	@Override
@@ -254,7 +255,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		{
 			SmsSender.SendTripCanceled(this, GetTrip().m_id);
 		}
-		m_tripChoiceFragment.GetTrip().Init();
+		GetTrip().Init();
 		ActivateFragment(m_tripChoiceFragment);
 	}
 	

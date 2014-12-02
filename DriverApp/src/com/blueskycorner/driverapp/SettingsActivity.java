@@ -135,16 +135,50 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 			}
 			case R.id.buttonForceUpdate:
 			{
-				m_buttonForceUpdate.setText(getResources().getText(R.string.updating));
-				m_pbUpdate.setVisibility(View.VISIBLE);
-				DataSynchronyzer sync = new DataSynchronyzer();
-				sync.addListener(this);
-				sync.Synchronize(this, E_SYNCHRONISATION_MODE.MODE_MANUALY, true);
+				if (TripStarted() == false)
+				{
+//					m_pbUpdate.setVisibility(View.VISIBLE);
+					m_buttonForceUpdate.setEnabled(false);
+					DataSynchronyzer sync = new DataSynchronyzer();
+					sync.addListener(this);
+					sync.Synchronize(this, E_SYNCHRONISATION_MODE.MODE_MANUALY, true);
+				}
+				else
+				{
+					AlertDialog.Builder builder=new AlertDialog.Builder(this);
+					builder.setTitle(R.string.warning);
+					builder.setMessage(R.string.impossible_to_update_when_a_trip_is_ongoing);
+					builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() 
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which) 
+						{
+							dialog.dismiss();
+						}
+					});
+					builder.show();
+
+				}
 				break;
 			}
 		}
 	}
 	
+	private boolean TripStarted() 
+	{
+		boolean bTripStarted = false;
+		Trip trip = DataManager.GetInstance().GetCurrentTrip();
+		if (trip != null)
+		{
+			if (trip.m_isStarted == true)
+			{
+				bTripStarted = true;
+			}
+		}
+		
+		return bTripStarted;
+	}
+
 	private int GetCurrentSchoolIndex(ArrayList<School> pi_schools)
 	{
 		int index = -1;
@@ -203,7 +237,19 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 	@Override
 	public void OnStepChanged(E_INIT_STEP pi_step) 
 	{
-		// Nothing to do
+		switch (pi_step)
+		{
+			case STEP_DEVICE_UPDATE:
+			{
+				m_buttonForceUpdate.setText(getResources().getText(R.string.device_update));
+				break;
+			}
+			case STEP_DB_UPDATE:
+			{
+				m_buttonForceUpdate.setText(getResources().getText(R.string.db_update));
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -211,7 +257,8 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 	{
 		try 
 		{
-			m_pbUpdate.setVisibility(View.GONE);
+//			m_pbUpdate.setVisibility(View.GONE);
+			m_buttonForceUpdate.setEnabled(true);
 			m_buttonForceUpdate.setText(getResources().getText(R.string.force_update));
 			InitFields();
 		} 
