@@ -12,13 +12,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-public class MainActivity extends FragmentActivity implements IDriverAppCommunicator, OnCheckedChangeListener
+public class MainActivity extends FragmentActivity implements IDriverAppCommunicator, OnCheckedChangeListener, IDriverAppParamHelperListener
 {
 	private static final String CURRENT_FRAGMENT = "CURRENT_FRAGMENT";
 	DriverAppFragment m_currentFragment = null;
@@ -50,6 +49,8 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		m_buttonAddChild.setEnabled(false);
 		
 		InitFragments(savedInstanceState);
+		
+		DriverAppParamHelper.GetInstance().AddListener(this);
 		
 		m_timerManager = new TimerManager(this);
 		m_timerManager.StartTimer();
@@ -90,15 +91,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		}
 		else
 		{
-			int tripId = DriverAppParamHelper.GetInstance().GetLastTripId();
-			
-			if (tripId != DriverAppParamHelper.NO_TRIP_ID)
-			{
-				trip = DataManager.GetInstance().getTrip(tripId);
-				ArrayList<Child> list = DataManager.GetInstance().GetChilds(trip.m_id);
-				trip.Init(list);
-				DataManager.GetInstance().SetCurrentTrip(trip);
-			}
+			trip = LoadLastTrip();
 			
 			m_currentFragment = m_tripChoiceFragment;
 		}
@@ -113,6 +106,21 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 		}
 		
 		ActivateFragment(m_currentFragment);
+	}
+
+	public Trip LoadLastTrip() 
+	{
+		Trip trip = null;
+		int tripId = DriverAppParamHelper.GetInstance().GetLastTripId();
+		
+		if (tripId != DriverAppParamHelper.NO_TRIP_ID)
+		{
+			trip = DataManager.GetInstance().getTrip(tripId);
+			ArrayList<Child> list = DataManager.GetInstance().GetChilds(trip.m_id);
+			trip.Init(list);
+			DataManager.GetInstance().SetCurrentTrip(trip);
+		}
+		return trip;
 	}
 
 	private void ActivateFragment(DriverAppFragment pi_fragment)
@@ -298,5 +306,29 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	public void childStateImplicitlyUpdated(Child pi_child) 
 	{
 		m_currentFragment.RefreshState(pi_child);
+	}
+
+	@Override
+	public void OnParamValueChange(String pi_paramName)
+	{
+		if (pi_paramName == DriverAppParamHelper.LAST_DB_UPDATE_TIME)
+		{
+			if (DriverAppParamHelper.GetInstance().GetLastTripId() != DriverAppParamHelper.NO_TRIP_ID)
+			{
+				Trip trip = DataManager.GetInstance().GetCurrentTrip();
+				ArrayList<Child> list = DataManager.GetInstance().GetChilds(trip.m_id);
+				trip.Init(list);
+			}
+			else
+			{
+				DataManager.GetInstance().SetCurrentTrip(null);
+				m_tripChoiceFragment.SetTrip(null);
+				m_tripFragment.SetTrip(null);
+				m_childFragment.SetTrip(null);
+
+			}
+
+			m_currentFragment.UpdateUI();
+		}
 	}
 }

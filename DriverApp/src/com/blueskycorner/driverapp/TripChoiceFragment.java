@@ -301,6 +301,12 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 	@Override
 	public void UpdateUI() 
 	{
+		SetTripButtonText(m_trip);
+		ChildListAdapter ad = (ChildListAdapter) m_childList.getAdapter();
+		if (ad != null)
+		{
+			ad.SetTrip(m_trip);
+		}
 		m_childList.invalidateViews();
 	}
 }

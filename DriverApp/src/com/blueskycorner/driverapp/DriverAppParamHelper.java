@@ -1,6 +1,7 @@
 package com.blueskycorner.driverapp;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,6 +15,8 @@ public class DriverAppParamHelper
 	private Context m_context = null;
 	private static DriverAppParamHelper m_driverParamHelper = new DriverAppParamHelper();
 	
+	private ArrayList<IDriverAppParamHelperListener> m_listeners = new ArrayList<IDriverAppParamHelperListener>();
+	
 	private static SimpleDateFormat m_dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	
 	private static final String LAST_SCHOOL_ID = "LAST_SCHOOL_ID";
@@ -24,7 +27,7 @@ public class DriverAppParamHelper
 	private static final String UNKNOWN_BACKGROUND_COLOR = "UNKNOWN_BACKGROUND_COLOR";
 	private static final String DEVICE_GETWAY = "GETWAY_NUMBER";
 	private static final String CHECK_TIMER_PERIOD = "CHECK_TIMER_PERIOD";
-	private static final String LAST_DB_UPDATE_TIME = "LAST_DB_UPDATE_TIME";
+	public static final String LAST_DB_UPDATE_TIME = "LAST_DB_UPDATE_TIME";
 	private static final String AUTO_UPDATE_PERIOD = "AUTO_UPDATE_PERIOD";
 	private static final String LAST_DEVICE_INFO_UPDATE = "LAST_DEVICE_INFO_UPDATE";
 	private static final String DEVICE_ID = "DEVICE_ID";
@@ -51,7 +54,32 @@ public class DriverAppParamHelper
 	public void SetContext(Context pi_context)
 	{
 		m_context = pi_context;
+	}	
+	
+	public void AddListener(IDriverAppParamHelperListener pi_listener) 
+	{
+		if (m_listeners.contains(pi_listener) == false)
+		{
+			m_listeners.add(pi_listener);
+		}
+	}    
+
+	public void RemoveListener(IDriverAppParamHelperListener pi_listener) 
+	{
+		if (m_listeners.contains(pi_listener) == false)
+		{
+			m_listeners.remove(pi_listener);
+		}
+	}    
+	
+	private void BroadcastParamChange(String pi_paramName)
+	{
+		for (IDriverAppParamHelperListener l : m_listeners) 
+		{
+			l.OnParamValueChange(pi_paramName);
+		}
 	}
+
 	
 	public static Date Long2Date(Long pi_date)
 	{
@@ -199,7 +227,8 @@ public class DriverAppParamHelper
 	public void SetLastDBUpdateTime(long pi_time) 
 	{
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(m_context);
-		sharedPref.edit().putLong(LAST_DB_UPDATE_TIME, pi_time).commit();		
+		sharedPref.edit().putLong(LAST_DB_UPDATE_TIME, pi_time).commit();
+		BroadcastParamChange(LAST_DB_UPDATE_TIME);
 	}
 
 	public void SetLastDeviceInfoUpdate(long pi_time) 
