@@ -15,19 +15,14 @@ public class Child
 	public String m_firstName = "";
 	public String m_lastName = "";
 	public Date m_birthdate = new Date(0);
-	public E_GRADE m_grade = E_GRADE.GRADE_PS;
+	public String m_grade = "";
 	public ArrayList<String> m_address = new ArrayList<String>();
+	public ArrayList<Date> m_addressDate = new ArrayList<Date>();
 	public int m_activeAddress = 0;
-	public E_LANGUAGE m_language = E_LANGUAGE.ENGLISH;
-	public Date m_creationDate = new Date(0);
-	public Date m_modificationDate = new Date(0);
 	public int m_pickupTimeHour = 0;
 	public int m_pickupTimeMinute = 0;
-	public String m_mondayInfo = "";
-	public String m_tuesdayInfo = "";
-	public String m_wednesdayInfo = "";
-	public String m_thursdayInfo = "";
-	public String m_fridayInfo = "";
+	public String m_diaryInfo = "";
+	public String m_usefulInfo = "";
 	// Other fields
 	public boolean m_isPresent = false;
 	public boolean m_isAdded = false;

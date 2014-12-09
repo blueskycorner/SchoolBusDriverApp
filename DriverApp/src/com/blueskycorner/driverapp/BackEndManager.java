@@ -20,7 +20,7 @@ public class BackEndManager
 	public static final String tableVersionURL = "http://testguest.hostei.com/DriverAppVersionApi.php";
 	public static final String getTableURL = "http://testguest.hostei.com/DriverAppTableApi.php";
 	public static final String KEY_RESULT = "result";
-	private static final String VERSION = "version";
+	private static final String VERSION = "v";
 	public static final String DEVICE_ID = "deviceid";
 	public static final String TABLE_ID = "tableid";
 	
@@ -37,17 +37,15 @@ public class BackEndManager
 	private static final String KEY_CHILD_FIRST_NAME = "fn";
 	private static final String KEY_CHILD_LAST_NAME = "ln";
 	private static final String KEY_CHILD_BIRTHDATE = "bd";
-	private static final String KEY_CHILD_GRADE_ID = "gid";
+	private static final String KEY_CHILD_GRADE = "g";
 	private static final String KEY_CHILD_ADDRESS1 = "ad1";
 	private static final String KEY_CHILD_ADDRESS2 = "ad2";
-	private static final String KEY_CHILD_LANGUAGE_ID = "lid";
-	private static final String KEY_CHILD_CREATION_DATE = "cd";
-	private static final String KEY_CHILD_ADDRESS_DATE = "ad";
-	private static final String KEY_CHILD_MONDAY_INFO = "mon";
-	private static final String KEY_CHILD_TUESDAY_INFO = "tue";
-	private static final String KEY_CHILD_WEDNESDAY_INFO = "wed";
-	private static final String KEY_CHILD_THURSDAY_INFO = "thu";
-	private static final String KEY_CHILD_FRIDAY_INFO = "fri";
+	private static final String KEY_CHILD_ADDRESS3 = "ad3";
+	private static final String KEY_CHILD_ADDRESS_DATE_1 = "d1";
+	private static final String KEY_CHILD_ADDRESS_DATE_2 = "d2";
+	private static final String KEY_CHILD_ADDRESS_DATE_3 = "d3";
+	private static final String KEY_CHILD_DIARY_INFO = "di";
+	private static final String KEY_CHILD_USEFUL_INFO = "ui";
 	
 	private static final String KEY_TRIP_ID = "id";
 	private static final String KEY_TRIP_SCHOOL_ID = "sid";
@@ -182,17 +180,17 @@ public class BackEndManager
 				JSONParser jsonParser = new JSONParser();
 				ArrayList<Integer> localTableVersion = DataManager.GetInstance().GetLocalTableVersion();
 				ArrayList<Integer> remoteTableVersion = new ArrayList<Integer>();
-				for (E_TABLE_ID i : E_TABLE_ID.values()) 
+				List<NameValuePair> paramsJson = new ArrayList<NameValuePair>();
+				paramsJson.add(new BasicNameValuePair(DEVICE_ID, Integer.toString(params[0])));
+				paramsJson.add(new BasicNameValuePair(TABLE_ID, VersionDAO.TABLE));
+				json = jsonParser.getJSONFromUrl(getTableURL, paramsJson);
+				if (json.getBoolean(KEY_RESULT) == true)
 				{
-					List<NameValuePair> paramsJson = new ArrayList<NameValuePair>();
-					paramsJson.add(new BasicNameValuePair(DEVICE_ID, Integer.toString(params[0])));
-					paramsJson.add(new BasicNameValuePair(TABLE_ID, Integer.toString(i.getValue())));
-					java.lang.System.out.println("Calling back end server : updating");
-					json = jsonParser.getJSONFromUrl(tableVersionURL, paramsJson);
-//					json = GetFakeTableVersion(i.getValue());
-					if (json.getBoolean(KEY_RESULT) == true)
+					JSONArray tab = json.getJSONArray(VersionDAO.TABLE);
+					for (int index=0; index<tab.length(); index++) 
 					{
-						remoteTableVersion.add(json.getInt(VERSION));
+						JSONObject o = (JSONObject) tab.get(index);
+						remoteTableVersion.add(o.getInt(VERSION));
 					}
 				}
 				
@@ -215,9 +213,9 @@ public class BackEndManager
 					JSONObject jsonObj = null;
 					if (j.getValue() >= indexStart)
 					{
-						List<NameValuePair> paramsJson = new ArrayList<NameValuePair>();
+						paramsJson = new ArrayList<NameValuePair>();
 						paramsJson.add(new BasicNameValuePair(DEVICE_ID, Integer.toString(params[0])));
-						paramsJson.add(new BasicNameValuePair(TABLE_ID, Integer.toString(j.getValue())));
+						paramsJson.add(new BasicNameValuePair(TABLE_ID, Integer.toString(j.getValue()+1)));
 						
 						jsonObj = jsonParser.getJSONFromUrl(getTableURL, paramsJson);
 //						jsonObj = GetFakeTable(j.getValue());
@@ -291,31 +289,31 @@ public class BackEndManager
 	{
 		try
 		{
-			switch (j.getValue())
+			switch (j)
 			{
-				case 0:
+				case TABLE_SCHOOL:
 				{
 					CreateSchoolObjects(pi_jsonObject);
 					DriverAppParamHelper.GetInstance().SetLastSchoolId(DriverAppParamHelper.NO_SCHOOL_ID);
 					break;
 				}
-				case 1:
+				case TABLE_DESTINATION:
 				{
 					CreateTripDestinationObjects(pi_jsonObject);
 					break;
 				}
-				case 2:
+				case TABLE_TRIP:
 				{
 					CreateTripObjects(pi_jsonObject);
 					DriverAppParamHelper.GetInstance().SetLastTripId(DriverAppParamHelper.NO_TRIP_ID);
 					break;
 				}
-				case 3:
+				case TABLE_CHILD:
 				{
 					CreateChildObjects(pi_jsonObject);
 					break;
 				}
-				case 4:
+				case TABLE_TRIP_CHILD_ASSOCIATION:
 				{
 					CreateTripChildObjects(pi_jsonObject);
 					break;
@@ -380,18 +378,16 @@ public class BackEndManager
 				String firstName = o.getString(KEY_CHILD_FIRST_NAME);
 				String lastName = o.getString(KEY_CHILD_LAST_NAME);
 				String birthdate = o.getString(KEY_CHILD_BIRTHDATE);
-				int gradeId = o.getInt(KEY_CHILD_GRADE_ID);
+				String grade = o.getString(KEY_CHILD_GRADE);
 				String address1 = o.getString(KEY_CHILD_ADDRESS1);
 				String address2 = o.getString(KEY_CHILD_ADDRESS2);
-				int languageId = o.getInt(KEY_CHILD_LANGUAGE_ID);
-				String creationDate = o.getString(KEY_CHILD_CREATION_DATE);
-				String modificationDate = o.getString(KEY_CHILD_ADDRESS_DATE);
-				String mondayInfo = o.getString(KEY_CHILD_MONDAY_INFO);
-				String tuesdayInfo = o.getString(KEY_CHILD_TUESDAY_INFO);
-				String wednesdayInfo = o.getString(KEY_CHILD_WEDNESDAY_INFO);
-				String thursdayInfo = o.getString(KEY_CHILD_THURSDAY_INFO);
-				String fridayInfo = o.getString(KEY_CHILD_FRIDAY_INFO);
-				DataManager.GetInstance().InsertChild(childId, firstName, lastName, birthdate, gradeId, address1, address2, languageId, creationDate, modificationDate, mondayInfo, tuesdayInfo, wednesdayInfo, thursdayInfo, fridayInfo);
+				String address3 = o.getString(KEY_CHILD_ADDRESS3);
+				String addressDate1 = o.getString(KEY_CHILD_ADDRESS_DATE_1);
+				String addressDate2 = o.getString(KEY_CHILD_ADDRESS_DATE_2);
+				String addressDate3 = o.getString(KEY_CHILD_ADDRESS_DATE_3);
+				String diaryInfo = o.getString(KEY_CHILD_DIARY_INFO);
+				String usefulInfo = o.getString(KEY_CHILD_USEFUL_INFO);
+				DataManager.GetInstance().InsertChild(childId, firstName, lastName, birthdate, grade, address1, address2, address3, addressDate1, addressDate2, addressDate3, diaryInfo, usefulInfo);
 			}
 		} 
 		catch (Exception e) 

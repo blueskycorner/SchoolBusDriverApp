@@ -1,6 +1,6 @@
 ﻿/*
 Created: 16/11/2014
-Modified: 20/11/2014
+Modified: 02/12/2014
 Project: SchoolBusService
 Model: SQLite 3.7
 Database: SQLite 3.7
@@ -42,17 +42,15 @@ CREATE TABLE child
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   birthdate date NOT NULL,
-  grade_id INTEGER NOT NULL,
+  grade TEXT NOT NULL,
   address1 TEXT NOT NULL,
   address2 TEXT NOT NULL,
-  language_id INTEGER NOT NULL,
-  creation_date date NOT NULL,
-  modification_date date NOT NULL,
-  monday_info TEXT NOT NULL,
-  tuesday_info TEXT NOT NULL,
-  wednesday_info TEXT NOT NULL,
-  thursday_info TEXT NOT NULL,
-  friday_info TEXT NOT NULL,
+  address3 TEXT NOT NULL,
+  address1_date date NOT NULL,
+  address2_date date NOT NULL,
+  address3_date date NOT NULL,
+  diary_info TEXT NOT NULL,
+  useful_info TEXT NOT NULL,
   CONSTRAINT Key3 PRIMARY KEY (id)
 );
 
@@ -82,7 +80,7 @@ CREATE TABLE trip_child_association
   child_id INTEGER NOT NULL,
   pickup_time_hour INTEGER NOT NULL,
   pickup_time_minute INTEGER NOT NULL,
-  address_id boolean NOT NULL,
+  address_id INTEGER NOT NULL,
   CONSTRAINT Key9 PRIMARY KEY (trip_id,child_id),
   CONSTRAINT Relationship2 FOREIGN KEY (trip_id) REFERENCES trip (id),
   CONSTRAINT Relationship3 FOREIGN KEY (child_id) REFERENCES child (id)

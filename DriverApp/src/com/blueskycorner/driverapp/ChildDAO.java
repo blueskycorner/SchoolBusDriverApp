@@ -20,19 +20,17 @@ public class ChildDAO extends SchoolBusDAO
     private static final String KEY_FIRST_NAME = "first_name";
     private static final String KEY_LAST_NAME = "last_name";
     private static final String KEY_BIRTHDATE = "birthdate";
-    private static final String KEY_GRADE_ID = "grade_id";
+    private static final String KEY_GRADE = "grade";
     private static final String KEY_ADDRESS_1 = "address1";
     private static final String KEY_ADDRESS_2 = "address2";
-    private static final String KEY_LANGUAGE_ID = "language_id";
-    private static final String KEY_CREATION_DATE = "creation_date";
-    private static final String KEY_MODIFICATION_DATE = "modification_date";
-    private static final String KEY_MONDAY_INFO = "monday_info";
-    private static final String KEY_TUESDAY_INFO = "tuesday_info";
-    private static final String KEY_WEDNESDAY_INFO = "wednesday_info";
-    private static final String KEY_THURSDAY_INFO = "thursday_info";
-    private static final String KEY_FRIDAY_INFO = "friday_info";
+    private static final String KEY_ADDRESS_3 = "address3";
+    private static final String KEY_ADDRESS_DATE_1 = "address1_date";
+    private static final String KEY_ADDRESS_DATE_2 = "address2_date";
+    private static final String KEY_ADDRESS_DATE_3 = "address3_date";
+    private static final String KEY_DIARY_INFO = "diary_info";
+    private static final String KEY_USEFUL_INFO = "useful_info";
     
-    private SimpleDateFormat m_parser = new SimpleDateFormat("yyyy:MM:dd");
+    private SimpleDateFormat m_parser = new SimpleDateFormat("yyyy/MM/dd");
     
     public ChildDAO(SqlLiteHelper pi_sqliteHelper) 
     {
@@ -56,14 +54,9 @@ public class ChildDAO extends SchoolBusDAO
 			child.m_birthdate = info.m_birthdate;
 			child.m_grade = info.m_grade;
 			child.m_address = info.m_address;
-			child.m_language = info.m_language;
-			child.m_creationDate = info.m_creationDate;
-			child.m_modificationDate = info.m_modificationDate;
-			child.m_mondayInfo = info.m_mondayInfo;
-			child.m_tuesdayInfo = info.m_tuesdayInfo;
-			child.m_wednesdayInfo = info.m_wednesdayInfo;
-			child.m_thursdayInfo = info.m_thursdayInfo;
-			child.m_fridayInfo = info.m_fridayInfo;
+			child.m_addressDate = info.m_addressDate;
+			child.m_diaryInfo = info.m_diaryInfo;
+			child.m_usefulInfo = info.m_usefulInfo;
 		}
 		
 		return pi_childs;
@@ -101,17 +94,15 @@ public class ChildDAO extends SchoolBusDAO
 		child.m_firstName = c.getString(c.getColumnIndex(KEY_FIRST_NAME));
 		child.m_lastName = c.getString(c.getColumnIndex(KEY_LAST_NAME));
 		child.m_birthdate = m_parser.parse(c.getString(c.getColumnIndex(KEY_BIRTHDATE)));
-		child.m_grade = E_GRADE.FromInt(c.getInt(c.getColumnIndex(KEY_GRADE_ID)));
+		child.m_grade = c.getString(c.getColumnIndex(KEY_GRADE));
 		child.m_address.add(c.getString(c.getColumnIndex(KEY_ADDRESS_1)));
 		child.m_address.add(c.getString(c.getColumnIndex(KEY_ADDRESS_2)));
-		child.m_language = E_LANGUAGE.FromInt(c.getInt(c.getColumnIndex(KEY_LANGUAGE_ID)));
-		child.m_creationDate = m_parser.parse(c.getString(c.getColumnIndex(KEY_CREATION_DATE)));
-		child.m_modificationDate = m_parser.parse(c.getString(c.getColumnIndex(KEY_MODIFICATION_DATE)));
-		child.m_mondayInfo = c.getString(c.getColumnIndex(KEY_MONDAY_INFO));
-		child.m_tuesdayInfo = c.getString(c.getColumnIndex(KEY_TUESDAY_INFO));
-		child.m_wednesdayInfo = c.getString(c.getColumnIndex(KEY_WEDNESDAY_INFO));
-		child.m_thursdayInfo = c.getString(c.getColumnIndex(KEY_THURSDAY_INFO));
-		child.m_fridayInfo = c.getString(c.getColumnIndex(KEY_FRIDAY_INFO));
+		child.m_address.add(c.getString(c.getColumnIndex(KEY_ADDRESS_3)));
+		child.m_addressDate.add(m_parser.parse(c.getString(c.getColumnIndex(KEY_ADDRESS_DATE_1))));
+		child.m_addressDate.add(m_parser.parse(c.getString(c.getColumnIndex(KEY_ADDRESS_DATE_2))));
+		child.m_addressDate.add(m_parser.parse(c.getString(c.getColumnIndex(KEY_ADDRESS_DATE_3))));
+		child.m_diaryInfo = c.getString(c.getColumnIndex(KEY_DIARY_INFO));
+		child.m_usefulInfo = c.getString(c.getColumnIndex(KEY_USEFUL_INFO));
 		return child;
 	}
 
@@ -119,34 +110,30 @@ public class ChildDAO extends SchoolBusDAO
 							String pi_firstName, 
 							String pi_lastName,
 							String pi_birthdate,
-							int pi_gradeId,
-							String pi_address1, 
-							String pi_address2, 
-							int pi_languageId, 
-							String pi_creationDate, 
-							String pi_modificationDate,
-							String pi_mondayInfo,
-							String pi_tuesdayInfo,
-							String pi_wednesdayInfo,
-							String pi_thursdayInfo,
-							String pi_fridayInfo) throws Exception
+							String pi_grade,
+							String pi_address1,
+							String pi_address2,
+							String pi_address3,
+							String pi_addressDate1,
+							String pi_addressDate2,
+							String pi_addressDate3, 
+							String pi_diaryInfo,
+							String pi_usefulInfo) throws Exception
 	{
 		ContentValues values = new ContentValues();
 		values.put(KEY_ID, pi_childId);
 		values.put(KEY_FIRST_NAME, pi_firstName);
 		values.put(KEY_LAST_NAME, pi_lastName);
 		values.put(KEY_BIRTHDATE, pi_birthdate);
-		values.put(KEY_GRADE_ID, pi_gradeId);
+		values.put(KEY_GRADE, pi_grade);
 		values.put(KEY_ADDRESS_1, pi_address1);
 		values.put(KEY_ADDRESS_2, pi_address2);
-		values.put(KEY_LANGUAGE_ID, pi_languageId);
-		values.put(KEY_CREATION_DATE, pi_creationDate);
-		values.put(KEY_MODIFICATION_DATE, pi_modificationDate);
-		values.put(KEY_MONDAY_INFO, pi_mondayInfo);
-		values.put(KEY_TUESDAY_INFO, pi_tuesdayInfo);
-		values.put(KEY_WEDNESDAY_INFO, pi_wednesdayInfo);
-		values.put(KEY_THURSDAY_INFO, pi_thursdayInfo);
-		values.put(KEY_FRIDAY_INFO, pi_fridayInfo);
+		values.put(KEY_ADDRESS_3, pi_address3);
+		values.put(KEY_ADDRESS_DATE_1, pi_addressDate1);
+		values.put(KEY_ADDRESS_DATE_2, pi_addressDate2);
+		values.put(KEY_ADDRESS_DATE_3, pi_addressDate3);
+		values.put(KEY_DIARY_INFO, pi_diaryInfo);
+		values.put(KEY_USEFUL_INFO, pi_usefulInfo);
 		
 	    // 1. build the query
 		Insert(values);

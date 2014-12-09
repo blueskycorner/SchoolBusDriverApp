@@ -51,7 +51,7 @@ public class TripChildAssociationDAO extends SchoolBusDAO
             		child.m_pickupTimeHour = cursor.getInt(cursor.getColumnIndex(KEY_PICKUP_TIME_HOUR));
             		child.m_pickupTimeMinute = cursor.getInt(cursor.getColumnIndex(KEY_PICKUP_TIME_MINUTE));
             		child.m_activeAddress = cursor.getInt(cursor.getColumnIndex(KEY_ADDRESS_ID));
-            		if ( (child.m_activeAddress != 0) && (child.m_activeAddress != 1) )
+            		if ( (child.m_activeAddress != 0) && (child.m_activeAddress != 1) && (child.m_activeAddress != 2) )
             		{
             			child.m_activeAddress = 0;
             		}
