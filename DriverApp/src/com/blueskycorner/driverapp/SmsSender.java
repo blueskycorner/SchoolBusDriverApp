@@ -1,7 +1,9 @@
 package com.blueskycorner.driverapp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import android.location.Location;
 //import android.app.Activity;
 //import android.app.PendingIntent;
 //import android.content.BroadcastReceiver;
@@ -26,6 +28,8 @@ public class SmsSender
 	private static final String TRIP_FINISHED_MESSAGE_ID = "8";
 	private static final String TRIP_CANCELED_MESSAGE_ID = "9";
 
+	private static final String SEPARATOR_TIME_STRING = ":";
+
 	private static void SendSMS(String sMessage) 
 	{
 		SmsManager sms = SmsManager.getDefault();
@@ -38,8 +42,13 @@ public class SmsSender
 
 	private static String GetSmsHead(final String pi_sMessageId) 
 	{
-		String sMessage = pi_sMessageId + SEPARATOR_STRING +
-				DriverAppParamHelper.GetInstance().GetDeviceId() + SEPARATOR_STRING;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		
+		String sMessage = Integer.toString(calendar.get(Calendar.HOUR_OF_DAY)) + SEPARATOR_TIME_STRING +
+						  Integer.toString(calendar.get(Calendar.MINUTE)) + SEPARATOR_STRING +
+						  pi_sMessageId + SEPARATOR_STRING +
+						  DriverAppParamHelper.GetInstance().GetDeviceId() + SEPARATOR_STRING;
 		return sMessage;
 	}
 	
@@ -84,13 +93,23 @@ public class SmsSender
 	}
 	
 	///// SEND ON THE WAY FINISHED
-	public static void SendOntheWayFinished(final Context pi_context, int pi_childId)
+	public static void SendOntheWayFinished(final Context pi_context, int pi_childId, Location pi_location)
 	{
 		String sMessage = GetSmsHead(ON_THE_WAY_FINISHED_MESSAGE_ID);
 		sMessage += String.valueOf(pi_childId) + SEPARATOR_STRING;
+		sMessage += GetLocationString(pi_location);
 		SendSMS(sMessage);
 	}
 	
+	private static String GetLocationString(Location pi_location)
+	{
+		
+		String s = String.valueOf(pi_location.getLatitude()) + SEPARATOR_STRING +
+				   String.valueOf(pi_location.getLongitude()) + SEPARATOR_STRING +
+				   String.valueOf(pi_location.getAccuracy()) + SEPARATOR_STRING;
+		return s;
+	}
+
 	///// SEND ON THE WAY CANCELED
 	public static void SendOntheWayCanceled(final Context pi_context, int pi_childId)
 	{

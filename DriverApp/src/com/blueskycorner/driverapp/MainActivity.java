@@ -2,7 +2,10 @@ package com.blueskycorner.driverapp;
 
 import java.util.ArrayList;
 
+import com.blueskycorner.system.System;
+
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
@@ -216,7 +219,8 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 			}
 			case STATE_ON_THE_WAY_FINISHED:
 			{
-				SmsSender.SendOntheWayFinished(this, pi_child.m_id);
+				Location loc = System.GetLastLocation(this);
+				SmsSender.SendOntheWayFinished(this, pi_child.m_id, loc);
 				break;
 			}
 			case STATE_ON_THE_WAY_CANCELED:
