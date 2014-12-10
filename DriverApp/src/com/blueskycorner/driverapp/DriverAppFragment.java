@@ -46,10 +46,14 @@ public abstract class DriverAppFragment extends Fragment
 		
 	}
 	
-	public void SetEnabled(boolean b)
+	public void SetEmergency(boolean b)
 	{
 		ViewGroup l = GetViewGroup();
-		enableDisableView(l,b);
+		enableDisableView(l,!b);
+		if (b == false)
+		{
+			UpdateUI();
+		}
 	}
 	
 	private void enableDisableView(View view, boolean enabled) {

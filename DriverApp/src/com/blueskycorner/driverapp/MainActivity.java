@@ -278,7 +278,7 @@ public class MainActivity extends FragmentActivity implements IDriverAppCommunic
 	@Override
 	public void onCheckedChanged(CompoundButton arg0, boolean arg1)
 	{
-		m_currentFragment.SetEnabled(!arg1);
+		m_currentFragment.SetEmergency(arg1);
 		m_buttonAddChild.setEnabled(!arg1);
 		SmsSender.SendEmergency(this, arg1);
 	}

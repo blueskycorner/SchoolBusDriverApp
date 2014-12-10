@@ -6,6 +6,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.view.Menu;
@@ -139,6 +140,8 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 				{
 //					m_pbUpdate.setVisibility(View.VISIBLE);
 					m_buttonForceUpdate.setEnabled(false);
+					int o = getResources().getConfiguration().orientation;
+					setRequestedOrientation(o);
 					DataSynchronyzer sync = new DataSynchronyzer();
 					sync.addListener(this);
 					sync.Synchronize(this, E_SYNCHRONISATION_MODE.MODE_MANUALY, true);
@@ -259,6 +262,7 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 		{
 //			m_pbUpdate.setVisibility(View.GONE);
 			m_buttonForceUpdate.setEnabled(true);
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 			m_buttonForceUpdate.setText(getResources().getText(R.string.force_update));
 			InitFields();
 		} 

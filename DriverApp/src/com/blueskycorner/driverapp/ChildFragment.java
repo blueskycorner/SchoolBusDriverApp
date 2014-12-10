@@ -82,8 +82,10 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 
 	private void InitButtons(boolean pi_isActivated) 
 	{
+		m_buttonStart.setEnabled(true);
 		m_buttonBack.setEnabled(!pi_isActivated);
 		m_buttonFinish.setEnabled(pi_isActivated);
+		m_buttonSkip.setEnabled(true);
 		
 		if (pi_isActivated == true)
 		{
@@ -195,6 +197,6 @@ public class ChildFragment extends DriverAppFragment implements OnClickListener
 	@Override
 	public void UpdateUI() 
 	{
-		
+		InitButtons(m_isActivated);
 	}
 }

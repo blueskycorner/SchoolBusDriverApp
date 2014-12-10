@@ -97,6 +97,7 @@ public class TripFragment extends DriverAppFragment implements OnClickListener
 			{
 				m_buttonEndTrip.setText(m_activity.getResources().getText(R.string.cancel_trip));
 			}
+			m_buttonEndTrip.setEnabled(true);
 		}
 	}
 
