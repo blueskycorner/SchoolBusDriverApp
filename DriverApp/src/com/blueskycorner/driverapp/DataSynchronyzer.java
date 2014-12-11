@@ -19,6 +19,7 @@ import android.os.SystemClock;
 
 public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManagerListener, IMobileDataListener 
 {
+	private static DataSynchronyzer m_dataSynchronizer = new DataSynchronyzer();
 	private static final int CHECK_DEVICE_INFO = 0;
 	private static final int CHECK_DB_UPDATE = 1;
 	private static final int ON_DEVICE_INFO_GRABBED = 2;
@@ -34,6 +35,16 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	
 	Handler m_handler = new Handler();
 	
+	public static DataSynchronyzer GetInstance() 
+    {
+	   return m_dataSynchronizer;
+    }
+	
+	private DataSynchronyzer()
+	{
+		
+	}
+
 	static public void SetAlarm(Context context)
     {
 		DriverAppParamHelper.GetInstance().SetContext(context);
@@ -81,17 +92,62 @@ public class DataSynchronyzer extends BroadcastReceiver implements IBackEndManag
 	    	m_listeners.remove(listener);
 	    }
     }
+    
+	private boolean TripStarted() 
+	{
+		boolean bTripStarted = false;
+		Trip trip = DataManager.GetInstance().GetCurrentTrip();
+		if (trip != null)
+		{
+			if (trip.m_isStarted == true)
+			{
+				bTripStarted = true;
+			}
+		}
+		
+		return bTripStarted;
+	}
 
     public void Synchronize(Context pi_context, E_SYNCHRONISATION_MODE pi_mode, Boolean pi_bForce)
     {
-    	m_lock.lock();
-    	m_mode = pi_mode;
-    	m_context = pi_context;
-    	m_bForce = pi_bForce;
-    	m_backEndManager = new BackEndManager();
-    	m_backEndManager.addListener(this);
-    	
-    	CheckDeviceInfo();
+    	if (m_lock.tryLock())
+    	{
+			if (TripStarted() == false)
+			{
+		    	m_mode = pi_mode;
+		    	m_context = pi_context;
+		    	m_bForce = pi_bForce;
+		    	m_backEndManager = new BackEndManager();
+		    	m_backEndManager.addListener(this);
+		    	
+		    	CheckDeviceInfo();
+			}
+			else 
+			{
+				if (pi_mode != E_SYNCHRONISATION_MODE.MODE_AUTO)
+				{
+					AlertDialog.Builder builder=new AlertDialog.Builder(pi_context);
+					builder.setTitle(R.string.warning);
+					builder.setMessage(R.string.impossible_to_update_when_a_trip_is_ongoing);
+					builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() 
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which) 
+						{
+							dialog.dismiss();
+						}
+					});
+					builder.show();
+				}
+				
+				BroadcastDataSynchronized();
+			}
+    	}
+    	else
+    	{
+    		// Not sure TBC TODO
+//    		BroadcastDataSynchronized();
+    	}
     }
     
     @Override

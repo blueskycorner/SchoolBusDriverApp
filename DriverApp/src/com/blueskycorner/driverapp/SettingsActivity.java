@@ -136,36 +136,17 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 			}
 			case R.id.buttonForceUpdate:
 			{
-				if (TripStarted() == false)
-				{
 //					m_pbUpdate.setVisibility(View.VISIBLE);
-					m_buttonForceUpdate.setEnabled(false);
-					int o = getResources().getConfiguration().orientation;
-					setRequestedOrientation(o);
-					DataSynchronyzer sync = new DataSynchronyzer();
-					sync.addListener(this);
-					sync.Synchronize(this, E_SYNCHRONISATION_MODE.MODE_MANUALY, true);
-				}
-				else
-				{
-					AlertDialog.Builder builder=new AlertDialog.Builder(this);
-					builder.setTitle(R.string.warning);
-					builder.setMessage(R.string.impossible_to_update_when_a_trip_is_ongoing);
-					builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() 
-					{
-						@Override
-						public void onClick(DialogInterface dialog, int which) 
-						{
-							dialog.dismiss();
-						}
-					});
-					builder.show();
-
-				}
+				m_buttonForceUpdate.setEnabled(false);
+				int o = getResources().getConfiguration().orientation;
+				setRequestedOrientation(o);
+				DataSynchronyzer.GetInstance().addListener(this);
+				DataSynchronyzer.GetInstance().Synchronize(this, E_SYNCHRONISATION_MODE.MODE_MANUALY, true);
 				break;
 			}
 		}
 	}
+	
 	
 	private boolean TripStarted() 
 	{
@@ -262,6 +243,7 @@ public class SettingsActivity extends Activity implements OnClickListener, OnChe
 		{
 //			m_pbUpdate.setVisibility(View.GONE);
 			m_buttonForceUpdate.setEnabled(true);
+			DataSynchronyzer.GetInstance().removeListener(this);
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 			m_buttonForceUpdate.setText(getResources().getText(R.string.force_update));
 			InitFields();

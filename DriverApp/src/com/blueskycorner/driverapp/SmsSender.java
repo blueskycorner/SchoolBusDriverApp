@@ -137,7 +137,8 @@ public class SmsSender
 	///// SEND DEVICE STATE
 	public static void SendDeviceState(Context pi_context, DeviceState pi_deviceState)
 	{
-		String sMessage = DEVICE_STATE_MESSAGE_ID + SEPARATOR_STRING + 	pi_deviceState.toSMS();
+		String sMessage = GetSmsHead(DEVICE_STATE_MESSAGE_ID);
+		sMessage +=	pi_deviceState.toSMS();
 		SendSMS(sMessage);
 	}
 

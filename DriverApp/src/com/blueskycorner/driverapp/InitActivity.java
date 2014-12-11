@@ -16,7 +16,6 @@ public class InitActivity extends Activity implements ISynchronizerListener
 	private static final int MAIN_ACTIVITY = 0;
 	private TextView m_tvInitState = null;
 	private ProgressBar m_progressBar = null;
-	private DataSynchronyzer m_dataSynchronizer = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -31,13 +30,11 @@ public class InitActivity extends Activity implements ISynchronizerListener
 		m_tvInitState = (TextView) findViewById(R.id.textViewInitState);
 		m_progressBar = (ProgressBar) findViewById(R.id.progressBarInit);
 		
-		m_dataSynchronizer = new DataSynchronyzer();
-		m_dataSynchronizer.addListener(this);
+		DataSynchronyzer.GetInstance().addListener(this);
 		
 		m_progressBar.setVisibility(View.VISIBLE);
-		m_dataSynchronizer.Synchronize(this, E_SYNCHRONISATION_MODE.MODE_STARTUP, false);
+		DataSynchronyzer.GetInstance().Synchronize(this, E_SYNCHRONISATION_MODE.MODE_STARTUP, false);
 	}
-
 
 	private void StartMainActivity() 
 	{
@@ -79,6 +76,7 @@ public class InitActivity extends Activity implements ISynchronizerListener
 	public void OnDataSynchronised()
 	{
 		m_progressBar.setVisibility(View.INVISIBLE);
+		DataSynchronyzer.GetInstance().removeListener(this);
 		StartMainActivity();
 	}
 }

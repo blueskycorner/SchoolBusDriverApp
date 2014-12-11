@@ -83,7 +83,7 @@ public class TripChoiceFragment extends DriverAppFragment implements OnClickList
 		{
 			tripName = getActivity().getResources().getString(R.string.choose_one);
 		}
-		String text = getString(R.string.trip) + " :  " + tripName;
+		String text = getActivity().getResources().getString(R.string.trip) + " :  " + tripName;
 		m_buttonTrip.setText(text);
 	}
 
