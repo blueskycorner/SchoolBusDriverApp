@@ -44,6 +44,7 @@ public class IncomingSmsReceiver extends BroadcastReceiver {
                 } // end for loop
                 
                 BroadcastSms(message);
+                abortBroadcast();
               } // bundle is null
            
         } 
